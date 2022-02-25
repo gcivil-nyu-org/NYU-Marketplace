@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from .models import Post, User
+from .forms import PostModelForm
 #from django.template import loader
+
 
 posts = [
     {
@@ -27,14 +30,18 @@ posts = [
 ]
 
 
-def createpost(request):
-
+def post_create(request):
+    form = PostModelForm()
+    if request.method == "POST":
+        form = PostModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/posts')
     context = {
-        'posts' :  posts
+        "form": form
     }
+    return render(request, "posts/createpost.html", context)
 
-    
-    return render(request,'posts/createpost.html')
 
 def index(request):
 
@@ -42,8 +49,8 @@ def index(request):
         'posts' :  posts
     }
 
-    
     return render(request,'posts/home.html',context)
+
 
 def profile(request):
 
@@ -51,7 +58,6 @@ def profile(request):
         'posts' :  posts
     }
 
-    
     return render(request,'posts/profile.html')
 
 
