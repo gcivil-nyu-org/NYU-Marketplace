@@ -1,0 +1,17 @@
+{% extends "posts/base.html" %}
+{% load static %}
+{% block content %}
+{% for post in posts %}
+<article class="media content-section">
+     <div class="media-body">
+       <div class="article-metadata">
+         <a class="mr-2" href="#">{{ post.author }}</a>
+         <small class="text-muted">{{ post.college }}</small>
+       </div>
+       <h2><a class="article-title" href="#">{{ post.item_type }}</a></h2>
+       <p class="article-content">{{ post.cost }}</p>
+     </div>
+   </article>
+   {% endfor %} 
+<h1>Hello from home.html</h1>
+{% endblock %}
