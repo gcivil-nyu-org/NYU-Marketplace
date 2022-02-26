@@ -1,7 +1,7 @@
 {% extends "posts/base.html" %}
 {% load static %}
 {% block content %}
-    {% comment %} THIS IS COMMENT
+    {% comment %} THIS IS COMMENT!!!!!!!
       <form>
         <div class="form-group">
           <label for="exampleInputEmail1">Email address</label>
@@ -22,10 +22,12 @@
 
 
     <h1>Create a new Post</h1>
-    <form method="post" >
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Submit</button>
-    </form>
+    <div class="form-group">
+        <form method="post" >
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-secondary">Post</button>
+        </form>
+    </div>
     
 {% endblock content %}
