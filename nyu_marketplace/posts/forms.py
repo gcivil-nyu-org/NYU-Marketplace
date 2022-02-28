@@ -47,7 +47,7 @@ class PostModelForm(forms.ModelForm):
         model = Post
         fields = ('name', 'option', 'price', 'category', 'description', 'picture')
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter name'}),
             'option': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'price': forms.TextInput(attrs={'class': 'form-control'}),
