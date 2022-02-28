@@ -4,7 +4,6 @@ from .models import Post
 from .forms import PostModelForm
 #from django.template import loader
 
-
 posts = [
     {
 
