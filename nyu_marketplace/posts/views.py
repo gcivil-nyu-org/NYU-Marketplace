@@ -2,31 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Post
 from .forms import PostModelForm
-#from django.template import loader
-
-posts = [
-    {
-
-        'author' : 'Shravani',
-        'college' : 'New York University',
-        'item_type' : 'Sell',
-        'cost' : '$24'
-    },
-    {
-
-        'author' : 'Tanvi',
-        'college' : 'New York University',
-        'item_type' : 'Exchange',
-        'cost' : '$10'
-    },
-     {
-
-        'author' : 'Tanvi',
-        'college' : 'New York University',
-        'item_type' : 'Exchange',
-        'cost' : '$10'
-    },
-]
+from django.template import loader
 
 
 def post_create(request):
@@ -43,19 +19,19 @@ def post_create(request):
 
 
 def index(request):
-
+    latest_posts_list = Post.objects.order_by('-updated_at')[:5]
+    template = loader.get_template('posts/home.html')
     context = {
-        'posts' :  posts
+        'posts': latest_posts_list,
     }
-
-    return render(request,'posts/home.html',context)
+    return HttpResponse(template.render(context, request))
 
 
 def profile(request):
 
-    context = {
-        'posts' :  posts
-    }
+    # context = {
+    #     'posts' :  posts
+    # }
 
     return render(request,'posts/profile.html')
 
