@@ -18,8 +18,8 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     options = (
-        ('rent', "Rent"),
         ('sell', "Sell"),
+        ('rent', "Rent"),
         ('exchange', "Exchange"),
     )
     option = models.CharField(max_length=10, choices=options, default="Rent")
@@ -30,6 +30,10 @@ class Post(models.Model):
     )
     category = models.CharField(max_length=10, choices=categories, default="Textbook")
     price = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    location = models.CharField(
+            max_length=50,
+            validators=[MinLengthValidator(2, "Title must be greater than 2 characters")]
+    )
 
 
     # Picture

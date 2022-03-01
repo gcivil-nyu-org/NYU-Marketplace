@@ -45,12 +45,13 @@ class PostModelForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('name', 'option', 'price', 'category', 'description', 'picture')
+        fields = ('name', 'option', 'price', 'category', 'location', 'description', 'picture')
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter name'}),
             'option': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Item Name'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'price': forms.TextInput(attrs={'class': 'form-control'}),
+            'price': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Item Price'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Item Location'}),
         }
 
