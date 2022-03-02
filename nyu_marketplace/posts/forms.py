@@ -69,7 +69,7 @@ class PostModelForm(forms.ModelForm):
             'category': forms.Select(attrs={'class': 'form-select col-sm-9',
                                             'id': 'inputCategory'}),
             'location': forms.TextInput(attrs={'class': 'form-control',
-                                           'type': "itemName",
-                                           'id': "inputItemName",
+                                           'type': "itemLocation",
+                                           'id': "inputItemLocation",
                                            'placeholder': "Please Enter Item Location"}),
         }

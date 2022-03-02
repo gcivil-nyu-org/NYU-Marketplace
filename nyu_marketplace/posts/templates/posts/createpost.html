@@ -40,7 +40,7 @@
       <div class="container col-7 ">
         <div class="row mb-3">
           <label for="inputOption" class="col-sm-3 col-form-label">{{ form.option.label }}<label style="color:red">*</label></label>
-          <div class="col-sm-9">
+          <div class="col-sm-9" onclick="clickOption()">
                       {{ form.option }}
             <!--select id="inputCategory" class="form-select col-sm-9">
               <option selected>Choose Category</option>
@@ -108,9 +108,9 @@
           <div class="col-sm-9">
             {{ form.location }}
           </div>
-        </div-->
 
-        <br>
+
+        <br><br><br>
         <div class="row mb-3">
           <label for="inputDescription" class="col-sm-2 col-form-label">{{ form.description.label }}</label></label>
           <div>
@@ -152,9 +152,27 @@
             inputPrice.value = null;
             inputPrice.setAttribute('placeholder', 'No Need to Input Price for Exchanging');
         } else {
-            console.log("enable exchange")
+            console.log("enable price")
             inputPrice.disabled = false;
             inputPrice.setAttribute('placeholder', 'Enter Item Price')
+        }
+
+    }
+
+    function clickOption(){
+        var sellSelect = document.getElementById('inputOption_0')
+        var rentSelect = document.getElementById('inputOption_1')
+        var exchangeSelect = document.getElementById('inputOption_2')
+        var inputPrice = document.getElementById('inputItemPrice')
+        if(sellSelect.checked || rentSelect.checked){
+            console.log("enable price")
+            inputPrice.disabled = false;
+            inputPrice.setAttribute('placeholder', 'Please Enter Item Price')
+        }else if(exchangeSelect.checked){
+            console.log("disable price")
+            inputPrice.disabled = true;
+            inputPrice.value = null;
+            inputPrice.setAttribute('placeholder', 'No Need to Input Price for Exchanging');
         }
 
     }
