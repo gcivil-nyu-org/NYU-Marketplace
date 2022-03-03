@@ -1,0 +1,1 @@
+web: gunicorn nyu_marketplace.wsgi
