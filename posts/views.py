@@ -93,3 +93,11 @@ def profile(request):
     }
 
     return render(request,'posts/profile.html')
+
+def postDetail(request):
+
+    context = {
+        'posts' :  posts
+    }
+
+    return render(request,'posts/postdetail.html')

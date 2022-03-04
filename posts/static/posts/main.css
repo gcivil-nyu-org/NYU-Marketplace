@@ -11,7 +11,13 @@
 .article-title {
     color: #444444;
   }
-  
+
+.poppins{
+  font-family: 'Poppins', sans-serif;
+}
+.nyu-purple{
+  color: #57068c;
+}
   a.article-title:hover {
     color: #428bca;
     text-decoration: none;
@@ -50,4 +56,3 @@
     border-radius: 3px;
     margin-bottom: 20px;
   }
-  
