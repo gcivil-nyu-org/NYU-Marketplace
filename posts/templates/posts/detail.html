@@ -1,7 +1,6 @@
 {% extends "posts/base.html" %}
 {% load static %}
 {% block content %}
-{% for post in post_list %}
 <article class="media content-section">
      <div class="media-body">
        <div class="article-metadata">
@@ -9,11 +8,10 @@
          <small class="text-muted">{{ post.location }}</small>
        </div>
        <h2><a class="article-title" href="#">{{ post.option }}</a></h2>
-         {% if post.price %}
        <p class="article-content">{{ post.price }}</p>
-         {% endif %}
-         <img style="width:30%;margin-top: 50px; border:3px solid black;" src="{{ post.picture.url }}">
+         {% if post.content_type %}
+        <img style="width:30%;margin-top: 50px; border:3px solid black;" src="{% url 'post-picture' post.id %}">
+        {% endif %}
      </div>
    </article>
-   {% endfor %}
 {% endblock %}
