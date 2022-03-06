@@ -1,17 +1,97 @@
 {% extends "posts/base.html" %}
 {% load static %}
 {% block content %}
-<article class="media content-section">
-     <div class="media-body">
-       <div class="article-metadata">
-         <a class="mr-2" href="#">{{ post.name }}</a>
-         <small class="text-muted">{{ post.location }}</small>
-       </div>
-       <h2><a class="article-title" href="#">{{ post.option }}</a></h2>
-       <p class="article-content">{{ post.price }}</p>
-         {% if post.content_type %}
-        <img style="width:30%;margin-top: 50px; border:3px solid black;" src="{% url 'post-picture' post.id %}">
+
+  <div class="container  mt-5">
+    {% csrf_token %}
+    <div class="row">
+      <div class="container col-4 mt-10">
+        <img id="frame"
+             src="https://static.wixstatic.com/media/2d0426_29351bd1608748f8b55f4e4382ca1fdb~mv2.jpg/v1/fit/w_1000%2Ch_1000%2Cal_c%2Cq_80/file.jpg"
+             class="img-fluid"
+             alt="images of item"
+        />
+        <!-- button onclick="clearImage()" class="btn btn-primary mt-3">Delete image</button-->
+
+      </div>
+      <div class="col-1">
+      </div>
+      <div class="container col-7 ">
+        <div class="col-12">
+          <h2 class="poppins" style="font-weight: bolder">{{ post.name }}</h2>
+        </div>
+        {% if post.option == 'exchange' %}
+          <div class="row justify-content-between col-12 mt-5">
+            <div class="col-6">
+              <h2 class="poppins" style="font-weight: bolder; color: #faad14">Exchange</h2>
+            </div>
+            <div class="col-5">
+            </div>
+          </div>
+        {% else %}
+          <div class="row justify-content-between col-12 mt-5">
+            <div class="col-6">
+              <h2 class="poppins nyu-purple" style="font-weight: bold">$&nbsp{{ post.price }}</h2>
+            </div>
+            <div class="col-5">
+              {% if post.option == 'sell' %}
+                <h2 class="poppins" style="font-weight: bolder; color: #faad14">Sell</h2>
+              {% elif post.option == 'rent' %}
+                <h2 class="poppins" style="font-weight: bolder; color: #faad14">Rent</h2>
+              {% endif %}
+            </div>
+          </div>
         {% endif %}
-     </div>
-   </article>
-{% endblock %}
+        <div class="col-12 mt-5">
+          <img
+              src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+              class="rounded-circle"
+              weight="25"
+              height="25"
+              alt="Black and White Portrait of a Man"
+              loading="lazy"
+          />
+          Katy Perry
+        </div>
+
+        <div class="col-12 mt-5">
+
+          <label class="poppins" style="font-weight: bold;">Location:</label>
+          <label class="poppins">&nbsp&nbsp{{ post.location }}</label>
+
+        </div>
+
+        <div class="row col-12 mt-3">
+          <div class="col-12">
+            <label class="poppins" style="font-weight: bold;">Description:</label>
+          </div>
+
+          <div class="col-8">
+            <div class="mt-3" style="border: 1px solid #ccc; border-radius: 16px">
+              <p style="margin: 10px 20px; white-space: normal; word-wrap: break-word; word-break: break-all;">
+                {{ post.description }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center col-8 mt-5">
+          <div class="col-2" style="margin-bottom: auto; margin-top: auto">
+            <i class="bi bi-star"></i><span>&nbsp 103</span>
+          </div>
+          <div class="col-6">
+            <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF">
+              <i class="bi bi-star"></i>&nbsp Interested!
+            </button>
+
+
+          </div>
+        </div>
+
+      </div>
+
+      <script>
+
+      </script>
+    </div>
+{% endblock content %}
