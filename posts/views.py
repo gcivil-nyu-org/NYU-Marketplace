@@ -64,16 +64,19 @@ class postCreate(CreateView):
 
     def post(self, request, pk=None):
         form = PostModelForm(request.POST, request.FILES or None)
+        image = request.FILES.get('picture')
+        print(image)
 
         if not form.is_valid():
             ctx = {'form': form}
+            print("form ng")
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
-        post = form.save(commit=False)
+        #post = form.save(commit=False)
         #ad.owner = self.request.user
-        post.save()
-        form.save_m2m()
+        form.save()
+        #form.save_m2m()
         return redirect(self.success_url)
 
 

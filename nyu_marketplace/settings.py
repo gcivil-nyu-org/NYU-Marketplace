@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ds)0p+3azo^8fvi040ql&i30a(1dlv$tn1^(vr#)z2)s%o(p4z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
+DEBUG = 'True'
 
 
 # Application definition
@@ -128,3 +128,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #AUTH_USER_MODEL = 'posts.User'
 
 django_heroku.settings(locals())
+
+
+STATIC_URL = 'static/'
+
+MEDIA_URL = 'images/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
+
+MEDIA_ROOT = BASE_DIR / 'static/images'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Add custom user
+#AUTH_USER_MODEL = 'posts.User'
+
+AWS_QUERYSTRING_AUTH = False
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = 'AKIA6HGOC5EA66FDCP7A'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'nyu-marketplace-team1'

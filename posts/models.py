@@ -27,9 +27,11 @@ class Post(models.Model):
         ('textbook', "Textbook"),
         ('tech', "Tech"),
         ('sport', "Sport"),
+        ('furniture', "Furniture"),
+        ('other', "Other"),
     )
     category = models.CharField(max_length=10, choices=categories, default="Textbook")
-    price = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     location = models.CharField(
             max_length=50,
             validators=[MinLengthValidator(2, "Title must be greater than 2 characters")]
@@ -37,8 +39,8 @@ class Post(models.Model):
 
 
     # Picture
-    picture = models.BinaryField(null=True, editable=True)
-    content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')
+    picture = models.ImageField(null=True, editable=True)
+    #content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')
 
     # Shows up in the admin list
     def __str__(self):

@@ -9,10 +9,10 @@
          <small class="text-muted">{{ post.location }}</small>
        </div>
        <h2><a class="article-title" href="#">{{ post.option }}</a></h2>
+         {% if post.price %}
        <p class="article-content">{{ post.price }}</p>
-         {% if post.content_type %}
-        <img style="width:30%;margin-top: 50px; border:3px solid black;" src="{% url 'post-picture' post.id %}">
-        {% endif %}
+         {% endif %}
+         <img style="width:30%;margin-top: 50px; border:3px solid black;" src="{{ post.picture.url }}">
      </div>
    </article>
    {% endfor %}
