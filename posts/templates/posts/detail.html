@@ -5,10 +5,10 @@
   <div class="container  mt-5">
     {% csrf_token %}
     <div class="row">
-      <div class="container col-4 mt-10">
+      <div class="container col-4 mt-10 detail-img-div">
         <img id="frame"
-             src="https://static.wixstatic.com/media/2d0426_29351bd1608748f8b55f4e4382ca1fdb~mv2.jpg/v1/fit/w_1000%2Ch_1000%2Cal_c%2Cq_80/file.jpg"
-             class="img-fluid"
+             src="{{ post.picture.url }}"
+             class="detail-img"
              alt="images of item"
         />
         <!-- button onclick="clearImage()" class="btn btn-primary mt-3">Delete image</button-->
