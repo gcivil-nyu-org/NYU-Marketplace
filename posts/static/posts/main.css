@@ -50,4 +50,7 @@
     border-radius: 3px;
     margin-bottom: 20px;
   }
-  
+
+  #id_remember{
+    margin:5px;
+  }
