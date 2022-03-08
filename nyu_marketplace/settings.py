@@ -21,12 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ds)0p+3azo^8fvi040ql&i30a(1dlv$tn1^(vr#)z2)s%o(p4z'
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
 ALLOWED_HOSTS = []
-DEBUG = 'True'
+DEBUG = str(os.environ.get('DEBUG')) == '1'
 
 
 # Application definition
@@ -163,11 +164,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #Add custom user
 #AUTH_USER_MODEL = 'posts.User'
 
-AWS_QUERYSTRING_AUTH = False
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_ACCESS_KEY_ID = 'AKIA6HGOC5EA66FDCP7A'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'nyu-marketplace-team1'
+
+AWS_QUERYSTRING_AUTH = str(os.environ.get('AWS_QUERYSTRING_AUTH')) == '1'
+DEFAULT_FILE_STORAGE = os.environ.get('DEFAULT_FILE_STORAGE')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 
 SITE_ID = 1
 
@@ -187,5 +189,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 LOGIN_REDIRECT_URL = '/posts'
 LOGOUT_REDIRECT_URL = '/accounts/login'
+SIGNUP_REDIRECT_URL = '/posts'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = None

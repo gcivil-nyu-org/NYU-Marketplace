@@ -16,3 +16,4 @@ sqlparse==0.4.2
 urllib3==1.26.8
 whitenoise==6.0.0
 django-allauth
+django-dotenv
