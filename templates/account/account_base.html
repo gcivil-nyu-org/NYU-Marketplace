@@ -1,0 +1,12 @@
+{% extends "posts/base.html" %}
+{% block content %}
+        <div class="row">
+          <div class="col-6 mt-5">
+            <img src="https://nyu-marketplace-team1.s3.amazonaws.com/new-york-university.jpg" class="" alt="" width="500">
+          </div>
+          <div class="col-6">
+            {% block content2 %}{% endblock %}
+          </div>
+
+        </div>
+{% endblock %}
