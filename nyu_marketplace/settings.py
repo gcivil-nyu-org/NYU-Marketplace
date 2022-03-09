@@ -194,6 +194,10 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = 'NYU Marketplace '
 SOCIALACCOUNT_QUERY_EMAIL = 'ACCOUNT_EMAIL_REQUIRED'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = ['nyu.edu']
+# ACCOUNT_ADAPTER = 'nyu_marketplace.adapters.CustomAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'nyu_marketplace.adapters.CustomSocialAccountAdapter'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.gmail.com"
