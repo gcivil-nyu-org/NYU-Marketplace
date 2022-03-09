@@ -1,19 +1,108 @@
 {% extends "posts/base.html" %}
 {% load static %}
 {% block content %}
-{% for post in post_list %}
-<article class="media content-section">
-     <div class="media-body">
-       <div class="article-metadata">
-         <a class="mr-2" href="#">{{ post.name }}</a>
-         <small class="text-muted">{{ post.location }}</small>
-       </div>
-       <h2><a class="article-title" href="#">{{ post.option }}</a></h2>
-         {% if post.price %}
-       <p class="article-content">{{ post.price }}</p>
-         {% endif %}
-         <img style="width:30%;margin-top: 50px; border:3px solid black;" src="{{ post.picture.url }}">
-     </div>
-   </article>
-   {% endfor %}
+
+  <div class="row">
+    <div class="col-2" style="margin-top: 50px">
+      <!--nav class="filter">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="filter-link" href="#">Sort by</a>
+          </li>
+          <li class="nav-item">
+            <a class="filter-link" href="#">Price: Low -> High</a>
+          </li>
+          <li class="nav-item">
+            <a class="filter-link" href="#">Price: High -> Low</a>
+          </li>
+          <li class="nav-item">
+            <a class="filter-link" href="#">Recently Added</a>
+          </li>
+        </ul>
+      </nav-->
+    </div>
+    <div class="col-10" style="margin-top: 30px">
+      <div class="row">
+        <div class="col-12">
+          <!--nav class="navbar navbar-expand-sm" style="background: #FFFFFF;">
+                      <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="filter-link" href="#" style="padding-left: 50px; padding-right: 20px">Buy</a>
+            </li>
+                        <li class="nav-item">
+              <a class="filter-link" href="#" style="padding-right: 20px">Rent</a>
+            </li>
+                        <li class="nav-item">
+              <a class="filter-link" href="#" style="padding-right: 20px">Exchange</a>
+            </li>
+          </ul>
+          </nav-->
+
+        </div>
+        {% for post in post_list %}
+          <div class="col-4 mt-3" style="padding: 0px 50px 20px 50px;">
+            <a style="color: #000000" href="{% url 'detail' post.id %}">
+              <div class="col-12 home-img-div" style="border: 1px solid #dddddd; border-radius: 3px">
+                <img class="home-img" src="{{ post.picture.url }}">
+              </div>
+              <div class="row col-12 mt-3 justify-content-between">
+
+                <div class="col-8">
+                  <a style="color: #000000; text-decoration: none; font-weight: bolder; font-size: 16px"
+                     href="{% url 'detail' post.id %}">{{ post.name }}</a>
+                </div>
+                <div class="col-1">
+                  <i class="bi bi-star"></i>
+                </div>
+              </div>
+              <div class="row col-12 mt-2 justify-content-between">
+                {% if post.price %}
+                  <div class="col-9">
+                    <span class="poppins" style="font-size:20px; font-weight: bolder; color: #7e7c7c">$&nbsp{{ post.price }}</span>
+
+                  </div>
+                  <div class="col-2">
+                    {% if post.option == 'sell' %}
+                    <span class="poppins" style="font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbsp&nbspSell</span>
+                  {% elif post.option == 'rent' %}
+                    <span class="poppins"
+                          style="font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbspRent</span>
+                  {% endif %}</div>
+
+
+                {% else %}
+
+                  <span class="poppins" style="font-size:20px; font-weight: bolder; color: #57068c">Exchange</span>
+
+                {% endif %}
+              </div>
+
+
+                    <div class="col-12 row justify-content-between mt-2">
+                      <div class="col-6">
+                        <span>{{ post.created_at|date:'m/d/Y' }}</span>
+                      </div>
+              <div class="col-1">
+                            <img
+              src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+              class="rounded-circle"
+              weight="25"
+              height="25"
+              alt="Black and White Portrait of a Man"
+              loading="lazy"
+                />
+
+        </div>
+              </div>
+            </a>
+          </div>
+
+        {% endfor %}
+      </div>
+
+    </div>
+
+  </div>
+
+
 {% endblock %}
