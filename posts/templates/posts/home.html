@@ -4,97 +4,124 @@
 
   <div class="row">
     <div class="col-2" style="margin-top: 50px">
-      <!--nav class="filter">
+      <nav class="filter">
         <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="filter-link" href="#">Sort by</a>
+          <li class="filter-title">
+            <a class="filter-link" href="#"><i class="bi bi-sort-down"></i>&nbsp&nbspSort by</a>
           </li>
-          <li class="nav-item">
+          <li class="filter-item">
             <a class="filter-link" href="#">Price: Low -> High</a>
           </li>
-          <li class="nav-item">
+          <li class="filter-item">
             <a class="filter-link" href="#">Price: High -> Low</a>
           </li>
-          <li class="nav-item">
+          <li class="filter-item">
             <a class="filter-link" href="#">Recently Added</a>
           </li>
         </ul>
-      </nav-->
+      </nav>
+      <nav class="category">
+        <ul class="navbar-nav">
+          <li class="filter-title">
+            <a class="filter-link" href="#"><i class="bi bi-card-list"></i>&nbsp&nbspCategory</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" href="#">Textbook</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" href="#">Tech</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" href="#">Sport</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" href="#">Furniture</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" href="#">Other</a>
+          </li>
+        </ul>
+      </nav>
     </div>
-    <div class="col-10" style="margin-top: 30px">
+    <div class="col-10" style="margin-top: 16px">
       <div class="row">
         <div class="col-12">
-          <!--nav class="navbar navbar-expand-sm" style="background: #FFFFFF;">
-                      <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="filter-link" href="#" style="padding-left: 50px; padding-right: 20px">Buy</a>
-            </li>
-                        <li class="nav-item">
-              <a class="filter-link" href="#" style="padding-right: 20px">Rent</a>
-            </li>
-                        <li class="nav-item">
-              <a class="filter-link" href="#" style="padding-right: 20px">Exchange</a>
-            </li>
-          </ul>
-          </nav-->
+          <nav class="navbar navbar-expand-sm" style="background: #FFFFFF;">
+            <ul class="navbar-nav">
+              <li class="type-item">
+                <a class="filter-link" href="#" style="padding-left: 30px; padding-right: 20px">Buy</a>
+              </li>
+              <li class="type-item">
+                <a class="filter-link" href="#" style="padding-right: 20px">Rent</a>
+              </li>
+              <li class="type-item">
+                <a class="filter-link" href="#" style="padding-right: 20px">Exchange</a>
+              </li>
+            </ul>
+          </nav>
 
         </div>
         {% for post in post_list %}
-          <div class="col-4 mt-3" style="padding: 0px 50px 20px 50px;">
-            <a style="color: #000000" href="{% url 'detail' post.id %}">
-              <div class="col-12 home-img-div" style="border: 1px solid #dddddd; border-radius: 3px">
-                <img class="home-img" src="{{ post.picture.url }}">
-              </div>
-              <div class="row col-12 mt-3 justify-content-between">
+          <div class="col-4 mt-3" style="padding: 0px 30px 20px 30px;">
+            <div class="list-item">
+              <a style="color: #000000" href="{% url 'detail' post.id %}">
+                <div class="col-12 home-img-div" style="#border: 1px solid #dddddd; #border-radius: 3px">
+                  <img class="home-img" src="{{ post.picture.url }}">
+                </div>
+                <div class="row col-12 mt-3 justify-content-between">
 
-                <div class="col-8">
-                  <a style="color: #000000; text-decoration: none; font-weight: bolder; font-size: 16px"
-                     href="{% url 'detail' post.id %}">{{ post.name }}</a>
+                  <div class="col-11">
+                    <a class="title"
+                       style="margin-left:6px; color: #000000; text-decoration: none; font-weight: bolder; font-size: 18px"
+                       href="{% url 'detail' post.id %}">{{ post.name }}</a>
+                  </div>
+                  <div class="col-1">
+                    <i class="bi bi-star"></i>
+                  </div>
                 </div>
-                <div class="col-1">
-                  <i class="bi bi-star"></i>
+                <div class="row col-12 mt-2 justify-content-between">
+                  {% if post.price %}
+                    <div class="col-9">
+                    <span class="poppins"
+                          style="margin-left:6px; font-size:18px; font-weight: bolder; color: #4b4b4b">$&nbsp{{ post.price | cut:'.00' }}</span>
+
+                    </div>
+                    <div class="col-3">
+                      {% if post.option == 'sell' %}
+                        <span class="poppins"
+                              style="margin-left:18px; font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbsp&nbspSell</span>
+                      {% elif post.option == 'rent' %}
+                        <span class="poppins"
+                              style="margin-left:18px; font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbspRent</span>
+                      {% endif %}</div>
+
+
+                  {% else %}
+
+                    <span class="poppins" style="margin-left:6px; font-size:20px; font-weight: bolder; color: #57068c">Exchange</span>
+
+                  {% endif %}
                 </div>
-              </div>
-              <div class="row col-12 mt-2 justify-content-between">
-                {% if post.price %}
-                  <div class="col-9">
-                    <span class="poppins" style="font-size:20px; font-weight: bolder; color: #7e7c7c">$&nbsp{{ post.price }}</span>
+
+
+                <div class="col-12 row justify-content-between mt-2">
+                  <div class="col-6" style="margin-left:6px;">
+                    <span>{{ post.created_at|date:'m/d/Y' }}</span>
+                  </div>
+                  <div class="col-1" style="margin-right: 10px; margin-bottom: 5px">
+                    <img
+                        src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                        class="rounded-circle"
+                        weight="25"
+                        height="25"
+                        alt="Black and White Portrait of a Man"
+                        loading="lazy"
+                    />
 
                   </div>
-                  <div class="col-2">
-                    {% if post.option == 'sell' %}
-                    <span class="poppins" style="font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbsp&nbspSell</span>
-                  {% elif post.option == 'rent' %}
-                    <span class="poppins"
-                          style="font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbspRent</span>
-                  {% endif %}</div>
-
-
-                {% else %}
-
-                  <span class="poppins" style="font-size:20px; font-weight: bolder; color: #57068c">Exchange</span>
-
-                {% endif %}
-              </div>
-
-
-                    <div class="col-12 row justify-content-between mt-2">
-                      <div class="col-6">
-                        <span>{{ post.created_at|date:'m/d/Y' }}</span>
-                      </div>
-              <div class="col-1">
-                            <img
-              src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
-              class="rounded-circle"
-              weight="25"
-              height="25"
-              alt="Black and White Portrait of a Man"
-              loading="lazy"
-                />
-
-        </div>
-              </div>
-            </a>
+                </div>
+              </a>
+            </div>
           </div>
 
         {% endfor %}
