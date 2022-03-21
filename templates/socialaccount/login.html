@@ -1,7 +1,8 @@
-{% extends "socialaccount/base.html" %}
+{% extends "account/account_base.html" %}
 {% load i18n %}
 
-{% block content %}
+{% block content2 %}
+    <div style="margin-top: 50px">
 {% if process == "connect" %}
 <h1>{% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}</h1>
 
@@ -14,6 +15,7 @@
 
 <form method="post">
   {% csrf_token %}
-  <button type="submit">{% trans "Continue" %}</button>
+  <button type="submit" class="ui button secondary">{% trans "Continue" %}</button>
 </form>
+    </div>
 {% endblock %}
