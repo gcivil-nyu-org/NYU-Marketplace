@@ -205,3 +205,5 @@ EMAIL_HOST_USER = "nyumarketplace@gmail.com"
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
+
+django_heroku.settings(locals(), test_runner=False)
