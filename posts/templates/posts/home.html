@@ -10,13 +10,13 @@
             <a class="filter-link" href="#"><i class="bi bi-sort-down"></i>&nbsp&nbspSort by</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="#">Price: Low -> High</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('sort', 'pricedesc')">Price: Low -> High</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="#">Price: High -> Low</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('sort', 'priceasc')">Price: High -> Low</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="#">Recently Added</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('sort', 'time')">Recently Added</a>
           </li>
         </ul>
       </nav>
@@ -26,10 +26,10 @@
             <a class="filter-link" href="#"><i class="bi bi-card-list"></i>&nbsp&nbspCategory</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="#">Textbook</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'Textbook')" >Textbook</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="#">Tech</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'Tech')">Tech</a>
           </li>
           <li class="filter-item">
             <a class="filter-link" href="#">Sport</a>
@@ -49,13 +49,16 @@
           <nav class="navbar navbar-expand-sm" style="background: #FFFFFF;">
             <ul class="navbar-nav">
               <li class="type-item">
-                <a class="filter-link" href="#" style="padding-left: 30px; padding-right: 20px">Buy</a>
+                <a class="filter-link" href="javascript:void(0);" onclick="getItem('type', 'Buy')"
+                   style="padding-left: 30px; padding-right: 20px">Buy</a>
               </li>
               <li class="type-item">
-                <a class="filter-link" href="#" style="padding-right: 20px">Rent</a>
+                <a class="filter-link" href="javascript:void(0);" onclick="getItem('type', 'Rent')"
+                   style="padding-right: 20px">Rent</a>
               </li>
               <li class="type-item">
-                <a class="filter-link" href="#" style="padding-right: 20px">Exchange</a>
+                <a class="filter-link" href="javascript:void(0);" onclick="getItem('type', 'Exchange')"
+                   style="padding-right: 20px">Exchange</a>
               </li>
             </ul>
           </nav>
@@ -131,5 +134,41 @@
 
   </div>
 
+  <script>
+    function getItem(filter, value){
+        var url = window.location.href;
+        console.log(url);
+        var query = window.location.search.substring(1);
+        console.log(query);
+        if(query == ""){
+            window.location.href = url + "?" + filter + "=" + value;
+        }else{
+            var contain = false;
+            paras = query.split("&");
+            console.log(paras)
+            hrefUrl = url.replace(query, "");
+            console.log(hrefUrl)
+            for(var i = 0; i < paras.length; i++){
+                var pair = paras[i].split("=");
+                if(pair[0] == filter){
+                    pair[1] = value;
+                    contain = true;
+                }
+                para = pair[0] + "=" + pair[1];
+                if(i < paras.length - 1){
+                    para += "&"
+                }
+                hrefUrl += para;
+            }
+            console.log(contain);
+            if(contain == false){
+                para = "&" + filter + "=" + value;
+                hrefUrl += para;
+            }
+            console.log(hrefUrl);
+            window.location.href = hrefUrl;
+        }
+    }
+  </script>
 
 {% endblock %}
