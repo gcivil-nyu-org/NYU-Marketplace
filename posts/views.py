@@ -95,11 +95,11 @@ class index(LoginRequiredMixin, View):
         if option != 'all':
             post_list =post_list.filter(option = option)
         if sort == 'pricedesc':
-            post_list.order_by('price').desc()
+            post_list = post_list.order_by('price')
         elif sort == 'priceasc':
-            post_list.order_by('price').asc()
+            post_list = post_list.order_by('-price')
         else:
-            post_list.order_by('-updated_at')
+            post_list = post_list.order_by('-updated_at')
 
         context = {
             'post_list': post_list
