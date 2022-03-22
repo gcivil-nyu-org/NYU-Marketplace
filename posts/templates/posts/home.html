@@ -10,10 +10,10 @@
             <a class="filter-link" href="#"><i class="bi bi-sort-down"></i>&nbsp&nbspSort by</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="javascript:void(0);" onclick="getItem('sort', 'pricedesc')">Price: Low -> High</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('sort', 'priceasc')">Price: Low -> High</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="javascript:void(0);" onclick="getItem('sort', 'priceasc')">Price: High -> Low</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('sort', 'pricedesc')">Price: High -> Low</a>
           </li>
           <li class="filter-item">
             <a class="filter-link" href="javascript:void(0);" onclick="getItem('sort', 'time')">Recently Added</a>
@@ -26,19 +26,22 @@
             <a class="filter-link" href="#"><i class="bi bi-card-list"></i>&nbsp&nbspCategory</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'Textbook')" >Textbook</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'all')" >Browse All</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'Tech')">Tech</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'textbook')" >Textbook</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="#">Sport</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'tech')">Tech</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="#">Furniture</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'sport')">Sport</a>
           </li>
           <li class="filter-item">
-            <a class="filter-link" href="#">Other</a>
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'furniture')">Furniture</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" href="javascript:void(0);" onclick="getItem('category', 'other')">Other</a>
           </li>
         </ul>
       </nav>
@@ -49,15 +52,19 @@
           <nav class="navbar navbar-expand-sm" style="background: #FFFFFF;">
             <ul class="navbar-nav">
               <li class="type-item">
-                <a class="filter-link" href="javascript:void(0);" onclick="getItem('type', 'Buy')"
-                   style="padding-left: 30px; padding-right: 20px">Buy</a>
+                <a class="filter-link" href="javascript:void(0);" onclick="getItem('option', 'all')"
+                   style="padding-left: 30px; padding-right: 20px">All</a>
               </li>
               <li class="type-item">
-                <a class="filter-link" href="javascript:void(0);" onclick="getItem('type', 'Rent')"
+                <a class="filter-link" href="javascript:void(0);" onclick="getItem('option', 'sell')"
+                   style="padding-right: 20px">Buy</a>
+              </li>
+              <li class="type-item">
+                <a class="filter-link" href="javascript:void(0);" onclick="getItem('option', 'rent')"
                    style="padding-right: 20px">Rent</a>
               </li>
               <li class="type-item">
-                <a class="filter-link" href="javascript:void(0);" onclick="getItem('type', 'Exchange')"
+                <a class="filter-link" href="javascript:void(0);" onclick="getItem('option', 'exchange')"
                    style="padding-right: 20px">Exchange</a>
               </li>
             </ul>

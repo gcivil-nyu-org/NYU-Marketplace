@@ -1,12 +1,9 @@
 from django import forms
-from django.core.files.uploadedfile import InMemoryUploadedFile
-
 from .models import Post
-from .humanize import naturalsize
 
 
 class PostModelForm(forms.ModelForm):
-    #postal_code = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect())
+    # postal_code = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect())
     # max_upload_limit = 2 * 1024 * 1024
     # max_upload_limit_text = naturalsize(max_upload_limit)
     #
@@ -47,27 +44,53 @@ class PostModelForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('name', 'option', 'price', 'category', 'description', 'picture', 'location')
+        fields = (
+            "name",
+            "option",
+            "price",
+            "category",
+            "description",
+            "picture",
+            "location",
+        )
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control',
-                                            'type': "itemName",
-                                            'id': "inputItemName",
-                                            'placeholder': "Please Enter Item Name"}),
-            'option': forms.RadioSelect(attrs={'class': 'form-check-inline',
-                                          'id': 'inputOption'}),
-            'description': forms.Textarea(attrs={'class': 'form-control',
-                                            'type': "itemName",
-                                            'id': "inputDescription",
-                                            'rows' : 3}),
-            'price': forms.TextInput(attrs={'class': 'form-control',
-                                            'type': "itemPrice",
-                                            'id': "inputItemPrice",
-                                            'placeholder': "Please Enter Item Price",
-                                            'onkeyup': "value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"}),
-            'category': forms.Select(attrs={'class': 'form-select col-sm-9',
-                                            'id': 'inputCategory'}),
-            'location': forms.TextInput(attrs={'class': 'form-control',
-                                           'type': "itemLocation",
-                                           'id': "inputItemLocation",
-                                           'placeholder': "Please Enter Item Location"}),
+            "name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "itemName",
+                    "id": "inputItemName",
+                    "placeholder": "Please Enter Item Name",
+                }
+            ),
+            "option": forms.RadioSelect(
+                attrs={"class": "form-check-inline", "id": "inputOption"}
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "type": "itemName",
+                    "id": "inputDescription",
+                    "rows": 3,
+                }
+            ),
+            "price": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "itemPrice",
+                    "id": "inputItemPrice",
+                    "placeholder": "Please Enter Item Price",
+                    "onkeyup": r"value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')",
+                }
+            ),
+            "category": forms.Select(
+                attrs={"class": "form-select col-sm-9", "id": "inputCategory"}
+            ),
+            "location": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "itemLocation",
+                    "id": "inputItemLocation",
+                    "placeholder": "Please Enter Item Location",
+                }
+            ),
         }
