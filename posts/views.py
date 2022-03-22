@@ -90,13 +90,13 @@ class index(LoginRequiredMixin, View):
         option = request.GET.get('option', default='all')
         sort = request.GET.get('sort', default='all')
         post_list = Post.objects.all()
-        if(category != 'all'):
+        if category != 'all':
             post_list = Post.objects.filter(category = category)
-        if(option != 'all'):
+        if option != 'all':
             post_list =post_list.filter(option = option)
-        if(sort == 'pricedesc'):
+        if sort == 'pricedesc':
             post_list.order_by('price').desc()
-        elif(sort == 'priceasc'):
+        elif sort == 'priceasc':
             post_list.order_by('price').asc()
         else:
             post_list.order_by('-updated_at')
