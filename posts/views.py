@@ -6,26 +6,26 @@ from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-posts = [
-    {
-        "author": "Shravani",
-        "college": "New York University",
-        "item_type": "Sell",
-        "cost": "$24",
-    },
-    {
-        "author": "Tanvi",
-        "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "$10",
-    },
-    {
-        "author": "Tanvi",
-        "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "$10",
-    },
-]
+# posts = [
+#     {
+#         "author": "Shravani",
+#         "college": "New York University",
+#         "item_type": "Sell",
+#         "cost": "$24",
+#     },
+#     {
+#         "author": "Tanvi",
+#         "college": "New York University",
+#         "item_type": "Exchange",
+#         "cost": "$10",
+#     },
+#     {
+#         "author": "Tanvi",
+#         "college": "New York University",
+#         "item_type": "Exchange",
+#         "cost": "$10",
+#     },
+# ]
 
 
 def stream_file(request, pk):
