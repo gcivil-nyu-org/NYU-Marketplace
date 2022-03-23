@@ -35,6 +35,7 @@ DEBUG = str(os.environ.get("DEBUG")) == "1"
 INSTALLED_APPS = [
     "django.contrib.sites",
     "allauth",
+    "users.apps.UsersConfig",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
