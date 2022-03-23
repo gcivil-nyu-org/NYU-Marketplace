@@ -15,14 +15,50 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('profile_pic', models.ImageField(blank=True, null=True, upload_to='')),
-                ('gender', models.CharField(choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], default='', max_length=10)),
-                ('school', models.CharField(choices=[('tandon', 'Tandon School of Engineering'), ('tish', 'Tisch School of Arts'), ('stern', 'Stern School of Business')], default='', max_length=10)),
-                ('address', models.CharField(default='', max_length=50)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("profile_pic", models.ImageField(blank=True, null=True, upload_to="")),
+                (
+                    "gender",
+                    models.CharField(
+                        choices=[
+                            ("male", "Male"),
+                            ("female", "Female"),
+                            ("other", "Other"),
+                        ],
+                        default="",
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "school",
+                    models.CharField(
+                        choices=[
+                            ("tandon", "Tandon School of Engineering"),
+                            ("tish", "Tisch School of Arts"),
+                            ("stern", "Stern School of Business"),
+                        ],
+                        default="",
+                        max_length=10,
+                    ),
+                ),
+                ("address", models.CharField(default="", max_length=50)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
