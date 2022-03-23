@@ -14,6 +14,7 @@ from pathlib import Path
 import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -144,8 +145,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Add custom user
 # AUTH_USER_MODEL = 'posts.User'
 
-django_heroku.settings(locals())
-
 
 STATIC_URL = "static/"
 
@@ -205,3 +204,5 @@ EMAIL_HOST_USER = "nyumarketplace@gmail.com"
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
+
+django_heroku.settings(locals(), test_runner=False)
