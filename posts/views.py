@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+
+# from django.http import HttpResponse
 from .models import Post
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
@@ -13,28 +14,34 @@ posts = [
         "item_type": "Sell",
         "cost": "$24",
     },
+]
+
+posts2 = [
     {
-        "author": "Tanvi",
+        "author": "Shravani",
         "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "$10",
+        "item_type": "exchange",
+        "cost": "$24",
     },
+]
+
+posts3 = [
     {
-        "author": "Tanvi",
+        "author": "Shravani",
         "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "$10",
+        "item_type": "rent",
+        "cost": "$24",
     },
 ]
 
 
-def stream_file(request, pk):
-    post = get_object_or_404(Post, id=pk)
-    response = HttpResponse()
-    response["Content-Type"] = post.content_type
-    response["Content-Length"] = len(post.picture)
-    response.write(post.picture)
-    return response
+# def stream_file(request, pk):
+#     post = get_object_or_404(Post, id=pk)
+#     response = HttpResponse()
+#     response["Content-Type"] = post.content_type
+#     response["Content-Length"] = len(post.picture)
+#     response.write(post.picture)
+#     return response
 
 
 # def post_create(request):
@@ -62,12 +69,12 @@ class postCreate(LoginRequiredMixin, CreateView):
 
     def post(self, request, pk=None):
         form = PostModelForm(request.POST, request.FILES or None)
-        image = request.FILES.get("picture")
-        print(image)
+        # image = request.FILES.get("picture")
+        # print(image)
 
         if not form.is_valid():
             ctx = {"form": form}
-            print("form ng")
+            # print("form ng")
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
