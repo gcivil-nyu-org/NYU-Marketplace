@@ -14,35 +14,23 @@ posts = [
         "item_type": "Sell",
         "cost": "$24",
     },
+]
+
+posts2 = [
     {
-        "author": "Tanvi",
+        "author": "Shravani",
         "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "$10",
+        "item_type": "exchange",
+        "cost": "$24",
     },
+]
+
+posts3 = [
     {
-        "author": "Tanvi",
+        "author": "Shravani",
         "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "$10",
-    },
-    {
-        "author": "Tanvi",
-        "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "710",
-    },
-    {
-        "author": "Tanvi8",
-        "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "$10",
-    },
-    {
-        "author": "Tanvi8",
-        "college": "New York University Tandon",
-        "item_type": "Exchange",
-        "cost": "$10",
+        "item_type": "rent",
+        "cost": "$24",
     },
 ]
 
@@ -81,12 +69,12 @@ class postCreate(LoginRequiredMixin, CreateView):
 
     def post(self, request, pk=None):
         form = PostModelForm(request.POST, request.FILES or None)
-        image = request.FILES.get("picture")
-        print(image)
+        # image = request.FILES.get("picture")
+        # print(image)
 
         if not form.is_valid():
             ctx = {"form": form}
-            print("form ng")
+            # print("form ng")
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
