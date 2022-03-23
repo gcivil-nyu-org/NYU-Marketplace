@@ -144,10 +144,9 @@
   <script>
     var query = window.location.search.substring(1);
     paras = query.split("&");
+    optionPara = false;
     for(var i = 0; i < paras.length; i++){
         var pair = paras[i].split("=");
-        console.log(pair[0]);
-        console.log(pair[1]);
         if(pair[0] == "sort" || pair[0] == "category"){
             if(pair[1] == "all"){
                 document.getElementById("allCategory").className = "filter-link-active";
@@ -156,6 +155,7 @@
             }
         }
         if(pair[0] == "option"){
+            optionPara = true;
             if(pair[1] == "all"){
                 document.getElementById("allOption").className = "type-link-active";
             }else{
@@ -163,6 +163,9 @@
             }
         }
 
+    }
+    if(optionPara == false){
+        document.getElementById("allOption").className = "type-link-active";
     }
     function getItem(filter, value){
         var url = window.location.href;
