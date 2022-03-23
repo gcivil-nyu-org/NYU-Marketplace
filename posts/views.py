@@ -1,40 +1,58 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+# from django.http import HttpResponse
 from .models import Post
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-# posts = [
-#     {
-#         "author": "Shravani",
-#         "college": "New York University",
-#         "item_type": "Sell",
-#         "cost": "$24",
-#     },
-#     {
-#         "author": "Tanvi",
-#         "college": "New York University",
-#         "item_type": "Exchange",
-#         "cost": "$10",
-#     },
-#     {
-#         "author": "Tanvi",
-#         "college": "New York University",
-#         "item_type": "Exchange",
-#         "cost": "$10",
-#     },
-# ]
+posts = [
+    {
+        "author": "Shravani",
+        "college": "New York University",
+        "item_type": "Sell",
+        "cost": "$24",
+    },
+    {
+        "author": "Tanvi",
+        "college": "New York University",
+        "item_type": "Exchange",
+        "cost": "$10",
+    },
+    {
+        "author": "Tanvi",
+        "college": "New York University",
+        "item_type": "Exchange",
+        "cost": "$10",
+    },
+    {
+        "author": "Tanvi",
+        "college": "New York University",
+        "item_type": "Exchange",
+        "cost": "710",
+    },
+    {
+        "author": "Tanvi8",
+        "college": "New York University",
+        "item_type": "Exchange",
+        "cost": "$10",
+    },
+    {
+        "author": "Tanvi8",
+        "college": "New York University Tandon",
+        "item_type": "Exchange",
+        "cost": "$10",
+    },
+]
 
 
-def stream_file(request, pk):
-    post = get_object_or_404(Post, id=pk)
-    response = HttpResponse()
-    response["Content-Type"] = post.content_type
-    response["Content-Length"] = len(post.picture)
-    response.write(post.picture)
-    return response
+# def stream_file(request, pk):
+#     post = get_object_or_404(Post, id=pk)
+#     response = HttpResponse()
+#     response["Content-Type"] = post.content_type
+#     response["Content-Length"] = len(post.picture)
+#     response.write(post.picture)
+#     return response
 
 
 # def post_create(request):
