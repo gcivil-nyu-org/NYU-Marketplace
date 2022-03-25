@@ -1,13 +1,21 @@
-# from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-#
-#
-# class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
-#     def is_open_for_signup(self, request, sociallogin):
-#         u = sociallogin.user
-#         print(u.email)
-#         # Optionally, set as staff now as well.
-#         # This is useful if you are using this for the Django Admin login.
-#         # Be careful with the staff setting, as some providers don't verify
-#         # email address, so that could be considered a security flaw.
-#         # u.is_staff = u.email.split('@')[1] == "customdomain.com"
-#         return u.email.split("@")[1] == "nyu.edu"
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from allauth.account.adapter import DefaultAccountAdapter
+from django.forms import ValidationError
+from django.contrib.auth.models import User
+
+
+class RestrictEmailAdapter(DefaultAccountAdapter):
+    def clean_email(self, email):
+        domain = email.split("@")[1]
+        emails = User.objects.values_list('email', flat=True)
+        if domain != "nyu.edu":
+            raise ValidationError('You are not using NYU email account.')
+        if email in emails:
+            raise ValidationError('A user is already registered with this e-mail address.')
+        return email
+
+
+class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
+    def is_open_for_signup(self, request, sociallogin):
+        u = sociallogin.user
+        return u.email.split("@")[1] == "nyu.edu"

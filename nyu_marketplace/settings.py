@@ -194,8 +194,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "NYU Marketplace "
 SOCIALACCOUNT_QUERY_EMAIL = "ACCOUNT_EMAIL_REQUIRED"
-# ACCOUNT_ADAPTER = 'nyu_marketplace.adapters.RestrictEmailAdapter'
-# SOCIALACCOUNT_ADAPTER = 'nyu_marketplace.adapters.CustomSocialAccountAdapter'
+ACCOUNT_ADAPTER = 'nyu_marketplace.adapters.RestrictEmailAdapter'
+SOCIALACCOUNT_ADAPTER = 'nyu_marketplace.adapters.CustomSocialAccountAdapter'
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
