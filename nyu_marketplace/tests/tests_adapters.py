@@ -4,6 +4,8 @@ from allauth.utils import get_user_model
 from allauth.account.models import EmailAddress
 from django.urls import reverse
 from django.core import mail
+from allauth.account.adapter import get_adapter
+from django.forms import ValidationError
 
 
 class AccountTests(TestCase):
@@ -34,3 +36,6 @@ class AccountTests(TestCase):
         )
         self.assertEqual(len(mail.outbox), 1)
         assert mail.outbox[0].to == ["john@example.com"]
+
+    def test_email_validator(self):
+        self.assertRaises(ValidationError, lambda: get_adapter().clean_email("def@gmail.com"))
