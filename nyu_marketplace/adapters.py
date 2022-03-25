@@ -19,5 +19,4 @@ class RestrictEmailAdapter(DefaultAccountAdapter):
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def is_open_for_signup(self, request, sociallogin):
-        u = sociallogin.user
-        return u.email.split("@")[1] == "nyu.edu"
+        return sociallogin.user.email.split("@")[1] == "nyu.edu"

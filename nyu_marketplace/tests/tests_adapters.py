@@ -56,3 +56,4 @@ class AccountTests(TestCase):
         self.assertRaises(
             ValidationError, lambda: get_adapter().clean_email("def@gmail.com")
         )
+        self.assertEquals(get_adapter().clean_email("def@nyu.edu"), "def@nyu.edu")
