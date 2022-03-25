@@ -37,7 +37,22 @@ class AccountTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         assert mail.outbox[0].to == ["john@example.com"]
 
+    def _create_user(self, username="john", password="doe", **kwargs):
+        user = get_user_model().objects.create(
+            username=username, email="abc@nyu.edu", is_active=True, **kwargs
+        )
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
+        user.save()
+        return user
+
     def test_email_validator(self):
+        self._create_user()
+        self.assertRaises(
+            ValidationError, lambda: get_adapter().clean_email("abc@nyu.edu")
+        )
         self.assertRaises(
             ValidationError, lambda: get_adapter().clean_email("def@gmail.com")
         )
