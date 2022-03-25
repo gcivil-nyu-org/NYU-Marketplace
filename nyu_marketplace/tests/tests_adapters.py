@@ -38,4 +38,6 @@ class AccountTests(TestCase):
         assert mail.outbox[0].to == ["john@example.com"]
 
     def test_email_validator(self):
-        self.assertRaises(ValidationError, lambda: get_adapter().clean_email("def@gmail.com"))
+        self.assertRaises(
+            ValidationError, lambda: get_adapter().clean_email("def@gmail.com")
+        )
