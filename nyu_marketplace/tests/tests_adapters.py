@@ -1,13 +1,10 @@
 from allauth.tests import TestCase
 from django.test.utils import override_settings
 from allauth.utils import get_user_model
-from allauth.account.models import (
-    EmailAddress,
-    EmailConfirmation,
-    EmailConfirmationHMAC,
-)
+from allauth.account.models import EmailAddress
 from django.urls import reverse
-from django.core import mail, validators
+from django.core import mail
+
 
 class AccountTests(TestCase):
     @override_settings(
