@@ -132,6 +132,15 @@ a.article-title:hover {
     margin-bottom: 12px;
     font-size: 16px;
 }
+.filter-link-active{
+    color: #1890ff;
+}
 .type-item{
     font-size: 20px;
+}
+.type-link{
+    color: #000000;
+}
+.type-link-active{
+    color: #1890ff;
 }

@@ -3,6 +3,8 @@ from .forms import ProfileForm
 from .models import Profile
 
 # Create your views here.
+# def userTest(request):
+#    return HttpResponse("Hello, world. You're at the polls index.")
 
 
 def profile(request):
