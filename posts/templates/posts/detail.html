@@ -80,7 +80,7 @@
             <i class="bi bi-star"></i><span>&nbsp 103</span>
           </div>
           
-          <form method="POST" action="{% url 'tasks:detail' post.id %}" method="POST">
+          <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
             {% csrf_token %}
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="interested">
@@ -88,7 +88,7 @@
               </button>
             </div>
             <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete">
+              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
                 <i class="bi"></i>&nbsp DELETE
               </button>
             </div>
