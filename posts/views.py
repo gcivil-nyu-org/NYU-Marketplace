@@ -1,6 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+<<<<<<< HEAD
 from django.http import HttpResponse, HttpResponseRedirect
+=======
+
+# from django.http import HttpResponse
+>>>>>>> develop
 from .models import Post
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
@@ -15,28 +20,34 @@ posts = [
         "item_type": "Sell",
         "cost": "$24",
     },
+]
+
+posts2 = [
     {
-        "author": "Tanvi",
+        "author": "Shravani",
         "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "$10",
+        "item_type": "exchange",
+        "cost": "$24",
     },
+]
+
+posts3 = [
     {
-        "author": "Tanvi",
+        "author": "Shravani",
         "college": "New York University",
-        "item_type": "Exchange",
-        "cost": "$10",
+        "item_type": "rent",
+        "cost": "$24",
     },
 ]
 
 
-def stream_file(request, pk):
-    post = get_object_or_404(Post, id=pk)
-    response = HttpResponse()
-    response["Content-Type"] = post.content_type
-    response["Content-Length"] = len(post.picture)
-    response.write(post.picture)
-    return response
+# def stream_file(request, pk):
+#     post = get_object_or_404(Post, id=pk)
+#     response = HttpResponse()
+#     response["Content-Type"] = post.content_type
+#     response["Content-Length"] = len(post.picture)
+#     response.write(post.picture)
+#     return response
 
 
 # def post_create(request):
@@ -74,17 +85,19 @@ class postCreate(LoginRequiredMixin, CreateView):
         else:
             post = Post()
         form = PostModelForm(request.POST, request.FILES or None, instance=post)
-        image = request.FILES.get("picture")
-        print(image)
+        # image = request.FILES.get("picture")
+        # print(image)
 
         if not form.is_valid():
             ctx = {"form": form}
-            print("form ng")
+            # print("form ng")
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
-        # post = form.save(commit=False)
+        post = form.save(commit=False)
+        post.user = request.user
         # ad.owner = self.request.user
+
         form.save()
         # form.save_m2m()
         return redirect(self.success_url)
@@ -124,6 +137,7 @@ def profile(request):
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
+<<<<<<< HEAD
 
     if request.method == "POST":
         if 'interested' in request.POST:
@@ -134,6 +148,22 @@ def detail(request, post_id):
         elif 'edit' in request.POST:
             return redirect('posts:post-edit', post_id = post_id)
 
+=======
+    # try:
+    #     selected_choice = question.choice_set.get(pk=request.POST['choice'])
+    # except (KeyError, Choice.DoesNotExist):
+    #     # Redisplay the question voting form.
+    #     return render(request, 'polls/detail.html', {
+    #         'question': question,
+    #         'error_message': "You didn't select a choice.",
+    #     })
+    # else:
+    #     #selected_choice.votes += 1
+    #     #selected_choice.save()
+    #     # Always return an HttpResponseRedirect after successfully dealing
+    #     # with POST data. This prevents data from being posted twice if a
+    #     # user hits the Back button.
+>>>>>>> develop
     context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)
     

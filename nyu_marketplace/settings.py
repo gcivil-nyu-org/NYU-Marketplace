@@ -14,6 +14,7 @@ from pathlib import Path
 import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -35,6 +36,7 @@ DEBUG = str(os.environ.get("DEBUG")) == "1"
 INSTALLED_APPS = [
     "django.contrib.sites",
     "allauth",
+    "users.apps.UsersConfig",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
@@ -144,8 +146,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Add custom user
 # AUTH_USER_MODEL = 'posts.User'
 
-django_heroku.settings(locals())
-
 
 STATIC_URL = "static/"
 
@@ -195,8 +195,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "NYU Marketplace "
 SOCIALACCOUNT_QUERY_EMAIL = "ACCOUNT_EMAIL_REQUIRED"
-# ACCOUNT_ADAPTER = 'nyu_marketplace.adapters.RestrictEmailAdapter'
-# SOCIALACCOUNT_ADAPTER = 'nyu_marketplace.adapters.CustomSocialAccountAdapter'
+ACCOUNT_ADAPTER = "nyu_marketplace.adapters.RestrictEmailAdapter"
+SOCIALACCOUNT_ADAPTER = "nyu_marketplace.adapters.CustomSocialAccountAdapter"
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -205,3 +205,5 @@ EMAIL_HOST_USER = "nyumarketplace@gmail.com"
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
+
+django_heroku.settings(locals(), test_runner=False)

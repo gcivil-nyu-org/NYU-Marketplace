@@ -43,7 +43,7 @@
       <!-- Collapsible wrapper -->
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <!-- Navbar brand -->
-        <a class="navbar-brand mt-2 mt-lg-0" href="#">
+        <a class="navbar-brand mt-2 mt-lg-0" href="{% url 'home' %}">
            
             <img src= "https://smartdesignworldwide.com/wp-content/uploads/2018/05/nyu-logo.jpg"  width = 100  loading = "lazy"/>
         </a>
@@ -127,10 +127,10 @@
             aria-labelledby="navbarDropdownMenuAvatar"
           >
             <li>
-              <a class="dropdown-item" href="#">My profile</a>
+              <a class="dropdown-item" href="{% url 'home' %}">My profile</a>
             </li>
             <li>
-              <a class="dropdown-item" href="#">Settings</a>
+              <a class="dropdown-item" href="{% url 'home' %}">Settings</a>
             </li>
             <li>
               <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
