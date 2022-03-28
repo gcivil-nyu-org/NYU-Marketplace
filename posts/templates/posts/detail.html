@@ -79,7 +79,6 @@
           <div class="col-2" style="margin-bottom: auto; margin-top: auto">
             <i class="bi bi-star"></i><span>&nbsp 103</span>
           </div>
-          
           <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
             {% csrf_token %}
             <div class="col-6">
@@ -96,7 +95,7 @@
           </br>
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF" name="edit">
-                <i class="bi"></i>&nbsp EDIt
+                <i class="bi"></i>&nbsp EDIT
               </button>
             </div>
           </form>

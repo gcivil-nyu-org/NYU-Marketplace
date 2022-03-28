@@ -8,9 +8,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 
 
-#todo add tasks:index and reverse everywhere.
-#todo why redirect instead of httpredirect
-#todo delete comments
 posts = [
     {
         "author": "Shravani",
@@ -63,11 +60,12 @@ class postCreate(LoginRequiredMixin, CreateView):
     def get(self, request, pk=None, post_id = None):
         
         if post_id:
+            #todo add condition on edit/post_id
             post = get_object_or_404(Post, pk=post_id)
             form = PostModelForm(instance=post)
         else:
             form = PostModelForm()
-        ctx = {"form": form}
+        ctx = {"form": form, "post_id": post_id}
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk=None, post_id = None):
@@ -125,21 +123,6 @@ def profile(request):
 
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
-    
-    # try:
-    #     selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    # except (KeyError, Choice.DoesNotExist):
-    #     # Redisplay the question voting form.
-    #     return render(request, 'polls/detail.html', {
-    #         'question': question,
-    #         'error_message': "You didn't select a choice.",
-    #     })
-    # else:
-    #     #selected_choice.votes += 1
-    #     #selected_choice.save()
-    #     # Always return an HttpResponseRedirect after successfully dealing
-    #     # with POST data. This prevents data from being posted twice if a
-    #     # user hits the Back button.
     post = get_object_or_404(Post, pk=post_id)
 
     if request.method == "POST":
@@ -147,9 +130,10 @@ def detail(request, post_id):
             pass
         elif 'delete' in request.POST:
             post.delete()
-            return HttpResponseRedirect(reverse('posts:home'))
+            return redirect('posts:home')
         elif 'edit' in request.POST:
             return redirect('posts:post-edit', post_id = post_id)
-    
-    context = {"post": post}
+
+    context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)
+    
