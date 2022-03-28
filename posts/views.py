@@ -137,7 +137,6 @@ def profile(request):
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-<<<<<<< HEAD
 
     if request.method == "POST":
         if 'interested' in request.POST:
@@ -147,23 +146,7 @@ def detail(request, post_id):
             return redirect('posts:home')
         elif 'edit' in request.POST:
             return redirect('posts:post-edit', post_id = post_id)
-
-=======
-    # try:
-    #     selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    # except (KeyError, Choice.DoesNotExist):
-    #     # Redisplay the question voting form.
-    #     return render(request, 'polls/detail.html', {
-    #         'question': question,
-    #         'error_message': "You didn't select a choice.",
-    #     })
-    # else:
-    #     #selected_choice.votes += 1
-    #     #selected_choice.save()
-    #     # Always return an HttpResponseRedirect after successfully dealing
-    #     # with POST data. This prevents data from being posted twice if a
-    #     # user hits the Back button.
->>>>>>> develop
+            
     context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)
     
