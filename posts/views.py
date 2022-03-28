@@ -1,11 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Post
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 
+
+#todo add tasks:index and reverse everywhere.
+#todo why redirect instead of httpredirect
+#todo delete comments
 posts = [
     {
         "author": "Shravani",
@@ -111,7 +116,7 @@ def profile(request):
 
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+    
     # try:
     #     selected_choice = question.choice_set.get(pk=request.POST['choice'])
     # except (KeyError, Choice.DoesNotExist):
@@ -126,14 +131,14 @@ def detail(request, post_id):
     #     # Always return an HttpResponseRedirect after successfully dealing
     #     # with POST data. This prevents data from being posted twice if a
     #     # user hits the Back button.
+    if request.method == "POST":
+        if 'interested' in request.POST:
+            pass
+        elif 'delete' in request.POST:
+            Post.objects.filter(pk=post_id).delete()
+            return HttpResponseRedirect(reverse('posts:home'))
+        elif 'edit' in request.POST:
+            pass
+    post = get_object_or_404(Post, pk=post_id)
     context = {"post": post}
     return render(request, "posts/detail.html", context)
-
-
-@login_required(login_url="/accounts/login/")
-def delete(request, post_id):
-    try:
-        Post.objects.filter(pk=post_id).delete()
-    except:
-        pass
-    return render(request, "posts/delete.html")
