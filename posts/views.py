@@ -1,11 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-<<<<<<< HEAD
-from django.http import HttpResponse, HttpResponseRedirect
-=======
-
-# from django.http import HttpResponse
->>>>>>> develop
 from .models import Post
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
@@ -146,7 +140,7 @@ def detail(request, post_id):
             return redirect('posts:home')
         elif 'edit' in request.POST:
             return redirect('posts:post-edit', post_id = post_id)
-            
+
     context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)
     
