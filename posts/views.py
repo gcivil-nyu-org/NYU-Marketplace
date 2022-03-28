@@ -135,5 +135,5 @@ def detail(request, post_id):
     #     # Always return an HttpResponseRedirect after successfully dealing
     #     # with POST data. This prevents data from being posted twice if a
     #     # user hits the Back button.
-    context = {"post": post}
+    context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)
