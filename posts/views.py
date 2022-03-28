@@ -128,3 +128,12 @@ def detail(request, post_id):
     #     # user hits the Back button.
     context = {"post": post}
     return render(request, "posts/detail.html", context)
+
+
+@login_required(login_url="/accounts/login/")
+def delete(request, post_id):
+    try:
+        Post.objects.filter(pk=post_id).delete()
+    except:
+        pass
+    return render(request, "posts/delete.html")

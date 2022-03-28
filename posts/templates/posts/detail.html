@@ -83,15 +83,23 @@
             <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF">
               <i class="bi bi-star"></i>&nbsp Interested!
             </button>
+            
 
 
           </div>
+          <form method="POST" action="{% url 'delete' post.id %}">
+            {% csrf_token %}
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF">
+                <i class="bi"></i>&nbsp DELETE
+              </button>
+            </div>
+          </form>
         </div>
 
       </div>
 
       <script>
-
       </script>
     </div>
 {% endblock content %}
