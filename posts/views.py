@@ -78,8 +78,10 @@ class postCreate(LoginRequiredMixin, CreateView):
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
-        # post = form.save(commit=False)
+        post = form.save(commit=False)
+        post.user = request.user
         # ad.owner = self.request.user
+
         form.save()
         # form.save_m2m()
         return redirect(self.success_url)
