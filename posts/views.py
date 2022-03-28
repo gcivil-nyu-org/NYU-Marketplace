@@ -60,13 +60,22 @@ class postCreate(LoginRequiredMixin, CreateView):
     template_name = "posts/createpost.html"
     login_url = "/accounts/login"
 
-    def get(self, request, pk=None):
-        form = PostModelForm()
+    def get(self, request, pk=None, post_id = None):
+        
+        if post_id:
+            post = get_object_or_404(Post, pk=post_id)
+            form = PostModelForm(instance=post)
+        else:
+            form = PostModelForm()
         ctx = {"form": form}
         return render(request, self.template_name, ctx)
 
-    def post(self, request, pk=None):
-        form = PostModelForm(request.POST, request.FILES or None)
+    def post(self, request, pk=None, post_id = None):
+        if post_id:
+            post = get_object_or_404(Post, pk=post_id)
+        else:
+            post = Post()
+        form = PostModelForm(request.POST, request.FILES or None, instance=post)
         image = request.FILES.get("picture")
         print(image)
 
@@ -131,14 +140,16 @@ def detail(request, post_id):
     #     # Always return an HttpResponseRedirect after successfully dealing
     #     # with POST data. This prevents data from being posted twice if a
     #     # user hits the Back button.
+    post = get_object_or_404(Post, pk=post_id)
+
     if request.method == "POST":
         if 'interested' in request.POST:
             pass
         elif 'delete' in request.POST:
-            Post.objects.filter(pk=post_id).delete()
+            post.delete()
             return HttpResponseRedirect(reverse('posts:home'))
         elif 'edit' in request.POST:
-            pass
-    post = get_object_or_404(Post, pk=post_id)
+            return redirect('posts:post-edit', post_id = post_id)
+    
     context = {"post": post}
     return render(request, "posts/detail.html", context)
