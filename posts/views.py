@@ -79,8 +79,10 @@ class postCreate(LoginRequiredMixin, CreateView):
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
-        # post = form.save(commit=False)
+        post = form.save(commit=False)
+        post.user = request.user
         # ad.owner = self.request.user
+
         form.save()
         # form.save_m2m()
         return redirect(self.success_url)
@@ -126,7 +128,7 @@ def detail(request, post_id):
     #     # Always return an HttpResponseRedirect after successfully dealing
     #     # with POST data. This prevents data from being posted twice if a
     #     # user hits the Back button.
-    context = {"post": post}
+    context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)
 
 
