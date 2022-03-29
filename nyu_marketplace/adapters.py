@@ -16,10 +16,6 @@ class RestrictEmailAdapter(DefaultAccountAdapter):
             )
         return email
 
-    def get_email_confirmation_redirect_url(self, request):
-        path = "/profile/"
-        return path
-
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def is_open_for_signup(self, request, sociallogin):
