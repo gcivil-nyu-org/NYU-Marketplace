@@ -28,6 +28,11 @@
     border-radius: 3px;
     margin-bottom: 20px;
   }
+
+  .title {
+      font-weight: bold;
+      font-size: 16px;
+  }
   </style>
 <div  padding = "20px" >
 
@@ -74,26 +79,26 @@
       
       <legend class="border-bottom mb-4">Profile Info</legend>
       <br>
-      <label>Email-ID</label>
+      <label class="title">Email-ID</label>
       <br>
       {{ user.email }}
       <br>
       <br>
 
 
-      <label>Gender</label>
+      <label class="title">Gender</label>
       <br>
       {{ form.gender }}
       <br>
       <br>
       
 
-      <label>School</label>
+      <label class="title">School</label>
       <br>
       {{ form.school }}
       <br>
 
-      <label>Address</label>
+      <label class="title">Address</label>
       <br>
       {{ form.address }}
       <br>

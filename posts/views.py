@@ -6,6 +6,7 @@ from .models import Post
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 posts = [
     {
@@ -135,3 +136,11 @@ def detail(request, post_id):
     #     # user hits the Back button.
     context = {"post": post}
     return render(request, "posts/detail.html", context)
+
+
+@login_required(login_url="/accounts/login/")
+def search(request):
+    q = request.GET.get("q")
+    post_list = Post.objects.filter(Q(name__icontains=q))
+    context = {"post_list": post_list}
+    return render(request, "posts/search.html", context)
