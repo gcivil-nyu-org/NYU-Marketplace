@@ -121,8 +121,7 @@
         </ul>
       </div-->
       <!-- Avatar -->
-
-
+      {% if user.is_authenticated %}
       <div class="dropdown">
         <a
             class="dropdown-toggle d-flex align-items-center hidden-arrow"
@@ -140,7 +139,7 @@
               alt="Black and White Portrait of a Man"
               loading="lazy"
           />
-          &nbsp User
+          &nbsp {{ user.username }}
 
         </a>
         <ul
@@ -148,7 +147,7 @@
             aria-labelledby="navbarDropdownMenuAvatar"
         >
           <li>
-            <a class="dropdown-item" href="{% url 'home' %}">My profile</a>
+            <a class="dropdown-item" href="{% url 'profile' %}">My profile</a>
           </li>
           <li>
             <a class="dropdown-item" href="{% url 'home' %}">Settings</a>
@@ -158,6 +157,10 @@
           </li>
         </ul>
       </div>
+      {% else %}
+      <div>
+      </div>
+      {% endif %}
     </div>
     <!-- Right elements -->
   </div>

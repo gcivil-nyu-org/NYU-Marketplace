@@ -110,14 +110,6 @@ class index(LoginRequiredMixin, View):
 
 
 @login_required(login_url="/accounts/login/")
-def profile(request):
-
-    # context = {"posts": posts}
-
-    return render(request, "posts/profile.html")
-
-
-@login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     # try:
