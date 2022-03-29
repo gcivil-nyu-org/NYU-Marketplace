@@ -1,0 +1,207 @@
+{% extends "posts/base.html" %}
+{% load static %}
+{% block content %}
+
+  <div class="row">
+    <div class="col-2" style="margin-top: 80px">
+      <nav class="filter">
+        <ul class="navbar-nav">
+          <li class="filter-title">
+            <a class="filter-link" href="#"><i class="bi bi-sort-down"></i>&nbsp&nbspSort by</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" id="priceasc" href="javascript:void(0);" onclick="getItem('sort', 'priceasc')">Price: Low -> High</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" id="pricedesc" href="javascript:void(0);" onclick="getItem('sort', 'pricedesc')">Price: High -> Low</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" id="time" href="javascript:void(0);" onclick="getItem('sort', 'time')">Recently Added</a>
+          </li>
+        </ul>
+      </nav>
+      <nav class="category">
+        <ul class="navbar-nav">
+          <li class="filter-title">
+            <a class="filter-link" href="#"><i class="bi bi-card-list"></i>&nbsp&nbspCategory</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" id="allCategory" href="javascript:void(0);" onclick="getItem('category', 'all')" >Browse All</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" id="textbook" href="javascript:void(0);" onclick="getItem('category', 'textbook')" >Textbook</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" id="tech" href="javascript:void(0);" onclick="getItem('category', 'tech')">Tech</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" id="sport" href="javascript:void(0);" onclick="getItem('category', 'sport')">Sport</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" id="furniture" href="javascript:void(0);" onclick="getItem('category', 'furniture')">Furniture</a>
+          </li>
+          <li class="filter-item">
+            <a class="filter-link" id="other" href="javascript:void(0);" onclick="getItem('category', 'other')">Other</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-10" style="margin-top: 16px">
+      <div class="row">
+        <div style="margin-left: 30px">
+          <p class="poppins" style="font-size: 20px">Find {{ post_list | length }} results.</p>
+        </div>
+        <div class="col-12" style="margin-bottom: 6px">
+          <nav class="navbar navbar-expand-sm" style="background: #FFFFFF;">
+            <ul class="navbar-nav">
+              <li class="type-item">
+                <a class="type-link" id="allOption"  href="javascript:void(0);" onclick="getItem('option', 'all')"
+                   style="padding-left: 30px; padding-right: 50px; font-size: 25px"><i class="bi bi-basket"></i>&nbspAll</a>
+              </li>
+              <li class="type-item">
+                <a class="type-link" id="sell" href="javascript:void(0);" onclick="getItem('option', 'sell')"
+                   style="padding-right: 50px; font-size: 25px"><i class="bi bi-cart2"></i>&nbsp Buy</a>
+              </li>
+              <li class="type-item">
+                <a class="type-link" id="rent" href="javascript:void(0);" onclick="getItem('option', 'rent')"
+                   style="padding-right: 50px; font-size: 25px"><i class="bi bi-palette2"></i>&nbsp Rent</a>
+              </li>
+              <li class="type-item">
+                <a class="type-link" id="exchange" href="javascript:void(0);" onclick="getItem('option', 'exchange')"
+                   style="padding-right: 50px; font-size: 25px"><i class="bi bi-layers-half"></i>&nbsp Exchange</a>
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+        {% for post in post_list %}
+          <div class="col-4 mt-3" style="padding: 0px 30px 20px 30px;">
+            <div class="list-item">
+              <a style="color: #000000" href="{% url 'detail' post.id %}">
+                <div class="col-12 home-img-div" style="#border: 1px solid #dddddd; #border-radius: 3px">
+                  <img class="home-img" src="{{ post.picture.url }}">
+                </div>
+                <div class="row col-12 mt-3 justify-content-between">
+
+                  <div class="col-11">
+                    <a class="title"
+                       style="margin-left:6px; color: #000000; text-decoration: none; font-weight: bolder; font-size: 18px"
+                       href="{% url 'detail' post.id %}">{{ post.name }}</a>
+                  </div>
+                  <div class="col-1">
+                    <i class="bi bi-star"></i>
+                  </div>
+                </div>
+                <div class="row col-12 mt-2 justify-content-between">
+                  {% if post.price %}
+                    <div class="col-9">
+                    <span class="poppins"
+                          style="margin-left:6px; font-size:18px; font-weight: bolder; color: #4b4b4b">$&nbsp{{ post.price | cut:'.00' }}</span>
+
+                    </div>
+                    <div class="col-3">
+                      {% if post.option == 'sell' %}
+                        <span class="poppins"
+                              style="margin-left:18px; font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbsp&nbspSell</span>
+                      {% elif post.option == 'rent' %}
+                        <span class="poppins"
+                              style="margin-left:18px; font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbspRent</span>
+                      {% endif %}</div>
+
+
+                  {% else %}
+
+                    <span class="poppins" style="margin-left:6px; font-size:20px; font-weight: bolder; color: #57068c">Exchange</span>
+
+                  {% endif %}
+                </div>
+
+
+                <div class="col-12 row justify-content-between mt-2">
+                  <div class="col-6" style="margin-left:6px;">
+                    <span>{{ post.created_at|date:'m/d/Y' }}</span>
+                  </div>
+                  <div class="col-1" style="margin-right: 10px; margin-bottom: 5px">
+                    <img
+                        src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                        class="rounded-circle"
+                        weight="25"
+                        height="25"
+                        alt="Black and White Portrait of a Man"
+                        loading="lazy"
+                    />
+
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+        {% endfor %}
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    var query = window.location.search.substring(1);
+    paras = query.split("&");
+    optionPara = false;
+    for(var i = 0; i < paras.length; i++){
+        var pair = paras[i].split("=");
+        if(pair[0] == "sort" || pair[0] == "category"){
+            if(pair[1] == "all"){
+                document.getElementById("allCategory").className = "filter-link-active";
+            }else{
+                document.getElementById(pair[1]).className = "filter-link-active";
+            }
+        }
+        if(pair[0] == "option"){
+            optionPara = true;
+            if(pair[1] == "all"){
+                document.getElementById("allOption").className = "type-link-active";
+            }else{
+                document.getElementById(pair[1]).className = "type-link-active";
+            }
+        }
+        if(pair[0] == "q"){
+            document.getElementById("searchInput").value = pair[1];
+
+        }
+
+    }
+    if(optionPara == false){
+        document.getElementById("allOption").className = "type-link-active";
+    }
+    function getItem(filter, value){
+        var url = window.location.href;
+        var query = window.location.search.substring(1);
+        if(query == ""){
+            window.location.href = url + "?" + filter + "=" + value;
+        }else{
+            var contain = false;
+            paras = query.split("&");
+            hrefUrl = url.replace(query, "");
+            for(var i = 0; i < paras.length; i++){
+                var pair = paras[i].split("=");
+                if(pair[0] == filter){
+                    pair[1] = value;
+                    contain = true;
+                }
+                para = pair[0] + "=" + pair[1];
+                if(i < paras.length - 1){
+                    para += "&"
+                }
+                hrefUrl += para;
+            }
+            if(contain == false){
+                para = "&" + filter + "=" + value;
+                hrefUrl += para;
+            }
+            window.location.href = hrefUrl;
+        }
+    }
+  </script>
+
+{% endblock %}
