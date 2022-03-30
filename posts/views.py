@@ -104,9 +104,12 @@ class index(LoginRequiredMixin, View):
         category = request.GET.get("category", default="all")
         option = request.GET.get("option", default="all")
         sort = request.GET.get("sort", default="all")
+        q = request.GET.get("q", default="")
         post_list = Post.objects.all()
+        if q != "":
+            post_list = post_list.filter(Q(name__icontains=q))
         if category != "all":
-            post_list = Post.objects.filter(category=category)
+            post_list = post_list.filter(category=category)
         if option != "all":
             post_list = post_list.filter(option=option)
         if sort == "priceasc":
@@ -115,7 +118,6 @@ class index(LoginRequiredMixin, View):
             post_list = post_list.order_by("-price")
         else:
             post_list = post_list.order_by("-updated_at")
-
         context = {"post_list": post_list}
         return render(request, "posts/home.html", context)
 
@@ -139,9 +141,11 @@ def detail(request, post_id):
     return render(request, "posts/detail.html", context)
 
 
-@login_required(login_url="/accounts/login/")
-def search(request):
-    q = request.GET.get("q")
-    post_list = Post.objects.filter(Q(name__icontains=q))
-    context = {"post_list": post_list}
-    return render(request, "posts/search.html", context)
+#  @login_required(login_url="/accounts/login/")
+# def search(request):
+#     q = request.GET.get("q")
+#     category = request.GET.get("category", default="all")
+#     option = request.GET.get("option", default="all")
+#     sort = request.GET.get("sort", default="all")
+#     post_list = Post.objects.filter(Q(name__icontains=q))
+#     return render(request, "posts/search.html", context)
