@@ -43,6 +43,14 @@ class TestViews(TestCase):
         self.assertEquals(login, True)
         response2 = self.client.get("/posts/")
         self.assertEquals(response2.status_code, 200)
+        response3 = self.client.get(
+            "/posts/", category="tech", option="rent", sort="priceasc"
+        )
+        self.assertEquals(response3.status_code, 200)
+        response3 = self.client.get(
+            "/posts/", category="tech", option="rent", sort="pricedsc"
+        )
+        self.assertEquals(response3.status_code, 200)
 
     def test_post_create_get(self):
         response = self.client.get("/posts/create/")
