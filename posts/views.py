@@ -5,6 +5,8 @@ from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseForbidden
 
 posts = [
     {
@@ -66,6 +68,8 @@ class postCreate(LoginRequiredMixin, CreateView):
         if post_id:
             #todo add condition on edit/post_id
             post = get_object_or_404(Post, pk=post_id)
+            if post.user != request.user:
+                raise PermissionDenied()
             form = PostModelForm(instance=post)
         else:
             form = PostModelForm()
@@ -124,13 +128,15 @@ def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
 
     if request.method == "POST":
-        if 'interested' in request.POST:
+        if post.user != request.user and 'interested' in request.POST:
             pass
-        elif 'delete' in request.POST:
+        elif post.user == request.user and 'delete' in request.POST:
             post.delete()
             return redirect('posts:home')
-        elif 'edit' in request.POST:
+        elif post.user == request.user and 'edit' in request.POST:
             return redirect('posts:post-edit', post_id = post_id)
+        else:
+            raise PermissionDenied()
 
     context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)
