@@ -199,10 +199,7 @@
             var url = window.location.href;
             var query = window.location.search.substring(1);
             var searchQ = document.getElementById("searchInput").value;
-            if (searchQ == null || searchQ.trim() == "") {
-              alert("Please input search words");
-              return false;
-            }
+
             if (query == "") {
                 window.location.href = url + "?q=" + searchQ;
             } else {
