@@ -36,6 +36,7 @@ DEBUG = str(os.environ.get("DEBUG")) == "1"
 INSTALLED_APPS = [
     "django.contrib.sites",
     "allauth",
+    "users.apps.UsersConfig",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
@@ -189,14 +190,14 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_REDIRECT_URL = "/posts"
 LOGOUT_REDIRECT_URL = "/accounts/login"
 SIGNUP_REDIRECT_URL = "/posts"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/profile"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "NYU Marketplace "
 SOCIALACCOUNT_QUERY_EMAIL = "ACCOUNT_EMAIL_REQUIRED"
-# ACCOUNT_ADAPTER = 'nyu_marketplace.adapters.RestrictEmailAdapter'
-# SOCIALACCOUNT_ADAPTER = 'nyu_marketplace.adapters.CustomSocialAccountAdapter'
-
+ACCOUNT_ADAPTER = "nyu_marketplace.adapters.RestrictEmailAdapter"
+SOCIALACCOUNT_ADAPTER = "nyu_marketplace.adapters.CustomSocialAccountAdapter"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"

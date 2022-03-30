@@ -10,11 +10,12 @@ install:
 before_script:
   - python manage.py makemigrations
   - python manage.py migrate
+  - python3 manage.py collectstatic
 
 script:
   - python -m black . --check
   - python -m flake8 --max-line-length=150
-  - coverage run --source=nyu_marketplace manage.py test
+  - coverage run --source=. manage.py test
 
 after_success:
   - python -m coveralls

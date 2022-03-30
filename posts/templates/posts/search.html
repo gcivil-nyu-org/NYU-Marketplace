@@ -48,6 +48,9 @@
     </div>
     <div class="col-10" style="margin-top: 16px">
       <div class="row">
+        <div style="margin-left: 30px">
+          <p class="poppins" style="font-size: 20px">Find {{ post_list | length }} results.</p>
+        </div>
         <div class="col-12" style="margin-bottom: 6px">
           <nav class="navbar navbar-expand-sm" style="background: #FFFFFF;">
             <ul class="navbar-nav">
@@ -74,7 +77,7 @@
         {% for post in post_list %}
           <div class="col-4 mt-3" style="padding: 0px 30px 20px 30px;">
             <div class="list-item">
-              <a style="color: #000000" href="{% url 'posts:detail' post.id %}">
+              <a style="color: #000000" href="{% url 'detail' post.id %}">
                 <div class="col-12 home-img-div" style="#border: 1px solid #dddddd; #border-radius: 3px">
                   <img class="home-img" src="{{ post.picture.url }}">
                 </div>
@@ -83,7 +86,7 @@
                   <div class="col-11">
                     <a class="title"
                        style="margin-left:6px; color: #000000; text-decoration: none; font-weight: bolder; font-size: 18px"
-                       href="{% url 'posts:detail' post.id %}">{{ post.name }}</a>
+                       href="{% url 'detail' post.id %}">{{ post.name }}</a>
                   </div>
                   <div class="col-1">
                     <i class="bi bi-star"></i>
@@ -161,6 +164,10 @@
             }else{
                 document.getElementById(pair[1]).className = "type-link-active";
             }
+        }
+        if(pair[0] == "q"){
+            document.getElementById("searchInput").value = pair[1];
+
         }
 
     }

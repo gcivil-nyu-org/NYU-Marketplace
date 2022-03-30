@@ -1,11 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-
-# from django.http import HttpResponse
 from .models import Post
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
+from django.core.exceptions import PermissionDenied
 
 posts = [
     {
@@ -62,13 +62,23 @@ class postCreate(LoginRequiredMixin, CreateView):
     template_name = "posts/createpost.html"
     login_url = "/accounts/login"
 
-    def get(self, request, pk=None):
-        form = PostModelForm()
-        ctx = {"form": form}
+    def get(self, request, pk=None, post_id=None):
+        if post_id:
+            post = get_object_or_404(Post, pk=post_id)
+            if post.user != request.user:
+                raise PermissionDenied()
+            form = PostModelForm(instance=post)
+        else:
+            form = PostModelForm()
+        ctx = {"form": form, "post_id": post_id}
         return render(request, self.template_name, ctx)
 
-    def post(self, request, pk=None):
-        form = PostModelForm(request.POST, request.FILES or None)
+    def post(self, request, pk=None, post_id=None):
+        if post_id:
+            post = get_object_or_404(Post, pk=post_id)
+        else:
+            post = Post()
+        form = PostModelForm(request.POST, request.FILES or None, instance=post)
         # image = request.FILES.get("picture")
         # print(image)
 
@@ -78,8 +88,10 @@ class postCreate(LoginRequiredMixin, CreateView):
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
-        # post = form.save(commit=False)
+        post = form.save(commit=False)
+        post.user = request.user
         # ad.owner = self.request.user
+
         form.save()
         # form.save_m2m()
         return redirect(self.success_url)
@@ -92,9 +104,12 @@ class index(LoginRequiredMixin, View):
         category = request.GET.get("category", default="all")
         option = request.GET.get("option", default="all")
         sort = request.GET.get("sort", default="all")
+        q = request.GET.get("q", default="")
         post_list = Post.objects.all()
+        if q != "":
+            post_list = post_list.filter(Q(name__icontains=q))
         if category != "all":
-            post_list = Post.objects.filter(category=category)
+            post_list = post_list.filter(category=category)
         if option != "all":
             post_list = post_list.filter(option=option)
         if sort == "priceasc":
@@ -103,35 +118,34 @@ class index(LoginRequiredMixin, View):
             post_list = post_list.order_by("-price")
         else:
             post_list = post_list.order_by("-updated_at")
-
         context = {"post_list": post_list}
         return render(request, "posts/home.html", context)
 
 
 @login_required(login_url="/accounts/login/")
-def profile(request):
-
-    # context = {"posts": posts}
-
-    return render(request, "posts/profile.html")
-
-
-@login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    # try:
-    #     selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    # except (KeyError, Choice.DoesNotExist):
-    #     # Redisplay the question voting form.
-    #     return render(request, 'polls/detail.html', {
-    #         'question': question,
-    #         'error_message': "You didn't select a choice.",
-    #     })
-    # else:
-    #     #selected_choice.votes += 1
-    #     #selected_choice.save()
-    #     # Always return an HttpResponseRedirect after successfully dealing
-    #     # with POST data. This prevents data from being posted twice if a
-    #     # user hits the Back button.
-    context = {"post": post}
+
+    if request.method == "POST":
+        if post.user != request.user and "interested" in request.POST:
+            pass
+        elif post.user == request.user and "delete" in request.POST:
+            post.delete()
+            return redirect("posts:home")
+        elif post.user == request.user and "edit" in request.POST:
+            return redirect("posts:post-edit", post_id=post_id)
+        else:
+            raise PermissionDenied()
+
+    context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)
+
+
+#  @login_required(login_url="/accounts/login/")
+# def search(request):
+#     q = request.GET.get("q")
+#     category = request.GET.get("category", default="all")
+#     option = request.GET.get("option", default="all")
+#     sort = request.GET.get("sort", default="all")
+#     post_list = Post.objects.filter(Q(name__icontains=q))
+#     return render(request, "posts/search.html", context)
