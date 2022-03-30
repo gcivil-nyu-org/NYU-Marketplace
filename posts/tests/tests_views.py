@@ -9,7 +9,9 @@ class TestViews(TestCase):
         self.client = Client()
         # self.client.login(username='testuser', password='12345')
         self.user = get_user_model().objects.create_user(
-            username="user", password="12test12", email="user@nyu.edu",
+            username="user",
+            password="12test12",
+            email="user@nyu.edu",
         )
         self.poster = get_user_model().objects.create_user(
             username="test", password="12test12", email="test@example.com"
@@ -41,7 +43,6 @@ class TestViews(TestCase):
         self.assertEquals(login, True)
         response2 = self.client.get("/posts/")
         self.assertEquals(response2.status_code, 200)
-
 
     def test_post_create_get(self):
         response = self.client.get("/posts/create/")
