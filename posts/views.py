@@ -6,7 +6,6 @@ from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseForbidden
 
 posts = [
     {
@@ -63,10 +62,8 @@ class postCreate(LoginRequiredMixin, CreateView):
     template_name = "posts/createpost.html"
     login_url = "/accounts/login"
 
-    def get(self, request, pk=None, post_id = None):
-        
+    def get(self, request, pk=None, post_id=None):
         if post_id:
-            #todo add condition on edit/post_id
             post = get_object_or_404(Post, pk=post_id)
             if post.user != request.user:
                 raise PermissionDenied()
@@ -76,7 +73,7 @@ class postCreate(LoginRequiredMixin, CreateView):
         ctx = {"form": form, "post_id": post_id}
         return render(request, self.template_name, ctx)
 
-    def post(self, request, pk=None, post_id = None):
+    def post(self, request, pk=None, post_id=None):
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
         else:
@@ -128,13 +125,13 @@ def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
 
     if request.method == "POST":
-        if post.user != request.user and 'interested' in request.POST:
+        if post.user != request.user and "interested" in request.POST:
             pass
-        elif post.user == request.user and 'delete' in request.POST:
+        elif post.user == request.user and "delete" in request.POST:
             post.delete()
-            return redirect('posts:home')
-        elif post.user == request.user and 'edit' in request.POST:
-            return redirect('posts:post-edit', post_id = post_id)
+            return redirect("posts:home")
+        elif post.user == request.user and "edit" in request.POST:
+            return redirect("posts:post-edit", post_id=post_id)
         else:
             raise PermissionDenied()
 

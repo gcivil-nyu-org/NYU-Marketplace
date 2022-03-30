@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 
-app_name="posts"
+app_name = "posts"
 urlpatterns = [
     path("", views.index.as_view(), name="home"),
     # path("profile/", views.profile, name="profile"),
@@ -11,6 +11,6 @@ urlpatterns = [
     path("create/", views.postCreate.as_view(), name="post-create"),
     path("edit/<int:post_id>", views.postCreate.as_view(), name="post-edit"),
     path("detail/<int:post_id>", views.detail, name="detail"),
-    #path("delete/<int:post_id>", views.delete, name="delete"),
+    # path("delete/<int:post_id>", views.delete, name="delete"),
     path("search/", views.search, name="search"),
 ]
