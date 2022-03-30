@@ -64,20 +64,19 @@
         </li>
         <li style="margin-left: 300px;">
 
-          <form class="navbar-form" role="search" method="get" onsubmit="return validateSearch()"
-                action="{% url 'posts:search' %}">
-            <div class="form-group row">
-              <div class="col">
-                <input type="text" id="searchInput" name="q" class="form-control"
-                       placeholder="Search Marketplace" style="width: 300px">
-              </div>
-              <div class="col">
-                <button type="submit" class="btn btn-secondary" style="color: #000000; background-color: #ffffff"><i
-                    class="bi bi-search"></i></button>
-              </div>
-
+          <div class="form-group row">
+            <div class="col">
+              <input type="text" id="searchInput" name="q" class="form-control" onkeydown="searchWords(1)"
+                     placeholder="Search Marketplace" style="width: 300px">
             </div>
-          </form>
+            <div class="col">
+              <button class="btn btn-secondary" style="color: #000000; background-color: #ffffff"
+                      onclick="searchWords(2)"><i
+                  class="bi bi-search"></i></button>
+            </div>
+
+          </div>
+
         </li>
       </ul>
       <!-- Left links -->
@@ -122,44 +121,44 @@
       </div-->
       <!-- Avatar -->
       {% if user.is_authenticated %}
-      <div class="dropdown">
-        <a
-            class="dropdown-toggle d-flex align-items-center hidden-arrow"
-            href="#"
-            id="navbarDropdownMenuAvatar"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            style="text-decoration:none;color:#FFFFFF;"
-        >
-          <img
-              src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
-              class="rounded-circle"
-              height="25"
-              alt="Black and White Portrait of a Man"
-              loading="lazy"
-          />
-          &nbsp {{ user.username }}
+        <div class="dropdown">
+          <a
+              class="dropdown-toggle d-flex align-items-center hidden-arrow"
+              href="#"
+              id="navbarDropdownMenuAvatar"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="text-decoration:none;color:#FFFFFF;"
+          >
+            <img
+                src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                class="rounded-circle"
+                height="25"
+                alt="Black and White Portrait of a Man"
+                loading="lazy"
+            />
+            &nbsp {{ user.username }}
 
-        </a>
-        <ul
-            class="dropdown-menu dropdown-menu-end"
-            aria-labelledby="navbarDropdownMenuAvatar"
-        >
-          <li>
-            <a class="dropdown-item" href="{% url 'users:profile' %}">My profile</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="{% url 'posts:home' %}">Settings</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
-          </li>
-        </ul>
-      </div>
+          </a>
+          <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="navbarDropdownMenuAvatar"
+          >
+            <li>
+              <a class="dropdown-item" href="{% url 'users:profile' %}">My profile</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'posts:home' %}">Settings</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
+            </li>
+          </ul>
+        </div>
       {% else %}
-      <div>
-      </div>
+        <div>
+        </div>
       {% endif %}
     </div>
     <!-- Right elements -->
@@ -178,12 +177,58 @@
   </div>
 </main>
 <script>
+    var query = window.location.search.substring(1);
+    paras = query.split("&");
+    for(var i = 0; i < paras.length; i++){
+        var pair = paras[i].split("=");
+        if(pair[0] == "q" ){
+            document.getElementById("searchInput").value = pair[1]
+        }
+    }
+
     function validateSearch() {
         var x = document.getElementById("searchInput").value;
         if (x == null || x.trim() == "") {
             alert("Please input search words");
             return false;
         }
+    }
+
+    function searchWords(source) {
+        if ((source == 1 && event.keyCode == 13) || source == 2) {
+            var url = window.location.href;
+            var query = window.location.search.substring(1);
+            var searchQ = document.getElementById("searchInput").value;
+            if (searchQ == null || searchQ.trim() == "") {
+              alert("Please input search words");
+              return false;
+            }
+            if (query == "") {
+                window.location.href = url + "?q=" + searchQ;
+            } else {
+                var contain = false;
+                paras = query.split("&");
+                hrefUrl = url.replace(query, "");
+                for (var i = 0; i < paras.length; i++) {
+                    var pair = paras[i].split("=");
+                    if (pair[0] == "q") {
+                        pair[1] = searchQ;
+                        contain = true;
+                    }
+                    para = pair[0] + "=" + pair[1];
+                    if (i < paras.length - 1) {
+                        para += "&"
+                    }
+                    hrefUrl += para;
+                }
+                if (contain == false) {
+                    para = "&q=" + searchQ;
+                    hrefUrl += para;
+                }
+                window.location.href = hrefUrl;
+            }
+        }
+
     }
 </script>
 </html>

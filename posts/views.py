@@ -106,8 +106,10 @@ class index(LoginRequiredMixin, View):
         sort = request.GET.get("sort", default="all")
         q = request.GET.get("q", default="")
         post_list = Post.objects.all()
+        if q != "":
+            post_list = post_list.filter(Q(name__icontains=q))
         if category != "all":
-            post_list = Post.objects.filter(category=category)
+            post_list = post_list.filter(category=category)
         if option != "all":
             post_list = post_list.filter(option=option)
         if sort == "priceasc":
@@ -116,8 +118,6 @@ class index(LoginRequiredMixin, View):
             post_list = post_list.order_by("-price")
         else:
             post_list = post_list.order_by("-updated_at")
-        if q != "":
-            post_list.filter(name__icontains=q)
         context = {"post_list": post_list}
         return render(request, "posts/home.html", context)
 
