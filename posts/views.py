@@ -1,12 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-
-# from django.http import HttpResponse
 from .models import Post
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.core.exceptions import PermissionDenied
 
 posts = [
     {
@@ -63,13 +62,23 @@ class postCreate(LoginRequiredMixin, CreateView):
     template_name = "posts/createpost.html"
     login_url = "/accounts/login"
 
-    def get(self, request, pk=None):
-        form = PostModelForm()
-        ctx = {"form": form}
+    def get(self, request, pk=None, post_id=None):
+        if post_id:
+            post = get_object_or_404(Post, pk=post_id)
+            if post.user != request.user:
+                raise PermissionDenied()
+            form = PostModelForm(instance=post)
+        else:
+            form = PostModelForm()
+        ctx = {"form": form, "post_id": post_id}
         return render(request, self.template_name, ctx)
 
-    def post(self, request, pk=None):
-        form = PostModelForm(request.POST, request.FILES or None)
+    def post(self, request, pk=None, post_id=None):
+        if post_id:
+            post = get_object_or_404(Post, pk=post_id)
+        else:
+            post = Post()
+        form = PostModelForm(request.POST, request.FILES or None, instance=post)
         # image = request.FILES.get("picture")
         # print(image)
 
@@ -114,20 +123,18 @@ class index(LoginRequiredMixin, View):
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    # try:
-    #     selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    # except (KeyError, Choice.DoesNotExist):
-    #     # Redisplay the question voting form.
-    #     return render(request, 'polls/detail.html', {
-    #         'question': question,
-    #         'error_message': "You didn't select a choice.",
-    #     })
-    # else:
-    #     #selected_choice.votes += 1
-    #     #selected_choice.save()
-    #     # Always return an HttpResponseRedirect after successfully dealing
-    #     # with POST data. This prevents data from being posted twice if a
-    #     # user hits the Back button.
+
+    if request.method == "POST":
+        if post.user != request.user and "interested" in request.POST:
+            pass
+        elif post.user == request.user and "delete" in request.POST:
+            post.delete()
+            return redirect("posts:home")
+        elif post.user == request.user and "edit" in request.POST:
+            return redirect("posts:post-edit", post_id=post_id)
+        else:
+            raise PermissionDenied()
+
     context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)
 

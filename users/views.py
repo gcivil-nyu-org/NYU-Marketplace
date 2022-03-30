@@ -14,7 +14,7 @@ def profile(request):
         profile = Profile.objects.create(user=request.user)
         form = ProfileForm(request.POST, instance=profile)
         form.save()
-        return redirect("/posts")
+        return redirect("posts:home")
     else:
         form = ProfileForm()
     return render(request, "users/profile.html", {"form": form})

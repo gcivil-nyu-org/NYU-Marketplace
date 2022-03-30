@@ -80,19 +80,33 @@
           <div class="col-2" style="margin-bottom: auto; margin-top: auto">
             <i class="bi bi-star"></i><span>&nbsp 103</span>
           </div>
-          <div class="col-6">
-            <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF">
-              <i class="bi bi-star"></i>&nbsp Interested!
-            </button>
-
-
-          </div>
+          <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+            {% csrf_token %}
+            {% if post.user != user %}
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="interested">
+                <i class="bi bi-star"></i>&nbsp Interested!
+              </button>
+            </div>
+            {% else %}
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
+                <i class="bi"></i>&nbsp DELETE
+              </button>
+            </div>
+          </br>
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF" name="edit">
+                <i class="bi"></i>&nbsp EDIT
+              </button>
+            </div>
+            {% endif %}
+          </form>
         </div>
 
       </div>
 
       <script>
-
       </script>
     </div>
 {% endblock content %}
