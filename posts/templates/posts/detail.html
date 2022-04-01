@@ -94,11 +94,13 @@
                 <i class="bi bi-star"></i>&nbsp Interested!
               </button>
             </div>
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="report">
-                <i class="bi bi-star"></i>&nbsp Report
-              </button>
-            </div>
+              {% if show_reported_button%}
+              <div class="col-6">
+                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="report" onclick="return confirm('Are you sure?');"">
+                  <i class="bi bi-star"></i>&nbsp Report
+                </button>
+              </div>
+              {% endif %}
             {% else %}
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">

@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
+from .models import Post, Report
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -117,7 +117,7 @@ class index(LoginRequiredMixin, View):
         elif sort == "pricedesc":
             post_list = post_list.order_by("-price")
         else:
-            post_list = post_list.order_by("-updated_at")
+            post_list = post_list.order_by("-created_at")
         context = {"post_list": post_list}
         return render(request, "posts/home.html", context)
 
@@ -125,15 +125,19 @@ class index(LoginRequiredMixin, View):
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-
+    show_reported_button = True
     if request.method == "POST":
         if post.user != request.user and "interested" in request.POST:
             pass
-        elif post.user == request.user and "report" in request.POST:
-           # increase post_count by 1
-           # update the report table
+        elif post.user != request.user and "report" in request.POST:
+            post.report_count += 1
+            post.save()
+            report = Report(reported_by=request.user, post=post)
+            report.save()
             return redirect("posts:home")
-        elif (post.user == request.user or request.user.is_superuser) and "delete" in request.POST:
+        elif (
+            post.user == request.user or request.user.is_superuser
+        ) and "delete" in request.POST:
             post.delete()
             return redirect("posts:home")
         elif post.user == request.user and "edit" in request.POST:
@@ -141,12 +145,14 @@ def detail(request, post_id):
         else:
             raise PermissionDenied()
     else:
-        # if user id and post id inside reported
-        # showReportedButton = True
-        pass
-    
+        if Report.objects.filter(reported_by=request.user, post=post):
+            show_reported_button = False
 
-    context = {"post": post, "user": request.user}
+    context = {
+        "post": post,
+        "user": request.user,
+        "show_reported_button": show_reported_button,
+    }
     return render(request, "posts/detail.html", context)
 
 
