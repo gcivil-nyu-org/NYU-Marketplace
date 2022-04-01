@@ -129,13 +129,22 @@ def detail(request, post_id):
     if request.method == "POST":
         if post.user != request.user and "interested" in request.POST:
             pass
-        elif post.user == request.user and "delete" in request.POST:
+        elif post.user == request.user and "report" in request.POST:
+           # increase post_count by 1
+           # update the report table
+            return redirect("posts:home")
+        elif (post.user == request.user or request.user.is_superuser) and "delete" in request.POST:
             post.delete()
             return redirect("posts:home")
         elif post.user == request.user and "edit" in request.POST:
             return redirect("posts:post-edit", post_id=post_id)
         else:
             raise PermissionDenied()
+    else:
+        # if user id and post id inside reported
+        # showReportedButton = True
+        pass
+    
 
     context = {"post": post, "user": request.user}
     return render(request, "posts/detail.html", context)

@@ -40,6 +40,15 @@ class Post(models.Model):
     picture = models.ImageField(null=True, editable=True)
     # content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')
 
+    report_count = models.PositiveIntegerField(default=0)
+    interested_count = models.PositiveIntegerField(default=0)
     # Shows up in the admin list
     def __str__(self):
         return self.name
+
+class Report(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    reported_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('post', 'reported_by')
