@@ -111,14 +111,21 @@ class index(LoginRequiredMixin, View):
         if category != "all":
             post_list = post_list.filter(category=category)
         if option != "all":
-            post_list = post_list.filter(option=option)
+            if option == "reported":
+                if request.user.is_superuser:
+                    post_list = post_list.filter(report_count__gte=1)
+                    post_list = post_list.order_by("-report_count")
+                else:
+                    raise PermissionDenied()
+            else:
+                post_list = post_list.filter(option=option)
         if sort == "priceasc":
             post_list = post_list.order_by("price")
         elif sort == "pricedesc":
             post_list = post_list.order_by("-price")
-        else:
+        elif option != "reported":
             post_list = post_list.order_by("-created_at")
-        context = {"post_list": post_list}
+        context = {"post_list": post_list, "user": request.user}
         return render(request, "posts/home.html", context)
 
 
