@@ -1,0 +1,36 @@
+{% extends "posts/base.html" %}
+{% load static %}
+{% block content %}
+  <div class="container mt-5">
+    {% csrf_token %}
+    <div class="row">
+      <div class="container col-3 mt-10">
+        <div class="card">
+          <div class="mt-1 mb-3" style="text-align: center; font-size: 20px; font-weight: bold">
+            weineng
+          </div>
+          <img
+              src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+              class="rounded-circle"
+              width="70%"
+              height="70%"
+              alt="Black and White Portrait of a Man"
+              loading="lazy"
+              style="margin: 0 auto"
+          />
+          <div class="card-body">
+            <p class="card-text pt-2">Hi! I am Weineng from NYU Tandon. If you are interested in my recent post, feel
+              free to call me!</p>
+            <p class="poppins pt-3" style="font-size: 16px; font-weight: bold"><i class="bi bi-house-door"></i>&nbsp&nbspLocation:
+              6 Metrotech Center</p>
+            <p class="poppins" style="font-size: 16px; font-weight: bold"><i class="bi bi-mailbox"></i>&nbsp&nbspEmail:
+              {{ user.email }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-9">
+
+      </div>
+    </div>
+  </div>
+{% endblock content %}

@@ -18,3 +18,8 @@ def profile(request):
     else:
         form = ProfileForm()
     return render(request, "users/profile.html", {"form": form})
+
+
+@login_required(login_url="/accounts/login/")
+def profile_detail(request):
+    return render(request, "users/profile_detail.html")
