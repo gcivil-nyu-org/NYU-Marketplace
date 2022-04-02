@@ -82,12 +82,25 @@
           </div>
           <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
             {% csrf_token %}
-            {% if post.user != user %}
+            {% if user.is_superuser %}
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
+                <i class="bi"></i>&nbsp DELETE
+              </button>
+            </div>
+            {% elif post.user != user %}
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="interested">
                 <i class="bi bi-star"></i>&nbsp Interested!
               </button>
             </div>
+              {% if show_reported_button%}
+              <div class="col-6">
+                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="report" onclick="return confirm('Are you sure?');"">
+                  <i class="bi bi-star"></i>&nbsp Report
+                </button>
+              </div>
+              {% endif %}
             {% else %}
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">

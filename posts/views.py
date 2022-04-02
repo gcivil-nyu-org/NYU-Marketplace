@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
+from .models import Post, Report
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -111,33 +111,55 @@ class index(LoginRequiredMixin, View):
         if category != "all":
             post_list = post_list.filter(category=category)
         if option != "all":
-            post_list = post_list.filter(option=option)
+            if option == "reported":
+                if request.user.is_superuser:
+                    post_list = post_list.filter(report_count__gte=1)
+                    post_list = post_list.order_by("-report_count")
+                else:
+                    raise PermissionDenied()
+            else:
+                post_list = post_list.filter(option=option)
         if sort == "priceasc":
             post_list = post_list.order_by("price")
         elif sort == "pricedesc":
             post_list = post_list.order_by("-price")
-        else:
-            post_list = post_list.order_by("-updated_at")
-        context = {"post_list": post_list}
+        elif option != "reported":
+            post_list = post_list.order_by("-created_at")
+        context = {"post_list": post_list, "user": request.user}
         return render(request, "posts/home.html", context)
 
 
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-
+    show_reported_button = True
     if request.method == "POST":
         if post.user != request.user and "interested" in request.POST:
             pass
-        elif post.user == request.user and "delete" in request.POST:
+        elif post.user != request.user and "report" in request.POST:
+            post.report_count += 1
+            post.save()
+            report = Report(reported_by=request.user, post=post)
+            report.save()
+            return redirect("posts:home")
+        elif (
+            post.user == request.user or request.user.is_superuser
+        ) and "delete" in request.POST:
             post.delete()
             return redirect("posts:home")
         elif post.user == request.user and "edit" in request.POST:
             return redirect("posts:post-edit", post_id=post_id)
         else:
             raise PermissionDenied()
+    else:
+        if Report.objects.filter(reported_by=request.user, post=post):
+            show_reported_button = False
 
-    context = {"post": post, "user": request.user}
+    context = {
+        "post": post,
+        "user": request.user,
+        "show_reported_button": show_reported_button,
+    }
     return render(request, "posts/detail.html", context)
 
 
