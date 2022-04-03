@@ -28,9 +28,5 @@ def profile_detail(request):
     user_info = Profile.objects.get(user=request.user)
     # user_info = user_info.filter(user=request.user)
 
-    context = {
-        "post_list": posts,
-        "user": user_info,
-        "default_user": request.user
-    }
+    context = {"post_list": posts, "user": user_info, "default_user": request.user}
     return render(request, "users/profile_detail.html", context)
