@@ -7,11 +7,10 @@
       <div class="container col-3 mt-10">
         <div class="card">
           <div class="mt-1 mb-3" style="text-align: center; font-size: 20px; font-weight: bold">
-            weineng
+            {{ user.user }}
           </div>
           <img
-              src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
-              class="rounded-circle"
+              src="{{ user.profile_pic.url }}"
               width="70%"
               height="70%"
               alt="Black and White Portrait of a Man"
@@ -19,18 +18,84 @@
               style="margin: 0 auto"
           />
           <div class="card-body">
-            <p class="card-text pt-2">Hi! I am Weineng from NYU Tandon. If you are interested in my recent post, feel
+            <p class="card-text pt-2">Hi! I am {{ user.user }} from {{ user.school }}. If you are interested in my recent post, feel
               free to call me!</p>
             <p class="poppins pt-3" style="font-size: 16px; font-weight: bold"><i class="bi bi-house-door"></i>&nbsp&nbspLocation:
-              6 Metrotech Center</p>
+              {{ user.address }}</p>
             <p class="poppins" style="font-size: 16px; font-weight: bold"><i class="bi bi-mailbox"></i>&nbsp&nbspEmail:
-              {{ user.email }}</p>
+              {{ default_user.email }}</p>
           </div>
         </div>
       </div>
       <div class="col-9">
+        <div class="row">
+            {% for post in post_list %}
+                      <div class="col-4 mt-3" style="padding: 0px 30px 20px 30px;">
+                        <div class="list-item">
+                          <a style="color: #000000" href="{% url 'posts:detail' post.id %}">
+                            <div class="col-12 home-img-div" style="#border: 1px solid #dddddd; #border-radius: 3px">
+                              <img class="home-img" src="{{ post.picture.url }}">
+                            </div>
+                            <div class="row col-12 mt-3 justify-content-between">
 
+                              <div class="col-11">
+                                <a class="title"
+                                   style="margin-left:6px; color: #000000; text-decoration: none; font-weight: bolder; font-size: 18px"
+                                   href="{% url 'posts:detail' post.id %}">{{ post.name }}</a>
+                              </div>
+                              <div class="col-1">
+                                <i class="bi bi-star"></i>
+                              </div>
+                            </div>
+                            <div class="row col-12 mt-2 justify-content-between">
+                              {% if post.price %}
+                                <div class="col-9">
+                                <span class="poppins"
+                                      style="margin-left:6px; font-size:18px; font-weight: bolder; color: #4b4b4b">$&nbsp{{ post.price | cut:'.00' }}</span>
+
+                                </div>
+                                <div class="col-3">
+                                  {% if post.option == 'sell' %}
+                                    <span class="poppins"
+                                          style="margin-left:12px; font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbsp&nbspSell</span>
+                                  {% elif post.option == 'rent' %}
+                                    <span class="poppins"
+                                          style="margin-left:12px; font-size:20px; font-weight: bolder; color: #faad14">&nbsp&nbspRent</span>
+                                  {% endif %}</div>
+
+
+                              {% else %}
+
+                                <span class="poppins" style="margin-left:6px; font-size:20px; font-weight: bolder; color: #57068c">Exchange</span>
+
+                              {% endif %}
+                            </div>
+
+
+                            <div class="col-12 row justify-content-between mt-2">
+                              <div class="col-6" style="margin-left:6px;">
+                                <span>{{ post.created_at|date:'m/d/Y' }}</span>
+                              </div>
+                              <div class="col-1" style="margin-right: 10px; margin-bottom: 5px">
+                                <img
+                                    src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                                    class="rounded-circle"
+                                    weight="25"
+                                    height="25"
+                                    alt="Black and White Portrait of a Man"
+                                    loading="lazy"
+                                />
+
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+
+                    {% endfor %}
+                  </div>
+            </div>
+            </div>
       </div>
     </div>
-  </div>
 {% endblock content %}
