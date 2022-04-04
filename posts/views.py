@@ -132,15 +132,31 @@ class index(LoginRequiredMixin, View):
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    show_reported_button = True
+    is_reported_by_user = False
+    if Report.objects.filter(reported_by=request.user, post=post):
+        is_reported_by_user = True
     if request.method == "POST":
         if post.user != request.user and "interested" in request.POST:
             pass
-        elif post.user != request.user and "report" in request.POST:
+        elif (
+            post.user != request.user
+            and "report" in request.POST
+            and not is_reported_by_user
+        ):
             post.report_count += 1
             post.save()
             report = Report(reported_by=request.user, post=post)
             report.save()
+            return redirect("posts:home")
+        elif (
+            post.user != request.user
+            and "cancel_report" in request.POST
+            and is_reported_by_user
+        ):
+            post.report_count -= 1
+            post.save()
+            report = Report.objects.filter(reported_by=request.user, post=post)
+            report.delete()
             return redirect("posts:home")
         elif (
             post.user == request.user or request.user.is_superuser
@@ -152,13 +168,12 @@ def detail(request, post_id):
         else:
             raise PermissionDenied()
     else:
-        if Report.objects.filter(reported_by=request.user, post=post):
-            show_reported_button = False
+        pass
 
     context = {
         "post": post,
         "user": request.user,
-        "show_reported_button": show_reported_button,
+        "is_reported_by_user": is_reported_by_user,
     }
     return render(request, "posts/detail.html", context)
 
