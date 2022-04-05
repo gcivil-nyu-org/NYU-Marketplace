@@ -1,11 +1,12 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from posts.models import Post
 
 
 class TestViews(TestCase):
     def setUp(self):
         self.client = Client()
+        self.request_factory = RequestFactory()
         # self.client.login(username='testuser', password='12345')
         self.user = get_user_model().objects.create_user(
             username="user",
@@ -69,8 +70,7 @@ class TestViews(TestCase):
     def test_detail_view(self):
         response = self.client.get("/posts/detail/1")
         self.assertEquals(response.status_code, 302)
-        login = self.client.login(email="user@nyu.edu", password="12test12")
-        self.assertEquals(login, True)
+        self.client.logout()
         Post.objects.create(
             name="macbook pro",
             description="used macbook pro",
@@ -81,6 +81,34 @@ class TestViews(TestCase):
             user=self.poster,
             picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
         )
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
         response2 = self.client.get("/posts/detail/1")
         self.assertEquals(response2.status_code, 200)
         self.assertTemplateUsed(response2, "posts/detail.html")
+        report = {"report": "report"}
+        response3 = self.client.post("/posts/detail/1", report)
+        self.assertEquals(response3.status_code, 302)
+        cancel_report = {"cancel_report": "cancel_report"}
+        response4 = self.client.post("/posts/detail/1", cancel_report)
+        self.assertEquals(response4.status_code, 302)
+        self.client.logout()
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        edit_denied = {"edit": "edit"}
+        response9 = self.client.post("/posts/detail/1", edit_denied)
+        self.assertEquals(response9.status_code, 403)
+        interested = {"interested": "interested"}
+        response5 = self.client.post("/posts/detail/1", interested)
+        self.assertEquals(response5.status_code, 200)
+        self.client.logout()
+        login = self.client.login(password="12test12", email="test@example.com")
+        self.assertEquals(login, True)
+        edit = {"edit": "edit"}
+        response6 = self.client.post("/posts/detail/1", edit)
+        self.assertEquals(response6.status_code, 302)
+        delete = {"delete": "delete"}
+        response7 = self.client.post("/posts/detail/1", delete)
+        self.assertEquals(response7.status_code, 302)
+        response8 = self.client.get("/posts/detail/1")
+        self.assertEquals(response8.status_code, 404)
