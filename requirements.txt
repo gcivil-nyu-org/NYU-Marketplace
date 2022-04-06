@@ -21,3 +21,4 @@ flake8
 black
 coverage
 coveralls
+django-phone-field
