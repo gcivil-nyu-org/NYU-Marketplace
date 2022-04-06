@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import ProfileForm
 from .models import Profile
+from posts.models import Post
 
 # Create your views here.
 # def userTest(request):
@@ -18,3 +19,29 @@ def profile(request):
     else:
         form = ProfileForm()
     return render(request, "users/profile.html", {"form": form})
+
+
+@login_required(login_url="/accounts/login/")
+def profile_detail(request):
+    posts = Post.objects.all()
+    posts = posts.filter(user=request.user)
+    user_info = Profile.objects.get(user=request.user)
+    # user_info = user_info.filter(user=request.user)
+
+    context = {"post_list": posts, "user": user_info, "default_user": request.user}
+    return render(request, "users/profile_detail.html", context)
+
+
+@login_required(login_url="/accounts/login/")
+def edit_profile(request):
+
+    if request.method == "POST":
+        # form = ProfileForm(request.POST, instance=request.user.profile)
+        form = ProfileForm(
+            request.POST, request.FILES or None, instance=request.user.profile
+        )
+        form.save()
+        return redirect("posts:home")
+    else:
+        form = ProfileForm(instance=request.user.profile)
+    return render(request, "users/edit_profile.html", {"form": form})

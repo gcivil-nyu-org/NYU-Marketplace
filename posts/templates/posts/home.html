@@ -67,6 +67,12 @@
                 <a class="type-link" id="exchange" href="javascript:void(0);" onclick="getItem('option', 'exchange')"
                    style="padding-right: 50px; font-size: 25px"><i class="bi bi-layers-half"></i>&nbsp Exchange</a>
               </li>
+                {%  if user.is_superuser %}
+                <li class="type-item">
+                <a class="type-link" id="reported" href="javascript:void(0);" onclick="getItem('option', 'reported')"
+                   style="padding-right: 50px; font-size: 25px"><i class="bi bi-flag-fill"></i>&nbsp Reported</a>
+              </li>
+                {%  endif %}
             </ul>
           </nav>
 
@@ -120,11 +126,11 @@
                   </div>
                   <div class="col-1" style="margin-right: 10px; margin-bottom: 5px">
                     <img
-                        src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                        src={{ post.user.profile.profile_pic.url }}
                         class="rounded-circle"
                         weight="25"
                         height="25"
-                        alt="Black and White Portrait of a Man"
+                        alt="Img"
                         loading="lazy"
                     />
 

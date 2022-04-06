@@ -44,10 +44,10 @@
         {% endif %}
         <div class="col-12 mt-5">
           <img
-              src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+              src={{ post.user.profile.profile_pic.url }}
               class="rounded-circle"
-              weight="25"
-              height="25"
+              weight="40"
+              height="40"
               alt="Black and White Portrait of a Man"
               loading="lazy"
           />
@@ -82,19 +82,42 @@
           </div>
           <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
             {% csrf_token %}
-            {% if post.user != user %}
+            {% if user.is_superuser %}
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
+                <i class="bi"></i>&nbsp DELETE
+              </button>
+            </div>
+            </br>
+            {% elif post.user != user %}
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="interested">
                 <i class="bi bi-star"></i>&nbsp Interested!
               </button>
             </div>
+            </br>
+              {% if is_reported_by_user%}
+              <div class="col-6">
+                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="cancel_report" onclick="return confirm('Are you sure?');"">
+                  <i class="bi bi-flag-fill"></i>&nbsp Cancel Report
+                </button>
+              </div>
+              </br>
+              {% else %}
+              <div class="col-6">
+                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="report" onclick="return confirm('Are you sure?');"">
+                  <i class="bi bi-flag"></i>&nbsp Report
+                </button>
+              </div>
+              </br>
+              {% endif %}
             {% else %}
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
                 <i class="bi"></i>&nbsp DELETE
               </button>
             </div>
-          </br>
+            </br>
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF" name="edit">
                 <i class="bi"></i>&nbsp EDIT
