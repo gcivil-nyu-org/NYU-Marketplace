@@ -38,13 +38,13 @@ class TestViews(TestCase):
         # login = self.client.force_login(self.user)
         login = self.client.login(email="user@nyu.edu", password="12test12")
         self.assertEquals(login, True)
-        Profile.objects.create(
-            user=self.user,
-            profile_pic="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
-            gender="male",
-            school="tandon",
-            address="6 Metrotech Center",
-        )
+        # Profile.objects.create(
+        #     user=self.user,
+        #     profile_pic="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        #     gender="male",
+        #     school="tandon",
+        #     address="6 Metrotech Center",
+        # )
         response2 = self.client.get("/profile/profile_detail/")
         self.assertEquals(response2.status_code, 200)
         self.assertTemplateUsed(response2, "users/profile_detail.html")
@@ -53,7 +53,7 @@ class TestViews(TestCase):
         login = self.client.login(email="user@nyu.edu", password="12test12")
         self.assertEquals(login, True)
         response = self.client.post(
-            "/profile/",
+            "/profile/edit_profile/",
             {
                 "user": "self.user",
                 "profile_pic": "https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",

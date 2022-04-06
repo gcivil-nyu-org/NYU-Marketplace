@@ -7,7 +7,9 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    profile_pic = models.ImageField(null=True, editable=True, blank=True)
+    profile_pic = models.ImageField(
+        null=True, editable=True, blank=True, default="blank-profile-picture.webp"
+    )
 
     genders = (
         ("male", "Male"),

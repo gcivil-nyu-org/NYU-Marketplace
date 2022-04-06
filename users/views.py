@@ -30,3 +30,18 @@ def profile_detail(request):
 
     context = {"post_list": posts, "user": user_info, "default_user": request.user}
     return render(request, "users/profile_detail.html", context)
+
+
+@login_required(login_url="/accounts/login/")
+def edit_profile(request):
+
+    if request.method == "POST":
+        # form = ProfileForm(request.POST, instance=request.user.profile)
+        form = ProfileForm(
+            request.POST, request.FILES or None, instance=request.user.profile
+        )
+        form.save()
+        return redirect("posts:home")
+    else:
+        form = ProfileForm(instance=request.user.profile)
+    return render(request, "users/edit_profile.html", {"form": form})

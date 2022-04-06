@@ -1,0 +1,129 @@
+{% extends "posts/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+  .div {
+      box-sizing: border-box;
+  }
+  /* Set additional styling options for the columns*/
+  .column {
+  float: left;
+  width: 50%;
+  }
+
+  .row:after {
+  content: "";
+  display: table;
+  clear: both;
+  }
+
+  .profile_class
+  {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+  }
+
+  .title {
+      font-weight: bold;
+      font-size: 16px;
+  }
+  </style>
+<div  padding = "20px" >
+
+<div class="row">
+
+
+
+
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+  <div class="column" >
+    <br>
+    <div  class="profile_class" class = "content-section">
+      <div class="media-body">
+
+        <h2 class="account-heading">Hi {{ user.username }}!</h2>
+        <br>
+      </div>
+
+
+
+    <img id="frame" style=" display: block;
+    border-style: none;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    height: 200px;"
+    class="rounded-circle account-img"
+         src="{{ user.profile.profile_pic.url }}">
+    <div id="formImage" onchange="preview()">{{form.profile_pic}}</div>
+
+
+
+    </div>
+  </div>
+
+  <div class="column">
+
+    <fieldset class="form-group">
+      <br>
+      <br>
+
+      <legend class="border-bottom mb-4">Profile Info</legend>
+      <br>
+      <label class="title">Email-ID</label>
+      <br>
+      {{ user.email }}
+      <br>
+      <br>
+
+
+      <label class="title">Gender</label>
+      <br>
+      {{ form.gender }}
+      <br>
+      <br>
+
+
+      <label class="title">School</label>
+      <br>
+      {{ form.school }}
+      <br>
+
+      <label class="title">Address</label>
+      <br>
+      {{ form.address }}
+      <br>
+
+   
+
+    </fieldset>
+
+    <div class="form-group">
+
+         <button class="btn btn-outline-info" type="submit" >Save</button>
+    </div>
+
+  </div>
+
+
+  </form>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function preview() {
+      frame.src = URL.createObjectURL(event.target.files[0]);
+  }
+  </script>
+
+{% endblock content %}
