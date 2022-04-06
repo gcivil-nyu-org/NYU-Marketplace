@@ -49,8 +49,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "unique_together": {("post", "reported_by")},
-            },
+            options={"unique_together": {("post", "reported_by")},},
         ),
     ]

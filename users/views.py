@@ -4,9 +4,20 @@ from .forms import ProfileForm
 from .models import Profile
 from posts.models import Post
 
-# Create your views here.
-# def userTest(request):
-#    return HttpResponse("Hello, world. You're at the polls index.")
+
+@login_required(login_url="/accounts/login/")
+def edit_profile(request):
+
+    if request.method == "POST":
+        # form = ProfileForm(request.POST, instance=request.user.profile)
+        form = ProfileForm(
+            request.POST, request.FILES or None, instance=request.user.profile
+        )
+        form.save()
+        return redirect("posts:home")
+    else:
+        form = ProfileForm(instance=request.user.profile)
+    return render(request, "users/edit_profile.html", {"form": form})
 
 
 @login_required(login_url="/accounts/login/")

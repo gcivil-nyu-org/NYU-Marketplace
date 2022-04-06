@@ -9,14 +9,10 @@ class TestViews(TestCase):
         self.request_factory = RequestFactory()
         # self.client.login(username='testuser', password='12345')
         self.user = get_user_model().objects.create_user(
-            username="user",
-            password="12test12",
-            email="user@nyu.edu",
+            username="user", password="12test12", email="user@nyu.edu",
         )
         self.admin = get_user_model().objects.create_superuser(
-            username="admin",
-            password="admintestadmin",
-            email="admin@nyu.edu",
+            username="admin", password="admintestadmin", email="admin@nyu.edu",
         )
         self.poster = get_user_model().objects.create_user(
             username="test", password="12test12", email="test@example.com"
