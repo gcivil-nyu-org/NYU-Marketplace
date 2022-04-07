@@ -13,7 +13,7 @@ before_script:
   - python manage.py collectstatic
 
 script:
-  - python -m black .
+  - python -m black . --check
   - python -m flake8 --max-line-length=150
   - coverage run --source=. manage.py test
 
