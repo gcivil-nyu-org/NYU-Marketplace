@@ -128,7 +128,9 @@ class index(LoginRequiredMixin, View):
         context = {"post_list": post_list, "user": request.user}
         return render(request, "posts/home.html", context)
 
+
 # TODO do if else both cleaner - both here and in detail.html
+
 
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
@@ -142,11 +144,17 @@ def detail(request, post_id):
         is_user_already_interested = True
 
     if request.method == "POST":
-        if post.user != request.user and "interested" in request.POST and not is_user_already_interested:
-            cust_message = 'HardCoded message. To be changed later'
+        if (
+            post.user != request.user
+            and "interested" in request.POST
+            and not is_user_already_interested
+        ):
+            cust_message = "HardCoded message. To be changed later"
             post.interested_count += 1
             post.save()
-            interest = Interest(interested_user=request.user, post=post, cust_message=cust_message)
+            interest = Interest(
+                interested_user=request.user, post=post, cust_message=cust_message
+            )
             interest.save()
             return redirect("posts:home")
         elif (

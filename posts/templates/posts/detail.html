@@ -121,6 +121,14 @@
               </br>
               {% endif %}
             {% else %}
+            {% if interest_list %}
+              Interests:
+              <ul>
+              {% for interest in interest_list%}
+                <li>{{ interest.interested_user}} : {{interest.cust_message}}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
                 <i class="bi"></i>&nbsp DELETE

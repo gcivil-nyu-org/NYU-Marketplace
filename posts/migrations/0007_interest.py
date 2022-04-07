@@ -10,20 +10,49 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('posts', '0006_post_interested_count_post_report_count_report'),
+        ("posts", "0006_post_interested_count_post_report_count_report"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Interest',
+            name="Interest",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cust_message', models.TextField(max_length=400, validators=[django.core.validators.MinLengthValidator(2, 'Title must be greater than 2 characters')])),
-                ('interested_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='posts.post')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "cust_message",
+                    models.TextField(
+                        max_length=400,
+                        validators=[
+                            django.core.validators.MinLengthValidator(
+                                2, "Title must be greater than 2 characters"
+                            )
+                        ],
+                    ),
+                ),
+                (
+                    "interested_user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "post",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="posts.post"
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('post', 'interested_user')},
+                "unique_together": {("post", "interested_user")},
             },
         ),
     ]
