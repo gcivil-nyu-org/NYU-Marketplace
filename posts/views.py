@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post, Report
+from .models import Post, Report, Interest
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -133,11 +133,20 @@ class index(LoginRequiredMixin, View):
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     is_reported_by_user = False
+    is_user_already_interested = False
     if Report.objects.filter(reported_by=request.user, post=post):
         is_reported_by_user = True
+    if Interest.objects.filter(interested_user=request.user, post=post):
+        is_user_already_interested = True
+
     if request.method == "POST":
-        if post.user != request.user and "interested" in request.POST:
-            pass
+        if post.user != request.user and "interested" in request.POST and not is_user_already_interested:
+            cust_message = 'HardCoded message. To be changed later'
+            post.interested_count += 1
+            post.save()
+            interest = Interest(interested_user=request.user, post=post, cust_message=cust_message)
+            interest.save()
+            return redirect("posts:home")
         elif (
             post.user != request.user
             and "report" in request.POST

@@ -53,3 +53,17 @@ class Report(models.Model):
 
     class Meta:
         unique_together = ("post", "reported_by")
+
+class Interest(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    interested_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cust_message = models.TextField(
+        max_length=400,
+        validators=[MinLengthValidator(2, "Title must be greater than 2 characters")],
+    )
+
+    class Meta:
+        unique_together = ("post", "interested_user")
+
+    def __str__(self):
+        return f'{self.interested_user.username} interested in {self.post}'
