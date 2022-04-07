@@ -77,15 +77,9 @@
         </div>
 
         <div class="row justify-content-center col-8 mt-5">
-          {% if post.interested_count %}
           <div class="col-2" style="margin-bottom: auto; margin-top: auto">
             <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count}}</span>
           </div>
-          {% else %}
-          <div class="col-7" style="margin-bottom: auto; margin-top: auto">
-            Be the first to reach out! Click Interested!
-          </div>
-          {% endif %}
           <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
             {% csrf_token %}
             {% if user.is_superuser %}
@@ -96,12 +90,21 @@
             </div>
             </br>
             {% elif post.user != user %}
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="interested">
-                <i class="bi bi-star"></i>&nbsp Interested!
-              </button>
-            </div>
-            </br>
+              {% if is_user_already_interested%}
+              <div class="col-6">
+                  <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="cancel_interest" onclick="return confirm('Are you sure?');">
+                    <i class="bi bi-star"></i>&nbsp Cancel Interest
+                  </button>
+              </div>
+              </br>
+              {% else %}
+              <div class="col-6">
+                <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="interested" onclick="return confirm('Are you sure?');">
+                  <i class="bi bi-star"></i>&nbsp Interested!
+                </button>
+              </div>
+              </br>
+              {% endif %}
               {% if is_reported_by_user%}
               <div class="col-6">
                 <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="cancel_report" onclick="return confirm('Are you sure?');"">

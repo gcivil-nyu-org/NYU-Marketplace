@@ -128,10 +128,12 @@ class index(LoginRequiredMixin, View):
         context = {"post_list": post_list, "user": request.user}
         return render(request, "posts/home.html", context)
 
+# TODO do if else both cleaner - both here and in detail.html
 
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
+    interest_list = None
     is_reported_by_user = False
     is_user_already_interested = False
     if Report.objects.filter(reported_by=request.user, post=post):
@@ -146,6 +148,16 @@ def detail(request, post_id):
             post.save()
             interest = Interest(interested_user=request.user, post=post, cust_message=cust_message)
             interest.save()
+            return redirect("posts:home")
+        elif (
+            post.user != request.user
+            and "cancel_interest" in request.POST
+            and is_user_already_interested
+        ):
+            post.interested_count -= 1
+            post.save()
+            interest = Interest.objects.filter(interested_user=request.user, post=post)
+            interest.delete()
             return redirect("posts:home")
         elif (
             post.user != request.user
@@ -177,12 +189,15 @@ def detail(request, post_id):
         else:
             raise PermissionDenied()
     else:
-        pass
+        if request.user == post.user:
+            interest_list = Interest.objects.filter(post=post)
 
     context = {
         "post": post,
         "user": request.user,
         "is_reported_by_user": is_reported_by_user,
+        "is_user_already_interested": is_user_already_interested,
+        "interest_list": interest_list,
     }
     return render(request, "posts/detail.html", context)
 
