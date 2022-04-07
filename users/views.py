@@ -40,6 +40,10 @@ def edit_profile(request):
         form = ProfileForm(
             request.POST, request.FILES or None, instance=request.user.profile
         )
+        if not form.is_valid():
+            ctx = {"form": form}
+            # print("form ng")
+            return render(request, "users/edit_profile.html", ctx)
         form.save()
         return redirect("posts:home")
     else:
