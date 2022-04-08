@@ -149,7 +149,7 @@ def detail(request, post_id):
             and "interested" in request.POST
             and not is_user_already_interested
         ):
-            cust_message = "HardCoded message. To be changed later"
+            cust_message = request.POST.get("cust_message")
             post.interested_count += 1
             post.save()
             interest = Interest(
