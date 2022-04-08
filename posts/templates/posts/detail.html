@@ -102,11 +102,35 @@
               </div>
               </br>
               {% else %}
-              <div class="col-6">
-                <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="interested" onclick="return confirm('Are you sure?');">
+                <div class="col-6">
+                <button type="button" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" data-bs-toggle="modal" data-bs-target="#interestedModal" data-bs-whatever="@mdo">
                   <i class="bi bi-star"></i>&nbsp Interested!
                 </button>
-              </div>
+
+                </div>
+                <div class="modal fade" id="interestedModal" tabindex="-1" aria-labelledby="interestedModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="interestedModalLabel">I'm interested!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                       <form>
+                         <div class="modal-body">
+                          <div class="mb-3">
+                            <label for="interested-message" class="col-form-label">Leave your message to owner:</label>
+                            <textarea class="form-control" id="interested-message" name="cust_message"></textarea>
+                          </div>
+                          </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="interested">Show Interested!</button>
+                      </div>
+                          </form>
+                    </div>
+                  </div>
+                </div>
+
               </br>
               {% endif %}
               {% if is_reported_by_user%}
