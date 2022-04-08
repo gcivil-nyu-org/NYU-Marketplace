@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post, Report
+from .models import Post, Report, Interest
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -129,15 +129,44 @@ class index(LoginRequiredMixin, View):
         return render(request, "posts/home.html", context)
 
 
+# TODO do if else both cleaner - both here and in detail.html
+
+
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
+    interest_list = None
     is_reported_by_user = False
+    is_user_already_interested = False
     if Report.objects.filter(reported_by=request.user, post=post):
         is_reported_by_user = True
+    if Interest.objects.filter(interested_user=request.user, post=post):
+        is_user_already_interested = True
+
     if request.method == "POST":
-        if post.user != request.user and "interested" in request.POST:
-            pass
+        if (
+            post.user != request.user
+            and "interested" in request.POST
+            and not is_user_already_interested
+        ):
+            cust_message = request.POST.get("cust_message")
+            post.interested_count += 1
+            post.save()
+            interest = Interest(
+                interested_user=request.user, post=post, cust_message=cust_message
+            )
+            interest.save()
+            return redirect("posts:home")
+        elif (
+            post.user != request.user
+            and "cancel_interest" in request.POST
+            and is_user_already_interested
+        ):
+            post.interested_count -= 1
+            post.save()
+            interest = Interest.objects.filter(interested_user=request.user, post=post)
+            interest.delete()
+            return redirect("posts:home")
         elif (
             post.user != request.user
             and "report" in request.POST
@@ -168,12 +197,15 @@ def detail(request, post_id):
         else:
             raise PermissionDenied()
     else:
-        pass
+        if request.user == post.user:
+            interest_list = Interest.objects.filter(post=post)
 
     context = {
         "post": post,
         "user": request.user,
         "is_reported_by_user": is_reported_by_user,
+        "is_user_already_interested": is_user_already_interested,
+        "interest_list": interest_list,
     }
     return render(request, "posts/detail.html", context)
 

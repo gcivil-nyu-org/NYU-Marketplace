@@ -125,6 +125,7 @@
                     <span>{{ post.created_at|date:'m/d/Y' }}</span>
                   </div>
                   <div class="col-1" style="margin-right: 10px; margin-bottom: 5px">
+                    <a href="{% url 'users:user_info' post.user.id %}">
                     <img
                         src={{ post.user.profile.profile_pic.url }}
                         class="rounded-circle"
@@ -132,7 +133,8 @@
                         height="25"
                         alt="Img"
                         loading="lazy"
-                    />
+                    >
+                      </a>
 
                   </div>
                 </div>

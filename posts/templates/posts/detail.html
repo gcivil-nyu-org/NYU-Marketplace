@@ -43,6 +43,7 @@
           </div>
         {% endif %}
         <div class="col-12 mt-5">
+          <a href="{% url 'users:user_info' post.user.id %}">
           <img
               src={{ post.user.profile.profile_pic.url }}
               class="rounded-circle"
@@ -51,7 +52,10 @@
               alt="Black and White Portrait of a Man"
               loading="lazy"
           />
+            </a>
+            <a href="{% url 'users:user_info' post.user.id %}">
           <label class="poppins" style="font-weight: bold; font-size: 18px">Post by {{ post.user.username }}</label>
+             </a>
 
         </div>
 
@@ -78,7 +82,7 @@
 
         <div class="row justify-content-center col-8 mt-5">
           <div class="col-2" style="margin-bottom: auto; margin-top: auto">
-            <i class="bi bi-star"></i><span>&nbsp 103</span>
+            <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count}}</span>
           </div>
           <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
             {% csrf_token %}
@@ -90,12 +94,45 @@
             </div>
             </br>
             {% elif post.user != user %}
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="interested">
-                <i class="bi bi-star"></i>&nbsp Interested!
-              </button>
-            </div>
-            </br>
+              {% if is_user_already_interested%}
+              <div class="col-6">
+                  <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="cancel_interest" onclick="return confirm('Are you sure?');">
+                    <i class="bi bi-star"></i>&nbsp Cancel Interest
+                  </button>
+              </div>
+              </br>
+              {% else %}
+                <div class="col-6">
+                <button type="button" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" data-bs-toggle="modal" data-bs-target="#interestedModal" data-bs-whatever="@mdo">
+                  <i class="bi bi-star"></i>&nbsp Interested!
+                </button>
+
+                </div>
+                <div class="modal fade" id="interestedModal" tabindex="-1" aria-labelledby="interestedModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="interestedModalLabel">I'm interested!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                       <form>
+                         <div class="modal-body">
+                          <div class="mb-3">
+                            <label for="interested-message" class="col-form-label">Leave your message to owner:</label>
+                            <textarea class="form-control" id="interested-message" name="cust_message"></textarea>
+                          </div>
+                          </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="interested">Show Interested!</button>
+                      </div>
+                          </form>
+                    </div>
+                  </div>
+                </div>
+
+              </br>
+              {% endif %}
               {% if is_reported_by_user%}
               <div class="col-6">
                 <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="cancel_report" onclick="return confirm('Are you sure?');"">
@@ -112,6 +149,14 @@
               </br>
               {% endif %}
             {% else %}
+            {% if interest_list %}
+              Interests:
+              <ul>
+              {% for interest in interest_list%}
+                <li>{{ interest.interested_user}} : {{interest.cust_message}}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
                 <i class="bi"></i>&nbsp DELETE
