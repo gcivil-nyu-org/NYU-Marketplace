@@ -43,7 +43,9 @@ def user_info(request, user_id):
 def edit_profile(request):
 
     if request.method == "POST":
-        form = ProfileForm(request.POST, request.FILES or None, instance=request.user.profile)
+        form = ProfileForm(
+            request.POST, request.FILES or None, instance=request.user.profile
+        )
         if not form.is_valid():
             ctx = {"form": form}
             return render(request, "users/edit_profile.html", ctx)

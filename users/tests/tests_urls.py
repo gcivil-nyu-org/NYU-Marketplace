@@ -10,7 +10,7 @@ class TestUrls(SimpleTestCase):
         self.assertEquals(url, "/profile/profile_detail/")
 
     def test_user_info_url_is_resolved(self):
-        url = reverse("users:user_info", args=['1'])
+        url = reverse("users:user_info", args=["1"])
         self.assertEquals(resolve(url).func, user_info)
         self.assertEquals(url, "/profile/user_info/1")
 

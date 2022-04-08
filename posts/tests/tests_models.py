@@ -87,6 +87,8 @@ class TestModels(TestCase):
             post=self.post,
             interested_user=self.interester,
         )
-        self.assertEquals(str(interest),  f"{self.interester.username} interested in {self.post}")
+        self.assertEquals(
+            str(interest), f"{self.interester.username} interested in {self.post}"
+        )
         self.assertEquals(str(interest.post), self.post.name)
         self.assertEquals(interest.interested_user.username, self.interester.username)
