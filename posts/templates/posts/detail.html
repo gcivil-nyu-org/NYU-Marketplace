@@ -43,6 +43,7 @@
           </div>
         {% endif %}
         <div class="col-12 mt-5">
+          <a href="{% url 'users:user_info' post.user.id %}">
           <img
               src={{ post.user.profile.profile_pic.url }}
               class="rounded-circle"
@@ -51,7 +52,10 @@
               alt="Black and White Portrait of a Man"
               loading="lazy"
           />
+            </a>
+            <a href="{% url 'users:user_info' post.user.id %}">
           <label class="poppins" style="font-weight: bold; font-size: 18px">Post by {{ post.user.username }}</label>
+             </a>
 
         </div>
 

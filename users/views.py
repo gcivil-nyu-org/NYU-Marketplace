@@ -9,16 +9,17 @@ from posts.models import Post
 #    return HttpResponse("Hello, world. You're at the polls index.")
 
 
-@login_required(login_url="/accounts/login/")
-def profile(request):
-    if request.method == "POST":
-        profile = Profile.objects.create(user=request.user)
-        form = ProfileForm(request.POST, instance=profile)
-        form.save()
-        return redirect("posts:home")
-    else:
-        form = ProfileForm()
-    return render(request, "users/profile.html", {"form": form})
+# @login_required(login_url="/accounts/login/")
+# def profile(request):
+#     # if request.method == "POST":
+#     #     # profile = Profile.objects.create(user=request.user)
+#     #     # form = ProfileForm(request.POST, instance=profile)
+#     #     # form.save()
+#     #     # return redirect("posts:home")
+#     #     # print(hi)
+#     # else:
+#     form = ProfileForm()
+#     return render(request, "users/profile.html", {"form": form})
 
 
 @login_required(login_url="/accounts/login/")
@@ -30,6 +31,20 @@ def profile_detail(request):
 
     context = {"post_list": posts, "user": user_info, "default_user": request.user}
     return render(request, "users/profile_detail.html", context)
+
+
+@login_required(login_url="/accounts/login/")
+def user_info(request, user_id):
+    posts = Post.objects.all()
+    posts = posts.filter(user=user_id)
+    user_info = Profile.objects.get(user=user_id)
+    # user_info = user_info.filter(user=request.user)
+    context = {"post_list": posts, "user": user_info, "default_user": request.user}
+    # print(request.user.id)
+    # print(user_id)
+    if request.user.id == user_id:
+        return render(request, "users/profile_detail.html", context)
+    return render(request, "users/user_info.html", context)
 
 
 @login_required(login_url="/accounts/login/")
