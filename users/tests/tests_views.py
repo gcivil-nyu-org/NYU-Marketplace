@@ -18,19 +18,12 @@ class TestViews(TestCase):
         )
 
     def test_profile_get(self):
-        # response = self.client.get("/profile/")
-        # self.assertEquals(response.status_code, 302)
-        # login = self.client.force_login(self.user)
         login = self.client.login(email="user@nyu.edu", password="12test12")
         self.assertEquals(login, True)
-        # response2 = self.client.get("/profile/")
-        # self.assertEquals(response2.status_code, 200)
         self.client.logout()
         self.assertEquals(login, True)
         login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
         self.assertEquals(login, True)
-        # response6 = self.client.get("/profile/")
-        # self.assertEquals(response6.status_code, 200)
 
     def test_profile_details_get(self):
         response = self.client.get("/profile/profile_detail/")
@@ -67,3 +60,18 @@ class TestViews(TestCase):
         self.assertEquals(profile1.gender, "female")
         self.assertEquals(profile1.school, "tandon")
         self.assertEquals(profile1.address, "6 Metrotech Center")
+
+    def test_user_info_get(self):
+        response = self.client.get(f"/profile/user_info/{self.user.id}")
+        self.assertEquals(response.status_code, 302)
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        response = self.client.get(f"/profile/user_info/{self.user.id}")
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, "users/profile_detail.html")
+        self.client.logout()
+        login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
+        self.assertEquals(login, True)
+        response2 = self.client.get(f"/profile/user_info/{self.user.id}")
+        self.assertEquals(response2.status_code, 200)
+        self.assertTemplateUsed(response2, "users/user_info.html")
