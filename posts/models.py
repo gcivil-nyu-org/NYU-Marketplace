@@ -62,7 +62,6 @@ class Interest(models.Model):
         max_length=400,
         validators=[MinLengthValidator(2, "Title must be greater than 2 characters")],
         null=True,
-
     )
 
     class Meta:

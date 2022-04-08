@@ -7,13 +7,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('posts', '0007_interest'),
+        ("posts", "0007_interest"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='interest',
-            name='cust_message',
-            field=models.TextField(max_length=400, null=True, validators=[django.core.validators.MinLengthValidator(2, 'Title must be greater than 2 characters')]),
+            model_name="interest",
+            name="cust_message",
+            field=models.TextField(
+                max_length=400,
+                null=True,
+                validators=[
+                    django.core.validators.MinLengthValidator(
+                        2, "Title must be greater than 2 characters"
+                    )
+                ],
+            ),
         ),
     ]
