@@ -100,7 +100,10 @@ class TestViews(TestCase):
         self.assertEquals(response9.status_code, 403)
         interested = {"interested": "interested"}
         response5 = self.client.post("/posts/detail/1", interested)
-        self.assertEquals(response5.status_code, 302)
+        self.assertEquals(response5.status_code, 200)
+        cancel_interested = {"cancel_interest": "cancel_interest"}
+        response9 = self.client.post("/posts/detail/1", cancel_interested)
+        self.assertEquals(response9.status_code, 200)
         self.client.logout()
         login = self.client.login(password="12test12", email="test@example.com")
         self.assertEquals(login, True)

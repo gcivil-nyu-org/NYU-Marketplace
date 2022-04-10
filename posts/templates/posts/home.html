@@ -91,9 +91,19 @@
                        style="margin-left:6px; color: #000000; text-decoration: none; font-weight: bolder; font-size: 18px"
                        href="{% url 'posts:detail' post.id %}">{{ post.name }}</a>
                   </div>
+                    {% if post.pk in user_interested_list %}
+
+                    <div class="col-1">
+{#                    <h1>{{ post.pk }}</h1>#}
+                    <i class="bi bi-star-fill" style="color:#57068c"></i>
+                  </div>
+                    {% else %}
                   <div class="col-1">
+{#                  <h1>{{ user_interested_list }}</h1>#}
+{#                  <h1>{{ post.pk }}</h1>#}
                     <i class="bi bi-star"></i>
                   </div>
+                    {% endif %}
                 </div>
                 <div class="row col-12 mt-2 justify-content-between">
                   {% if post.price %}
