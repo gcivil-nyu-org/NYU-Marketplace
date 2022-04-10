@@ -106,9 +106,11 @@ class index(LoginRequiredMixin, View):
         sort = request.GET.get("sort", default="all")
         q = request.GET.get("q", default="")
         post_list = Post.objects.all()
-        post_list_pk = Post.objects.all().values('pk')
+        post_list_pk = Post.objects.all().values("pk")
         if len(Interest.objects.filter(interested_user=request.user)) > 0:
-            user_interested_list = Interest.objects.filter(interested_user=request.user).values_list('post')[0]
+            user_interested_list = Interest.objects.filter(
+                interested_user=request.user
+            ).values_list("post")[0]
         else:
             user_interested_list = ()
             # print(user_interested_list)
@@ -131,8 +133,12 @@ class index(LoginRequiredMixin, View):
             post_list = post_list.order_by("-price")
         elif option != "reported":
             post_list = post_list.order_by("-created_at")
-        context = {"post_list": post_list, "user": request.user, "user_interested_list": user_interested_list,
-                   "post_list_pk":post_list_pk}
+        context = {
+            "post_list": post_list,
+            "user": request.user,
+            "user_interested_list": user_interested_list,
+            "post_list_pk": post_list_pk,
+        }
         # print(post_list_pk)
         # print(user_interested_list)
         return render(request, "posts/home.html", context)
