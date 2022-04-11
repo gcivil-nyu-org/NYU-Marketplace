@@ -32,6 +32,16 @@ class TestViews(TestCase):
         #     user=self.poster,
         # )
 
+    def test_admin_cannot_not_create_post(self):
+        response = self.client.get("/posts/create/")
+        self.assertEquals(response.status_code, 302)
+        login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
+        self.assertEquals(login, True)
+        response2 = self.client.get("/posts/create/")
+        self.assertEquals(response2.status_code, 403)
+        response3 = self.client.post("/posts/create/")
+        self.assertEquals(response3.status_code, 403)
+
     def test_post_get(self):
         response = self.client.get("/posts/")
         self.assertEquals(response.status_code, 302)
