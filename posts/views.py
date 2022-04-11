@@ -63,6 +63,8 @@ class postCreate(LoginRequiredMixin, CreateView):
     login_url = "/accounts/login"
 
     def get(self, request, pk=None, post_id=None):
+        if request.user.is_superuser:
+            raise PermissionDenied()
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
             if post.user != request.user:
@@ -74,6 +76,8 @@ class postCreate(LoginRequiredMixin, CreateView):
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk=None, post_id=None):
+        if request.user.is_superuser:
+            raise PermissionDenied()
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
         else:
