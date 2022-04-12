@@ -155,8 +155,12 @@ class index(LoginRequiredMixin, View):
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     interest_list = None
+    report_list = None
+    admin_check_report = False
     is_reported_by_user = False
     is_user_already_interested = False
+    if Report.objects.filter(post=post):
+        admin_check_report = True
     if Report.objects.filter(reported_by=request.user, post=post):
         is_reported_by_user = True
     if Interest.objects.filter(interested_user=request.user, post=post):
@@ -260,6 +264,10 @@ def detail(request, post_id):
     else:
         if request.user == post.user:
             interest_list = Interest.objects.filter(post=post)
+        if request.user.is_superuser:
+            if admin_check_report:
+                report_list = Report.objects.filter(post=post)
+                # print(report.reason)
 
     context = {
         "post": post,
@@ -267,6 +275,7 @@ def detail(request, post_id):
         "is_reported_by_user": is_reported_by_user,
         "is_user_already_interested": is_user_already_interested,
         "interest_list": interest_list,
+        "report_list": report_list,
     }
     return render(request, "posts/detail.html", context)
 
