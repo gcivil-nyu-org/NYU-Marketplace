@@ -1,6 +1,7 @@
 {% extends "posts/base.html" %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'posts/main.css' %}">
 
   <div class="container  mt-5">
     {% csrf_token %}
@@ -151,16 +152,18 @@
                 </button>
               </div>
               </br>
+
               {% endif %}
             {% else %}
-            {% if interest_list %}
-              Interests:
-              <ul>
-              {% for interest in interest_list%}
-                <li>{{ interest.interested_user}} : {{interest.cust_message}}</li>
-              {% endfor %}
-              </ul>
-            {% endif %}
+
+{#            {% if interest_list %}#}
+{#              Interests:#}
+{#              <ul>#}
+{#              {% for interest in interest_list%}#}
+{#                <li>{{ interest.interested_user}} : {{interest.cust_message}}</li>#}
+{#              {% endfor %}#}
+{#              </ul>#}
+{#            {% endif %}#}
             <div class="col-6">
               <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
                 <i class="bi"></i>&nbsp DELETE
@@ -175,10 +178,60 @@
             {% endif %}
           </form>
         </div>
+        {% if user == post.user %}
+            <div class = "col-md-12">
+            <div class = "table-wrap">
+             <table class="table table-responsive-xl">
+                            <thead>
+                            <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Message</th>
+                            <th>&nbsp;</th>
+                            </tr>
+                            </thead>
+                          {% for interest in interest_list %}
+                              <tr class = "alert">
+                              <td class="d-flex align-items-center">
+{#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
+                                  <div class = "img">
+                                                              <img
+                                  src={{ interest.interested_user.profile.profile_pic.url }}
+                                  class="rounded-circle"
+                                  weight="40"
+                                  height="40"
+                                  alt="Black and White Portrait of a Man"
+                                  loading="lazy"
+                              />
+                                  </div>
+                                <div class="pl-3 email">
+                                <span>{{ interest.interested_user}}</span>
+                                <span>Joined on {{ interest.interested_user.date_joined}}</span>
+                                </div>
+                                </td>
+                                  <td >{{ interest.interested_user.email}}</td>
+                                <td class="status"> {{interest.cust_message}}</td>
+                              <td>
+                                    <button type="button" class="btn-close custom-button" aria-label="Close"></button>
+
+                                </button>
+                                </td>
+
+
+                              </tr>
+
+
+                                {% endfor %}
+                        </table>
+            </div>
+            </div>
+        {% endif %}
+        </div>
 
       </div>
 
       <script>
       </script>
     </div>
+
 {% endblock content %}
