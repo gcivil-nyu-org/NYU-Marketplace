@@ -7,14 +7,10 @@ class TestViews(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = get_user_model().objects.create_user(
-            username="user",
-            password="12test12",
-            email="user@nyu.edu",
+            username="user", password="12test12", email="user@nyu.edu",
         )
         self.admin = get_user_model().objects.create_superuser(
-            username="admin",
-            password="admintestadmin",
-            email="admin@nyu.edu",
+            username="admin", password="admintestadmin", email="admin@nyu.edu",
         )
 
     def test_profile_get(self):

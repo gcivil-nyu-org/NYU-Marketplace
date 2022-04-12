@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ProfileForm
 from .models import Profile
-from posts.models import Post
+
+from posts.models import Post, Report, Interest
+from django.core.exceptions import PermissionDenied
 
 # @login_required(login_url="/accounts/login/")
 # def profile(request):
@@ -54,3 +56,81 @@ def edit_profile(request):
     else:
         form = ProfileForm(instance=request.user.profile)
     return render(request, "users/edit_profile.html", {"form": form})
+
+
+@login_required(login_url="/accounts/login/")
+def post_interest_detail(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    interest_list = None
+    is_reported_by_user = False
+    is_user_already_interested = False
+    if Report.objects.filter(reported_by=request.user, post=post):
+        is_reported_by_user = True
+    if Interest.objects.filter(interested_user=request.user, post=post):
+        is_user_already_interested = True
+
+    if request.method == "POST":
+        if (
+            post.user != request.user
+            and "interested" in request.POST
+            and not is_user_already_interested
+        ):
+            cust_message = request.POST.get("cust_message")
+            post.interested_count += 1
+            post.save()
+            interest = Interest(
+                interested_user=request.user, post=post, cust_message=cust_message
+            )
+            interest.save()
+            return redirect("posts:home")
+        elif (
+            post.user != request.user
+            and "cancel_interest" in request.POST
+            and is_user_already_interested
+        ):
+            post.interested_count -= 1
+            post.save()
+            interest = Interest.objects.filter(interested_user=request.user, post=post)
+            interest.delete()
+            return redirect("posts:home")
+        elif (
+            post.user != request.user
+            and "report" in request.POST
+            and not is_reported_by_user
+        ):
+            post.report_count += 1
+            post.save()
+            report = Report(reported_by=request.user, post=post)
+            report.save()
+            return redirect("posts:home")
+        elif (
+            post.user != request.user
+            and "cancel_report" in request.POST
+            and is_reported_by_user
+        ):
+            post.report_count -= 1
+            post.save()
+            report = Report.objects.filter(reported_by=request.user, post=post)
+            report.delete()
+            return redirect("posts:home")
+        elif (
+            post.user == request.user or request.user.is_superuser
+        ) and "delete" in request.POST:
+            post.delete()
+            return redirect("posts:home")
+        elif post.user == request.user and "edit" in request.POST:
+            return redirect("posts:post-edit", post_id=post_id)
+        else:
+            raise PermissionDenied()
+    else:
+        if request.user == post.user:
+            interest_list = Interest.objects.filter(post=post)
+
+    context = {
+        "post": post,
+        "user": request.user,
+        "is_reported_by_user": is_reported_by_user,
+        "is_user_already_interested": is_user_already_interested,
+        "interest_list": interest_list,
+    }
+    return render(request, "users/post_interest_detail.html", context)
