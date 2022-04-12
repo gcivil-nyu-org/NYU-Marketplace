@@ -125,3 +125,45 @@ class TestViews(TestCase):
         self.assertEquals(response7.status_code, 302)
         response8 = self.client.get("/posts/detail/1")
         self.assertEquals(response8.status_code, 404)
+
+    def test_detail_view_admin(self):
+        response = self.client.get("/posts/detail/1")
+        self.assertEquals(response.status_code, 302)
+        self.client.logout()
+        Post.objects.create(
+            name="macbook pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        report = {"report": "report", "report_option": "4"}
+        response1 = self.client.post("/posts/detail/1", report)
+        self.assertEquals(response1.status_code, 200)
+        self.client.logout()
+
+        login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
+        self.assertEquals(login, True)
+        response2 = self.client.get("/posts/detail/1")
+        self.assertEquals(response2.status_code, 200)
+        self.assertEquals(len(response2.context["report_list"]), 1)
+        self.client.logout()
+
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        cancel_report = {"cancel_report": "cancel_report"}
+        response3 = self.client.post("/posts/detail/1", cancel_report)
+        self.assertEquals(response3.status_code, 200)
+        self.client.logout()
+
+        login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
+        self.assertEquals(login, True)
+        response4 = self.client.get("/posts/detail/1")
+        self.assertEquals(response4.status_code, 200)
+        self.assertEquals(response4.context["report_list"], None)
+        self.client.logout()
