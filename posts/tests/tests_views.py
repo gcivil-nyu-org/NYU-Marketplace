@@ -96,12 +96,12 @@ class TestViews(TestCase):
         response2 = self.client.get("/posts/detail/1")
         self.assertEquals(response2.status_code, 200)
         self.assertTemplateUsed(response2, "posts/detail.html")
-        report = {"report": "report"}
+        report = {"report": "report", "report_option":"4"}
         response3 = self.client.post("/posts/detail/1", report)
-        self.assertEquals(response3.status_code, 302)
+        self.assertEquals(response3.status_code, 200)
         cancel_report = {"cancel_report": "cancel_report"}
         response4 = self.client.post("/posts/detail/1", cancel_report)
-        self.assertEquals(response4.status_code, 302)
+        self.assertEquals(response4.status_code, 200)
         self.client.logout()
         login = self.client.login(email="user@nyu.edu", password="12test12")
         self.assertEquals(login, True)

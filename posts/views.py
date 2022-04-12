@@ -211,7 +211,13 @@ def detail(request, post_id):
         ):
             post.report_count += 1
             post.save()
-            report = Report(reported_by=request.user, post=post)
+            # print(request.POST.get("report_option"))
+            # report = Report(reported_by=request.user, post=post, reasons=request.POST.get("report_option"))
+            report = Report(
+                reported_by=request.user,
+                post=post,
+                reason=request.POST.get("report_option"),
+            )
             report.save()
             is_reported_by_user = True
             context = {

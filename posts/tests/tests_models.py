@@ -78,6 +78,7 @@ class TestModels(TestCase):
         report = Report.objects.create(
             post=self.post,
             reported_by=self.reporter,
+            reason=4,
         )
         self.assertEquals(str(report.post), self.post.name)
         self.assertEquals(report.reported_by.username, self.reporter.username)
