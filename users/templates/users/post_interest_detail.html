@@ -6,37 +6,19 @@
   <div class="container  mt-5">
     {% csrf_token %}
     <div class="row">
+      <div class="container col-4 mt-10">
+        <div class="row">
+          <div class="detail-img-div">
+            <img id="frame"
+               src="{{ post.picture.url }}"
+               class="detail-img"
+               alt="images of item"
 
-      <div class="container col-4 mt-10 detail-img-div">
-          <div class = "col-1">
-                 <img id="frame"
-             src="{{ post.picture.url }}"
-             class="detail-img"
-             alt="images of item"
-        />
-               <div class="col-12">
-          <h2 class="poppins" style="font-weight: bolder; font-size: 36px">{{ post.name }}</h2>
-        </div>
-
-
+          />
           </div>
+          <div>
 
-
-
-
-        <!-- button onclick="clearImage()" class="btn btn-primary mt-3">Delete image</button-->
-
-      </div>
-
-
-
-
-      <div class="col-1">
-      </div>
-
-
-<div class="container col-7 ">
-        <div class="col-12">
+                 <div class="col-12">
           <h2 class="poppins" style="font-weight: bolder; font-size: 36px">{{ post.name }}</h2>
         </div>
         {% if post.option == 'exchange' %}
@@ -84,6 +66,7 @@
           <label class="poppins" style="font-size: 18px">&nbsp&nbsp{{ post.location }}</label>
 
         </div>
+
         <div class="row col-12 mt-3">
           <div class="col-12">
             <label class="poppins" style="font-weight: bold; font-size: 18px">Description:</label>
@@ -191,7 +174,28 @@
             {% endif %}
           </form>
         </div>
-        {% if user == post.user %}
+
+
+
+
+
+
+
+          </div>
+        </div>
+        <!-- button onclick="clearImage()" class="btn btn-primary mt-3">Delete image</button-->
+      </div>
+
+
+
+      <div class="col-1">
+      </div>
+
+
+
+
+      <div class="container col-7 ">
+                {% if user == post.user %}
             <div class = "col-md-12">
             <div class = "table-wrap">
              <table class="table table-responsive-xl">
@@ -239,8 +243,6 @@
             </div>
             </div>
         {% endif %}
-        </div>
-
       </div>
 
       <script>
