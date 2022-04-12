@@ -213,7 +213,16 @@ def detail(request, post_id):
             post.save()
             report = Report(reported_by=request.user, post=post)
             report.save()
-            return redirect("posts:home")
+            is_reported_by_user = True
+            context = {
+                "post": post,
+                "user": request.user,
+                "is_reported_by_user": is_reported_by_user,
+                "is_user_already_interested": is_user_already_interested,
+                "interest_list": interest_list,
+            }
+            return render(request, "posts/detail.html", context)
+            # return redirect("posts:home")
         elif (
             post.user != request.user
             and "cancel_report" in request.POST
@@ -223,7 +232,16 @@ def detail(request, post_id):
             post.save()
             report = Report.objects.filter(reported_by=request.user, post=post)
             report.delete()
-            return redirect("posts:home")
+            is_reported_by_user = False
+            context = {
+                "post": post,
+                "user": request.user,
+                "is_reported_by_user": is_reported_by_user,
+                "is_user_already_interested": is_user_already_interested,
+                "interest_list": interest_list,
+            }
+            return render(request, "posts/detail.html", context)
+            # return redirect("posts:home")
         elif (
             post.user == request.user or request.user.is_superuser
         ) and "delete" in request.POST:

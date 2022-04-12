@@ -50,6 +50,13 @@ class Post(models.Model):
 class Report(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     reported_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    # reasons = (
+    #     ("1", "Inappropriate post content"),
+    #     ("2", "Post item is unavailable anymore"),
+    #     ("3", "Cannot reach out to post owner"),
+    #     ("4", "Other"),
+    # )
+    # option = models.IntegerField(max_length=10, choices=reasons, default=4)
 
     class Meta:
         unique_together = ("post", "reported_by")
