@@ -49,7 +49,7 @@
       <!-- Navbar brand -->
       <a class="navbar-brand mt-2 mt-lg-0" href="{% url 'posts:home' %}">
 
-        <img src="https://smartdesignworldwide.com/wp-content/uploads/2018/05/nyu-logo.jpg" width=100 loading="lazy"/>
+        <img src="https://nyu-marketplace-team1.s3.amazonaws.com/Marketplca.png" width=200 loading="lazy"/>
       </a>
       <!-- Left links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -59,9 +59,11 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'users:profile_detail' %}">Profile</a>
         </li>
+        {% if not user.is_superuser %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'posts:post-create' %}">My Posts</a>
+          <a class="nav-link" href="{% url 'posts:post-create' %}">Create a Post</a>
         </li>
+        {% endif %}
         <li style="margin-left: 300px;">
 
           <div class="form-group row">
@@ -147,7 +149,44 @@
               aria-labelledby="navbarDropdownMenuAvatar"
           >
             <li>
-              <a class="dropdown-item" href="{% url 'users:profile' %}">My profile</a>
+              <a class="dropdown-item" href="{% url 'users:profile_detail' %}">My profile</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'posts:home' %}">Settings</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
+            </li>
+          </ul>
+        </div>
+      {% elif default_user.is_authenticated %}
+                <div class="dropdown">
+          <a
+              class="dropdown-toggle d-flex align-items-center hidden-arrow"
+              href="#"
+              id="navbarDropdownMenuAvatar"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="text-decoration:none;color:#FFFFFF;"
+          >
+            <img
+                src={{ default_user.profile.profile_pic.url }}
+                class="rounded-circle"
+                height="40"
+                width = "40"
+                alt="Black and White Portrait of a Man"
+                loading="lazy"
+            />
+            &nbsp {{ default_user.username }}
+
+          </a>
+          <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="navbarDropdownMenuAvatar"
+          >
+            <li>
+              <a class="dropdown-item" href="{% url 'users:profile_detail' %}">My profile</a>
             </li>
             <li>
               <a class="dropdown-item" href="{% url 'posts:home' %}">Settings</a>

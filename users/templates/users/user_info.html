@@ -6,15 +6,14 @@
     <div class="row">
       <div class="container col-3 mt-10">
         <div class="card">
-          <div class="mt-1 mb-3" style="text-align: center; font-size: 20px; font-weight: bold; padding-left: 90px">
+          <div class="mt-1 mb-3" style="text-align: center; font-size: 20px; font-weight: bold;">
             {{ user.user }}
 
-            <a href="{% url 'users:edit_profile' %}" style="margin-left: 50px">
-              <button type="submit" class="btn"
-                              name="edit">
-                <i class="bi bi-pencil"></i>
-              </button>
-            </a>
+{#            <a href="{% url 'users:edit_profile' %}" style="padding-left: 30px">#}
+{#              <button type="submit" class="btn btn-primary btn-sm">#}
+{#            <i class="bi bi-pencil-square"></i>Edit#}
+{#                </button>#}
+{#            </a>#}
           </div>
           <img
               src="{{ user.profile_pic.url }}"
@@ -32,23 +31,22 @@
             <p class="card-text pt-2">Hi! I am {{ user.user }}. If you are interested in my recent post, feel
               free to call me!</p>
             {% endif %}
-
             <p class="poppins pt-3" style="font-size: 16px; font-weight: bold"><i class="bi bi-book"></i>&nbsp&nbspSchool:
               {{ user.school }}</p>
             <p class="poppins" style="font-size: 16px; font-weight: bold"><i class="bi bi-house-door"></i>&nbsp&nbspLocation:
               {{ user.address }}</p>
             <p class="poppins" style="font-size: 16px; font-weight: bold"><i class="bi bi-mailbox"></i>&nbsp&nbspEmail:
-              {{ default_user.email }}</p>
+              {{ user_account.email }}</p>
           </div>
         </div>
       </div>
       <div class="col-9">
-        <h1 class="poppins" style="margin-left: 3%">My Post</h1>
+        <h1 class="poppins" style="margin-left: 3%">Post</h1>
         <div class="row">
             {% for post in post_list %}
                       <div class="col-4 mt-3" style="padding: 0px 30px 20px 30px;">
                         <div class="list-item">
-                          <a style="color: #000000" href="{% url 'users:post_interest_detail' post.id %}">
+                          <a style="color: #000000" href="{% url 'posts:detail' post.id %}">
                             <div class="col-12 home-img-div" style="#border: 1px solid #dddddd; #border-radius: 3px">
                               <img class="home-img" src="{{ post.picture.url }}">
                             </div>
@@ -57,7 +55,7 @@
                               <div class="col-11">
                                 <a class="title"
                                    style="margin-left:6px; color: #000000; text-decoration: none; font-weight: bolder; font-size: 18px"
-                                   href="{% url 'users:post_interest_detail' post.id %}">{{ post.name }}</a>
+                                   href="{% url 'posts:detail' post.id %}">{{ post.name }}</a>
                               </div>
                               <div class="col-1">
                                 <i class="bi bi-star"></i>

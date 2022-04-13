@@ -32,6 +32,16 @@ class TestViews(TestCase):
         #     user=self.poster,
         # )
 
+    def test_admin_cannot_not_create_post(self):
+        response = self.client.get("/posts/create/")
+        self.assertEquals(response.status_code, 302)
+        login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
+        self.assertEquals(login, True)
+        response2 = self.client.get("/posts/create/")
+        self.assertEquals(response2.status_code, 403)
+        response3 = self.client.post("/posts/create/")
+        self.assertEquals(response3.status_code, 403)
+
     def test_post_get(self):
         response = self.client.get("/posts/")
         self.assertEquals(response.status_code, 302)
@@ -86,12 +96,12 @@ class TestViews(TestCase):
         response2 = self.client.get("/posts/detail/1")
         self.assertEquals(response2.status_code, 200)
         self.assertTemplateUsed(response2, "posts/detail.html")
-        report = {"report": "report"}
+        report = {"report": "report", "report_option": "4"}
         response3 = self.client.post("/posts/detail/1", report)
-        self.assertEquals(response3.status_code, 302)
+        self.assertEquals(response3.status_code, 200)
         cancel_report = {"cancel_report": "cancel_report"}
         response4 = self.client.post("/posts/detail/1", cancel_report)
-        self.assertEquals(response4.status_code, 302)
+        self.assertEquals(response4.status_code, 200)
         self.client.logout()
         login = self.client.login(email="user@nyu.edu", password="12test12")
         self.assertEquals(login, True)
@@ -101,6 +111,9 @@ class TestViews(TestCase):
         interested = {"interested": "interested"}
         response5 = self.client.post("/posts/detail/1", interested)
         self.assertEquals(response5.status_code, 200)
+        cancel_interested = {"cancel_interest": "cancel_interest"}
+        response9 = self.client.post("/posts/detail/1", cancel_interested)
+        self.assertEquals(response9.status_code, 200)
         self.client.logout()
         login = self.client.login(password="12test12", email="test@example.com")
         self.assertEquals(login, True)
@@ -112,3 +125,45 @@ class TestViews(TestCase):
         self.assertEquals(response7.status_code, 302)
         response8 = self.client.get("/posts/detail/1")
         self.assertEquals(response8.status_code, 404)
+
+    def test_detail_view_admin(self):
+        response = self.client.get("/posts/detail/1")
+        self.assertEquals(response.status_code, 302)
+        self.client.logout()
+        Post.objects.create(
+            name="macbook pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        report = {"report": "report", "report_option": "4"}
+        response1 = self.client.post("/posts/detail/1", report)
+        self.assertEquals(response1.status_code, 200)
+        self.client.logout()
+
+        login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
+        self.assertEquals(login, True)
+        response2 = self.client.get("/posts/detail/1")
+        self.assertEquals(response2.status_code, 200)
+        self.assertEquals(len(response2.context["report_list"]), 1)
+        self.client.logout()
+
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        cancel_report = {"cancel_report": "cancel_report"}
+        response3 = self.client.post("/posts/detail/1", cancel_report)
+        self.assertEquals(response3.status_code, 200)
+        self.client.logout()
+
+        login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
+        self.assertEquals(login, True)
+        response4 = self.client.get("/posts/detail/1")
+        self.assertEquals(response4.status_code, 200)
+        self.assertEquals(response4.context["report_list"], None)
+        self.client.logout()

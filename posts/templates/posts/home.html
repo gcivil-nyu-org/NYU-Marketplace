@@ -91,9 +91,19 @@
                        style="margin-left:6px; color: #000000; text-decoration: none; font-weight: bolder; font-size: 18px"
                        href="{% url 'posts:detail' post.id %}">{{ post.name }}</a>
                   </div>
+                    {% if post.pk in user_interested_list %}
+
+                    <div class="col-1">
+{#                    <h1>{{ post.pk }}</h1>#}
+                    <i class="bi bi-star-fill" style="color:#ffc300"></i>
+                  </div>
+                    {% else %}
                   <div class="col-1">
+{#                  <h1>{{ user_interested_list }}</h1>#}
+{#                  <h1>{{ post.pk }}</h1>#}
                     <i class="bi bi-star"></i>
                   </div>
+                    {% endif %}
                 </div>
                 <div class="row col-12 mt-2 justify-content-between">
                   {% if post.price %}
@@ -125,6 +135,7 @@
                     <span>{{ post.created_at|date:'m/d/Y' }}</span>
                   </div>
                   <div class="col-1" style="margin-right: 10px; margin-bottom: 5px">
+                    <a href="{% url 'users:user_info' post.user.id %}">
                     <img
                         src={{ post.user.profile.profile_pic.url }}
                         class="rounded-circle"
@@ -132,7 +143,8 @@
                         height="25"
                         alt="Img"
                         loading="lazy"
-                    />
+                    >
+                      </a>
 
                   </div>
                 </div>

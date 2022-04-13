@@ -18,7 +18,7 @@
       </div>
       <div class="container col-7 ">
         <div class="col-12">
-          <h2 class="poppins" style="font-weight: bolder; font-size: 36px">{{ post.name }}</h2>
+          <h2 class="poppins" style="font-weight: bolder; font-size: 36px">{{ post.name | truncatechars:25}}</h2>
         </div>
         {% if post.option == 'exchange' %}
           <div class="row justify-content-between col-12 mt-5">
@@ -43,6 +43,7 @@
           </div>
         {% endif %}
         <div class="col-12 mt-5">
+          <a href="{% url 'users:user_info' post.user.id %}">
           <img
               src={{ post.user.profile.profile_pic.url }}
               class="rounded-circle"
@@ -51,7 +52,10 @@
               alt="Black and White Portrait of a Man"
               loading="lazy"
           />
+            </a>
+            <a href="{% url 'users:user_info' post.user.id %}">
           <label class="poppins" style="font-weight: bold; font-size: 18px">Post by {{ post.user.username }}</label>
+             </a>
 
         </div>
 
@@ -78,53 +82,162 @@
 
         <div class="row justify-content-center col-8 mt-5">
           <div class="col-2" style="margin-bottom: auto; margin-top: auto">
-            <i class="bi bi-star"></i><span>&nbsp 103</span>
+              {% if post.interested_count == 0  %}
+            <i class="bi bi-star" ></i><span>&nbsp {{ post.interested_count}}</span>
+              {% elif post.interested_count > 0  %}
+            <i class="bi bi-star-fill" style='color:#ffc300' ></i><span>&nbsp {{ post.interested_count}}</span>
+              {% endif %}
           </div>
-          <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
-            {% csrf_token %}
+
             {% if user.is_superuser %}
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
-                <i class="bi"></i>&nbsp DELETE
-              </button>
-            </div>
+              <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                {% csrf_token %}
+                <div class="col-6">
+                  <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
+                    <i class="bi"></i>&nbsp DELETE
+                  </button>
+                </div>
+              </form>
+{#                {% for report in report_list %}#}
+{#                <h1>{{ report.reason }}</h1>#}
+{#                {% endfor %}#}
+
             </br>
             {% elif post.user != user %}
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="interested">
-                <i class="bi bi-star"></i>&nbsp Interested!
-              </button>
-            </div>
-            </br>
-              {% if is_reported_by_user%}
-              <div class="col-6">
-                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="cancel_report" onclick="return confirm('Are you sure?');"">
-                  <i class="bi bi-flag-fill"></i>&nbsp Cancel Report
-                </button>
-              </div>
+              {% if is_user_already_interested %}
+                <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                  {% csrf_token %}
+                  <div class="col-6">
+                      <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="cancel_interest" onclick="return confirm('Are you sure?');">
+                        <i class="bi bi-star-fill" style='color: #f3da35'></i>&nbsp Cancel Interest
+                      </button>
+                  </div>
+                </form>
               </br>
               {% else %}
-              <div class="col-6">
+                <div class="col-6">
+                  <button type="button" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" data-bs-toggle="modal" data-bs-target="#interestedModal" data-bs-whatever="@mdo">
+                    <i class="bi bi-star"></i>&nbsp Interested!
+                  </button>
+
+                </div>
+                <div class="modal fade" id="interestedModal" tabindex="-1" aria-labelledby="interestedModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="interestedModalLabel">I'm interested!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                          {% csrf_token %}
+                         <div class="modal-body">
+                          <div class="mb-3">
+                            <label for="interested-message" class="col-form-label">Leave your message to owner:</label>
+                            <textarea class="form-control" id="interested-message" name="cust_message"></textarea>
+                          </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" name="interested">Show Interested!</button>
+                          </div>
+                       </form>
+                    </div>
+                  </div>
+                </div>
+
+              </br>
+              {% endif %}
+
+              {% if is_reported_by_user%}
+                <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                  {% csrf_token %}
+                  <div class="col-6">
+                    <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="cancel_report" onclick="return confirm('Are you sure?');"">
+                      <i class="bi bi-flag-fill"></i>&nbsp Cancel Report
+                    </button>
+                  </div>
+                </form>
+              </br>
+              {% else %}
+                <div class="col-6">
+                  <button type="button" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" data-bs-toggle="modal" data-bs-target="#reportModal" data-bs-whatever="@mdo">
+                    <i class="bi bi-flag"></i>&nbsp Report
+                  </button>
+
+                </div>
+                <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="reportModalLabel">Report this post?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                       <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                         {% csrf_token %}
+                         <div class="modal-body">
+                          <div class="mb-3">
+                            <h4 class="modal-title" id="reportModalLabel">Select a reason:</h4>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="report_option" id="reportRadios1" value="1" required>
+                              <label class="form-check-label" for="reportRadios1">
+                                Inappropriate post content
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="report_option" id="reportRadios2" value="2">
+                              <label class="form-check-label" for="reportRadios2">
+                                Post item is unavailable anymore
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="report_option" id="reportRadios3" value="3">
+                              <label class="form-check-label" for="reportRadios3">
+                                Cannot reach out to post owner
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="report_option" id="reportRadios4" value="4">
+                              <label class="form-check-label" for="reportRadios4">
+                                Other
+                              </label>
+                            </div>
+                          </div>
+                          </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-danger" name="report">Report it!</button>
+                        </div>
+                       </form>
+                    </div>
+                  </div>
+                </div>
+              <!--div class="col-6">
                 <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="report" onclick="return confirm('Are you sure?');"">
                   <i class="bi bi-flag"></i>&nbsp Report
                 </button>
-              </div>
+              </div-->
+
               </br>
               {% endif %}
             {% else %}
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
-                <i class="bi"></i>&nbsp DELETE
-              </button>
-            </div>
+              <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                {% csrf_token %}
+                <div class="col-6">
+                  <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
+                    <i class="bi"></i>&nbsp DELETE
+                  </button>
+                </div>
+              </form>
             </br>
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF" name="edit">
-                <i class="bi"></i>&nbsp EDIT
-              </button>
-            </div>
+              <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                {% csrf_token %}
+                <div class="col-6">
+                  <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF" name="edit">
+                    <i class="bi"></i>&nbsp EDIT
+                  </button>
+                </div>
+              </form>
             {% endif %}
-          </form>
         </div>
 
       </div>
