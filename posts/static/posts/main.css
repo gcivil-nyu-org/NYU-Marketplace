@@ -1,6 +1,6 @@
 .navbar 
 {
-    background-color : #57068c;
+    background-color :#472080;
 }
 .nav-link {
     color: white;
@@ -51,7 +51,7 @@
   font-family: 'Poppins', sans-serif;
 }
 .nyu-purple{
-  color: #57068c;
+  color: #472080;
 }
 
 a.article-title:hover {
@@ -143,4 +143,57 @@ a.article-title:hover {
 }
 .type-link-active{
     color: #1890ff;
+}
+.table thead th {
+    border: none;
+    padding: 30px;
+    font-size: 13px;
+    font-weight: 500;
+    color: gray;
+}
+.table-wrap {
+    overflow-x: scroll;
+}
+.table tbody td {
+    border: none;
+    padding: 30px;
+    font-size: 14px;
+    background: #fff;
+    vertical-align: middle;
+}
+
+button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled) {
+    cursor: pointer;
+}
+
+.custom-button{
+    font-size: 10px;
+    color: #dc3545;
+}
+.alert {
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid #d4d4d5;
+    border-radius: 0.25rem;
+}
+.table tbody td .img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.pl-3, .px-3 {
+    padding-left: 1rem !important;
+}
+.table tbody td .email span {
+    display: block;
+}
+.table tbody td .email span:last-child {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.3);
 }
