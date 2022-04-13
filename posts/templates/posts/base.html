@@ -159,6 +159,43 @@
             </li>
           </ul>
         </div>
+      {% elif default_user.is_authenticated %}
+                <div class="dropdown">
+          <a
+              class="dropdown-toggle d-flex align-items-center hidden-arrow"
+              href="#"
+              id="navbarDropdownMenuAvatar"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="text-decoration:none;color:#FFFFFF;"
+          >
+            <img
+                src={{ default_user.profile.profile_pic.url }}
+                class="rounded-circle"
+                height="40"
+                width = "40"
+                alt="Black and White Portrait of a Man"
+                loading="lazy"
+            />
+            &nbsp {{ default_user.username }}
+
+          </a>
+          <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="navbarDropdownMenuAvatar"
+          >
+            <li>
+              <a class="dropdown-item" href="{% url 'users:profile_detail' %}">My profile</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'posts:home' %}">Settings</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
+            </li>
+          </ul>
+        </div>
       {% else %}
         <div>
         </div>
