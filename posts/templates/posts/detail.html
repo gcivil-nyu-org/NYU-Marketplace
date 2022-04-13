@@ -98,9 +98,9 @@
                   </button>
                 </div>
               </form>
-                {% for report in report_list %}
-                <h1>{{ report.reason }}</h1>
-                {% endfor %}
+{#                {% for report in report_list %}#}
+{#                <h1>{{ report.reason }}</h1>#}
+{#                {% endfor %}#}
 
             </br>
             {% elif post.user != user %}
@@ -220,14 +220,6 @@
               </br>
               {% endif %}
             {% else %}
-            {% if interest_list %}
-              Interests:
-              <ul>
-              {% for interest in interest_list%}
-                <li>{{ interest.interested_user}} : {{interest.cust_message}}</li>
-              {% endfor %}
-              </ul>
-            {% endif %}
               <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
                 {% csrf_token %}
                 <div class="col-6">
