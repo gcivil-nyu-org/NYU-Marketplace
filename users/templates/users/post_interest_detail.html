@@ -1,184 +1,197 @@
 {% extends "posts/base.html" %}
 {% load static %}
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'posts/main.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'posts/main.css' %}">
 
   <div class="container  mt-5">
     {% csrf_token %}
     <div class="row">
-      <div class="container col-4 mt-10">
+      <div class="container col-3 mt-10">
         <div class="row">
-          <div class="detail-img-div">
+          <div class="col-12">
+            <h2 class="poppins" style="font-weight: bolder; font-size: 24px">{{ post.name }}</h2>
+          </div>
+          <div class="detail-img-div mt-4">
             <img id="frame"
-               src="{{ post.picture.url }}"
-               class="detail-img"
-               alt="images of item"
+                 src="{{ post.picture.url }}"
+                 class="detail-img"
+                 alt="images of item"
 
-          />
+            />
           </div>
           <div>
 
-                 <div class="col-12">
-          <h2 class="poppins" style="font-weight: bolder; font-size: 36px">{{ post.name }}</h2>
-        </div>
-        {% if post.option == 'exchange' %}
-          <div class="row justify-content-between col-12 mt-5">
-            <div class="col-6">
-              <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Exchange</h2>
-            </div>
-            <div class="col-5">
-            </div>
-          </div>
-        {% else %}
-          <div class="row justify-content-between col-12 mt-5">
-            <div class="col-6">
-              <h2 class="poppins nyu-purple" style="font-weight: bold; font-size: 30px">$&nbsp{{ post.price }}</h2>
-            </div>
-            <div class="col-5">
-              {% if post.option == 'sell' %}
-                <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Sell</h2>
-              {% elif post.option == 'rent' %}
-                <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Rent</h2>
-              {% endif %}
-            </div>
-          </div>
-        {% endif %}
-        <div class="col-12 mt-5">
-          <a href="{% url 'users:user_info' post.user.id %}">
-          <img
-              src={{ post.user.profile.profile_pic.url }}
-              class="rounded-circle"
-              weight="40"
-              height="40"
-              alt="Black and White Portrait of a Man"
-              loading="lazy"
-          />
-            </a>
-            <a href="{% url 'users:user_info' post.user.id %}">
-          <label class="poppins" style="font-weight: bold; font-size: 18px">Post by {{ post.user.username }}</label>
-             </a>
 
-        </div>
-
-        <div class="col-12 mt-5">
-
-          <label class="poppins" style="font-weight: bold; font-size: 18px">Location:</label>
-          <label class="poppins" style="font-size: 18px">&nbsp&nbsp{{ post.location }}</label>
-
-        </div>
-
-        <div class="row col-12 mt-3">
-          <div class="col-12">
-            <label class="poppins" style="font-weight: bold; font-size: 18px">Description:</label>
-          </div>
-
-          <div class="col-8">
-            <div class="mt-3" style="border: 1px solid #ccc; border-radius: 16px">
-              <p style="margin: 10px 20px; white-space: normal; word-wrap: break-word; word-break: break-all; font-size: 18px">
-                {{ post.description }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="row justify-content-center col-8 mt-5">
-          <div class="col-2" style="margin-bottom: auto; margin-top: auto">
-            <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count}}</span>
-          </div>
-          <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
-            {% csrf_token %}
-            {% if user.is_superuser %}
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
-                <i class="bi"></i>&nbsp DELETE
-              </button>
-            </div>
-            </br>
-            {% elif post.user != user %}
-              {% if is_user_already_interested%}
-              <div class="col-6">
-                  <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="cancel_interest" onclick="return confirm('Are you sure?');">
-                    <i class="bi bi-star"></i>&nbsp Cancel Interest
-                  </button>
-              </div>
-              </br>
-              {% else %}
+            {% if post.option == 'exchange' %}
+              <div class="row justify-content-between col-12 mt-5">
                 <div class="col-6">
-                <button type="button" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" data-bs-toggle="modal" data-bs-target="#interestedModal" data-bs-whatever="@mdo">
-                  <i class="bi bi-star"></i>&nbsp Interested!
-                </button>
-
+                  <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Exchange</h2>
                 </div>
-                <div class="modal fade" id="interestedModal" tabindex="-1" aria-labelledby="interestedModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="interestedModalLabel">I'm interested!</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                       <form>
-                         <div class="modal-body">
-                          <div class="mb-3">
-                            <label for="interested-message" class="col-form-label">Leave your message to owner:</label>
-                            <textarea class="form-control" id="interested-message" name="cust_message"></textarea>
-                          </div>
-                          </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" name="interested">Show Interested!</button>
-                      </div>
-                          </form>
-                    </div>
-                  </div>
+                <div class="col-4">
                 </div>
-
-              </br>
-              {% endif %}
-              {% if is_reported_by_user%}
-              <div class="col-6">
-                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="cancel_report" onclick="return confirm('Are you sure?');"">
-                  <i class="bi bi-flag-fill"></i>&nbsp Cancel Report
-                </button>
+                <div class="col-2" style="margin-bottom: auto; margin-top: auto">
+                  <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count }}</span>
+                </div>
               </div>
-              </br>
-              {% else %}
-              <div class="col-6">
-                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="report" onclick="return confirm('Are you sure?');"">
-                  <i class="bi bi-flag"></i>&nbsp Report
-                </button>
-              </div>
-              </br>
-
-              {% endif %}
             {% else %}
-
-{#            {% if interest_list %}#}
-{#              Interests:#}
-{#              <ul>#}
-{#              {% for interest in interest_list%}#}
-{#                <li>{{ interest.interested_user}} : {{interest.cust_message}}</li>#}
-{#              {% endfor %}#}
-{#              </ul>#}
-{#            {% endif %}#}
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
-                <i class="bi"></i>&nbsp DELETE
-              </button>
-            </div>
-            </br>
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF" name="edit">
-                <i class="bi"></i>&nbsp EDIT
-              </button>
-            </div>
+              <div class="row justify-content-between col-12 mt-4">
+                <div class="col-6">
+                  <h2 class="poppins nyu-purple" style="font-weight: bold; font-size: 24px">$&nbsp{{ post.price }}</h2>
+                </div>
+                <div class="col-4">
+                  {% if post.option == 'sell' %}
+                    <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 24px">Sell</h2>
+                  {% elif post.option == 'rent' %}
+                    <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Rent</h2>
+                  {% endif %}
+                </div>
+                <div class="col-2" style="margin-bottom: auto; margin-top: auto">
+                  <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count }}</span>
+                </div>
+              </div>
             {% endif %}
-          </form>
-        </div>
+            <div class="col-12 mt-3">
+              <a href="{% url 'users:user_info' post.user.id %}">
+                <img
+                    src={{ post.user.profile.profile_pic.url }}
+                        class="rounded-circle"
+                    weight="40"
+                    height="40"
+                    alt="Black and White Portrait of a Man"
+                    loading="lazy"
+                />
+              </a>
+              <a href="{% url 'users:user_info' post.user.id %}">
+                <label class="poppins" style="font-weight: bold; font-size: 18px">Post
+                  by {{ post.user.username }}</label>
+              </a>
 
+            </div>
 
+            <div class="col-12 mt-3">
 
+              <label class="poppins" style="font-weight: bold; font-size: 18px">Location:</label>
+              <label class="poppins" style="font-size: 18px">&nbsp&nbsp{{ post.location }}</label>
 
+            </div>
 
+            <div class="row col-12 mt-3">
+              <div class="col-12">
+                <label class="poppins" style="font-weight: bold; font-size: 18px">Description:</label>
+              </div>
+
+              <div class="col-8">
+                <div class="mt-3" style="border: 1px solid #ccc; border-radius: 16px">
+                  <p style="margin: 10px 20px; white-space: normal; word-wrap: break-word; word-break: break-all; font-size: 18px">
+                    {{ post.description }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="row justify-content-center mt-3">
+
+              <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                {% csrf_token %}
+                {% if user.is_superuser %}
+                  <div class="col-6">
+                    <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF"
+                            name="delete" onclick="return confirm('Are you sure?');">
+                      <i class="bi"></i>&nbsp DELETE
+                    </button>
+                  </div>
+                  </br>
+                {% elif post.user != user %}
+                  {% if is_user_already_interested %}
+                    <div class="col-6">
+                      <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF"
+                              name="cancel_interest" onclick="return confirm('Are you sure?');">
+                        <i class="bi bi-star"></i>&nbsp Cancel Interest
+                      </button>
+                    </div>
+                    </br>
+                  {% else %}
+                    <div class="col-6">
+                      <button type="button" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF"
+                              data-bs-toggle="modal" data-bs-target="#interestedModal" data-bs-whatever="@mdo">
+                        <i class="bi bi-star"></i>&nbsp Interested!
+                      </button>
+
+                    </div>
+                    <div class="modal fade" id="interestedModal" tabindex="-1" aria-labelledby="interestedModalLabel"
+                         aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="interestedModalLabel">I'm interested!</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <form>
+                            <div class="modal-body">
+                              <div class="mb-3">
+                                <label for="interested-message" class="col-form-label">Leave your message to
+                                  owner:</label>
+                                <textarea class="form-control" id="interested-message" name="cust_message"></textarea>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary" name="interested">Show Interested!</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+
+                    </br>
+                  {% endif %}
+                  {% if is_reported_by_user %}
+                    <div class="col-6">
+                      <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF"
+                              name="cancel_report" onclick="return confirm('Are you sure?');">
+                        <i class="bi bi-flag-fill"></i>&nbsp Cancel Report
+                      </button>
+                    </div>
+                    </br>
+                  {% else %}
+                    <div class="col-6">
+                      <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF"
+                              name="report" onclick="return confirm('Are you sure?');">
+                        <i class="bi bi-flag"></i>&nbsp Report
+                      </button>
+                    </div>
+                    </br>
+
+                  {% endif %}
+                {% else %}
+
+                  {#            {% if interest_list %}#}
+                  {#              Interests:#}
+                  {#              <ul>#}
+                  {#              {% for interest in interest_list%}#}
+                  {#                <li>{{ interest.interested_user}} : {{interest.cust_message}}</li>#}
+                  {#              {% endfor %}#}
+                  {#              </ul>#}
+                  {#            {% endif %}#}
+                  <row>
+                    <div class="col-8">
+                      <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF"
+                              name="delete" onclick="return confirm('Are you sure?');">
+                        DELETE
+                      </button>
+                      <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF; margin-left: 8%"
+                              name="edit">
+                        EDIT
+                      </button>
+
+                    </div>
+                    </br>
+
+                  </row>
+
+                {% endif %}
+              </form>
+            </div>
 
 
           </div>
@@ -187,66 +200,63 @@
       </div>
 
 
-
       <div class="col-1">
       </div>
 
 
+      <div class="container col-8 ">
+        {% if user == post.user %}
+          <div class="col-md-12">
+            <div class="table-wrap">
+              <table class="table table-responsive-xl">
+                <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Message</th>
+                  <th>&nbsp;</th>
+                </tr>
+                </thead>
+                {% for interest in interest_list %}
+                  <tr class="alert">
+                    <td class="d-flex align-items-center">
+                      {#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
+                      <div class="img">
+                        <img
+                            src={{ interest.interested_user.profile.profile_pic.url }}
+                                class="rounded-circle"
+                            weight="40"
+                            height="40"
+                            alt="Black and White Portrait of a Man"
+                            loading="lazy"
+                        />
+                      </div>
+                      <div class="pl-3 email">
+                        <span>{{ interest.interested_user }}</span>
+                        <span>Joined on {{ interest.interested_user.date_joined }}</span>
+                      </div>
+                    </td>
+                    <td>{{ interest.interested_user.email }}</td>
+                    <td class="status"> {{ interest.cust_message }}</td>
+                    <td>
+                      <button type="button" class="btn-close custom-button" aria-label="Close"></button>
+
+                      </button>
+                    </td>
 
 
-      <div class="container col-7 ">
-                {% if user == post.user %}
-            <div class = "col-md-12">
-            <div class = "table-wrap">
-             <table class="table table-responsive-xl">
-                            <thead>
-                            <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Message</th>
-                            <th>&nbsp;</th>
-                            </tr>
-                            </thead>
-                          {% for interest in interest_list %}
-                              <tr class = "alert">
-                              <td class="d-flex align-items-center">
-{#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
-                                  <div class = "img">
-                                                              <img
-                                  src={{ interest.interested_user.profile.profile_pic.url }}
-                                  class="rounded-circle"
-                                  weight="40"
-                                  height="40"
-                                  alt="Black and White Portrait of a Man"
-                                  loading="lazy"
-                              />
-                                  </div>
-                                <div class="pl-3 email">
-                                <span>{{ interest.interested_user}}</span>
-                                <span>Joined on {{ interest.interested_user.date_joined}}</span>
-                                </div>
-                                </td>
-                                  <td >{{ interest.interested_user.email}}</td>
-                                <td class="status"> {{interest.cust_message}}</td>
-                              <td>
-                                    <button type="button" class="btn-close custom-button" aria-label="Close"></button>
-
-                                </button>
-                                </td>
+                  </tr>
 
 
-                              </tr>
-
-
-                                {% endfor %}
-                        </table>
+                {% endfor %}
+              </table>
             </div>
-            </div>
+          </div>
         {% endif %}
       </div>
 
       <script>
       </script>
     </div>
-
+  </div>
 {% endblock content %}

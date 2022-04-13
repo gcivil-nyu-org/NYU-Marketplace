@@ -81,11 +81,9 @@
           </div>
         </div>
 
-        <div class="row justify-content-center col-8 mt-5">
-          <div class="col-2" style="margin-bottom: auto; margin-top: auto">
-            <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count}}</span>
-          </div>
-          <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+        <div class="row col-8 mt-5">
+          <div class="row col-10">
+            <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
             {% csrf_token %}
             {% if user.is_superuser %}
             <div class="col-6">
@@ -136,14 +134,14 @@
               {% endif %}
               {% if is_reported_by_user%}
               <div class="col-6">
-                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="cancel_report" onclick="return confirm('Are you sure?');"">
+                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="cancel_report" onclick="return confirm('Are you sure?');">
                   <i class="bi bi-flag-fill"></i>&nbsp Cancel Report
                 </button>
               </div>
               </br>
               {% else %}
               <div class="col-6">
-                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="report" onclick="return confirm('Are you sure?');"">
+                <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="report" onclick="return confirm('Are you sure?');">
                   <i class="bi bi-flag"></i>&nbsp Report
                 </button>
               </div>
@@ -160,68 +158,22 @@
 {#              {% endfor %}#}
 {#              </ul>#}
 {#            {% endif %}#}
-            <div class="col-6">
+            <div>
               <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
-                <i class="bi"></i>&nbsp DELETE
+                DELETE
+              </button>
+              <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF; margin-left: 10%" name="edit">
+                EDIT
               </button>
             </div>
             </br>
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF" name="edit">
-                <i class="bi"></i>&nbsp EDIT
-              </button>
-            </div>
             {% endif %}
           </form>
+          </div>
+          <div class="col-2" style="margin-bottom: auto; margin-top: 2%">
+            <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count}}</span>
+          </div>
         </div>
-        {% if user == post.user %}
-            <div class = "col-md-12">
-            <div class = "table-wrap">
-             <table class="table table-responsive-xl">
-                            <thead>
-                            <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Message</th>
-                            <th>&nbsp;</th>
-                            </tr>
-                            </thead>
-                          {% for interest in interest_list %}
-                              <tr class = "alert">
-                              <td class="d-flex align-items-center">
-{#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
-                                  <div class = "img">
-                                                              <img
-                                  src={{ interest.interested_user.profile.profile_pic.url }}
-                                  class="rounded-circle"
-                                  weight="40"
-                                  height="40"
-                                  alt="Black and White Portrait of a Man"
-                                  loading="lazy"
-                              />
-                                  </div>
-                                <div class="pl-3 email">
-                                <span>{{ interest.interested_user}}</span>
-                                <span>Joined on {{ interest.interested_user.date_joined}}</span>
-                                </div>
-                                </td>
-                                  <td >{{ interest.interested_user.email}}</td>
-                                <td class="status"> {{interest.cust_message}}</td>
-                              <td>
-                                    <button type="button" class="btn-close custom-button" aria-label="Close"></button>
-
-                                </button>
-                                </td>
-
-
-                              </tr>
-
-
-                                {% endfor %}
-                        </table>
-            </div>
-            </div>
-        {% endif %}
         </div>
 
       </div>
