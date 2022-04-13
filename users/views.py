@@ -5,6 +5,7 @@ from .models import Profile
 
 from posts.models import Post, Report, Interest
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.models import User
 
 # @login_required(login_url="/accounts/login/")
 # def profile(request):
@@ -35,7 +36,13 @@ def user_info(request, user_id):
     posts = Post.objects.all()
     posts = posts.filter(user=user_id)
     user_info = Profile.objects.get(user=user_id)
-    context = {"post_list": posts, "user": user_info, "default_user": request.user}
+    user_account = User.objects.get(id=user_id)
+    context = {
+        "post_list": posts,
+        "user": user_info,
+        "default_user": request.user,
+        "user_account": user_account,
+    }
     if request.user.id == user_id:
         return render(request, "users/profile_detail.html", context)
     return render(request, "users/user_info.html", context)

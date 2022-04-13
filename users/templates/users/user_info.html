@@ -24,17 +24,24 @@
               style="margin: 0 auto"
           />
           <div class="card-body">
+            {% if user.school != "" %}
             <p class="card-text pt-2">Hi! I am {{ user.user }} from {{ user.school }}. If you are interested in my recent post, feel
               free to call me!</p>
-            <p class="poppins pt-3" style="font-size: 16px; font-weight: bold"><i class="bi bi-house-door"></i>&nbsp&nbspLocation:
+            {% else %}
+            <p class="card-text pt-2">Hi! I am {{ user.user }}. If you are interested in my recent post, feel
+              free to call me!</p>
+            {% endif %}
+            <p class="poppins pt-3" style="font-size: 16px; font-weight: bold"><i class="bi bi-book"></i>&nbsp&nbspSchool:
+              {{ user.school }}</p>
+            <p class="poppins" style="font-size: 16px; font-weight: bold"><i class="bi bi-house-door"></i>&nbsp&nbspLocation:
               {{ user.address }}</p>
             <p class="poppins" style="font-size: 16px; font-weight: bold"><i class="bi bi-mailbox"></i>&nbsp&nbspEmail:
-              {{ default_user.email }}</p>
+              {{ user_account.email }}</p>
           </div>
         </div>
       </div>
       <div class="col-9">
-        <h1 class="poppins" style="margin-left: 3%">My Post</h1>
+        <h1 class="poppins" style="margin-left: 3%">Post</h1>
         <div class="row">
             {% for post in post_list %}
                       <div class="col-4 mt-3" style="padding: 0px 30px 20px 30px;">
