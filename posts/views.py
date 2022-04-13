@@ -63,6 +63,8 @@ class postCreate(LoginRequiredMixin, CreateView):
     login_url = "/accounts/login"
 
     def get(self, request, pk=None, post_id=None):
+        if request.user.is_superuser:
+            raise PermissionDenied()
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
             if post.user != request.user:
@@ -74,6 +76,8 @@ class postCreate(LoginRequiredMixin, CreateView):
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk=None, post_id=None):
+        if request.user.is_superuser:
+            raise PermissionDenied()
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
         else:
@@ -106,6 +110,14 @@ class index(LoginRequiredMixin, View):
         sort = request.GET.get("sort", default="all")
         q = request.GET.get("q", default="")
         post_list = Post.objects.all()
+        post_list_pk = Post.objects.all().values("pk")
+        if len(Interest.objects.filter(interested_user=request.user)) > 0:
+            user_interested_list = Interest.objects.filter(
+                interested_user=request.user
+            ).values_list("post")[0]
+        else:
+            user_interested_list = ()
+            # print(user_interested_list)
         if q != "":
             post_list = post_list.filter(Q(name__icontains=q))
         if category != "all":
@@ -125,7 +137,14 @@ class index(LoginRequiredMixin, View):
             post_list = post_list.order_by("-price")
         elif option != "reported":
             post_list = post_list.order_by("-created_at")
-        context = {"post_list": post_list, "user": request.user}
+        context = {
+            "post_list": post_list,
+            "user": request.user,
+            "user_interested_list": user_interested_list,
+            "post_list_pk": post_list_pk,
+        }
+        # print(post_list_pk)
+        # print(user_interested_list)
         return render(request, "posts/home.html", context)
 
 
@@ -156,7 +175,16 @@ def detail(request, post_id):
                 interested_user=request.user, post=post, cust_message=cust_message
             )
             interest.save()
-            return redirect("posts:home")
+            is_user_already_interested = True
+            context = {
+                "post": post,
+                "user": request.user,
+                "is_reported_by_user": is_reported_by_user,
+                "is_user_already_interested": is_user_already_interested,
+                "interest_list": interest_list,
+            }
+            return render(request, "posts/detail.html", context)
+            # return redirect("posts:home")
         elif (
             post.user != request.user
             and "cancel_interest" in request.POST
@@ -166,7 +194,16 @@ def detail(request, post_id):
             post.save()
             interest = Interest.objects.filter(interested_user=request.user, post=post)
             interest.delete()
-            return redirect("posts:home")
+            is_user_already_interested = False
+            context = {
+                "post": post,
+                "user": request.user,
+                "is_reported_by_user": is_reported_by_user,
+                "is_user_already_interested": is_user_already_interested,
+                "interest_list": interest_list,
+            }
+            return render(request, "posts/detail.html", context)
+            # return redirect("posts:home")
         elif (
             post.user != request.user
             and "report" in request.POST
