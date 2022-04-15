@@ -80,7 +80,11 @@
         {% for post in post_list %}
           <div class="col-4 mt-3" style="padding: 0px 30px 20px 30px;">
             <div class="list-item">
+              {% if user.is_superuser %}
+              <a style="color: #000000" href="{% url 'users:post_interest_detail' post.id %}">
+              {% else %}
               <a style="color: #000000" href="{% url 'posts:detail' post.id %}">
+              {% endif %}
                 <div class="col-12 home-img-div" style="#border: 1px solid #dddddd; #border-radius: 3px">
                   <img class="home-img" src="{{ post.picture.url }}">
                 </div>
