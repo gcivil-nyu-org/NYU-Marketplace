@@ -216,6 +216,7 @@
                     <td class="d-flex align-items-center">
                       {#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
                       <div class="img">
+                          <a href="{% url 'users:user_info' interest.interested_user.id %}">
                         <img
                             src={{ interest.interested_user.profile.profile_pic.url }}
                                 class="rounded-circle"
@@ -224,9 +225,12 @@
                             alt="Black and White Portrait of a Man"
                             loading="lazy"
                         />
+                          </a>
                       </div>
                       <div class="pl-3 email">
+                           <a href="{% url 'users:user_info' interest.interested_user.id %}">
                         <span>{{ interest.interested_user }}</span>
+                           </a>
                         <span>Joined on {{ interest.interested_user.date_joined }}</span>
                       </div>
                     </td>
@@ -262,6 +266,7 @@
                     <td class="d-flex align-items-center">
                       {#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
                       <div class="img">
+                           <a href="{% url 'users:user_info' report.reported_by.id %}">
                         <img
                             src={{ report.reported_by.profile.profile_pic.url }}
                                 class="rounded-circle"
@@ -270,9 +275,12 @@
                             alt="Black and White Portrait of a Man"
                             loading="lazy"
                         />
+                           </a>
                       </div>
                       <div class="pl-3 email">
+                          <a href="{% url 'users:user_info' report.reported_by.id %}">
                         <span>{{ report.reported_by }}</span>
+                          </a>
                         <span>Joined on {{ report.reported_by.date_joined }}</span>
                       </div>
                     </td>
