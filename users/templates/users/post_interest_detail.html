@@ -18,6 +18,7 @@
                     style="font-weight: bolder; font-size: 24px;">{{ post.name | truncatechars:20 }}</span>
 
             </div>
+          {% if not user.is_superuser %}
             <div class="col-3">
               <button type="submit" class="btn"
                       name="edit">
@@ -28,6 +29,7 @@
                 <i class="bi bi-trash"></i>
               </button>
             </div>
+          {% endif %}
         </div>
           </form>
 
@@ -197,7 +199,7 @@
 
 
       <div class="container col-7 ">
-        {% if user == post.user %}
+        {% if user == post.user and not user.is_superuser %}
           <div class="col-md-12">
             <div class="table-wrap">
               <table class="table table-responsive-xl">
@@ -214,6 +216,7 @@
                     <td class="d-flex align-items-center">
                       {#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
                       <div class="img">
+                          <a href="{% url 'users:user_info' interest.interested_user.id %}">
                         <img
                             src={{ interest.interested_user.profile.profile_pic.url }}
                                 class="rounded-circle"
@@ -222,9 +225,12 @@
                             alt="Black and White Portrait of a Man"
                             loading="lazy"
                         />
+                          </a>
                       </div>
                       <div class="pl-3 email">
+                           <a href="{% url 'users:user_info' interest.interested_user.id %}">
                         <span>{{ interest.interested_user }}</span>
+                           </a>
                         <span>Joined on {{ interest.interested_user.date_joined }}</span>
                       </div>
                     </td>
@@ -237,6 +243,57 @@
                     </td>
 
 
+                  </tr>
+
+
+                {% endfor %}
+              </table>
+            </div>
+          </div>
+          {% elif user.is_superuser %}
+                    <div class="col-md-12">
+            <div class="table-wrap">
+              <table class="table table-responsive-xl">
+                <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Report reason</th>
+                </tr>
+                </thead>
+                {% for report in report_list %}
+                  <tr class="alert">
+                    <td class="d-flex align-items-center">
+                      {#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
+                      <div class="img">
+                           <a href="{% url 'users:user_info' report.reported_by.id %}">
+                        <img
+                            src={{ report.reported_by.profile.profile_pic.url }}
+                                class="rounded-circle"
+                            weight="40"
+                            height="40"
+                            alt="Black and White Portrait of a Man"
+                            loading="lazy"
+                        />
+                           </a>
+                      </div>
+                      <div class="pl-3 email">
+                          <a href="{% url 'users:user_info' report.reported_by.id %}">
+                        <span>{{ report.reported_by }}</span>
+                          </a>
+                        <span>Joined on {{ report.reported_by.date_joined }}</span>
+                      </div>
+                    </td>
+                    <td>{{ report.reported_by.email }}</td>
+                    {% if report.reason == 1 %}
+                      <td class="status">Inappropriate post content</td>
+                    {% elif report.reason == 2 %}
+                      <td class="status">Post item is unavailable anymore</td>
+                    {% elif report.reason == 3 %}
+                      <td class="status">Cannot reach out to post owner</td>
+                    {% elif report.reason == 4 %}
+                      <td class="status">Other</td>
+                    {% endif %}
                   </tr>
 
 
