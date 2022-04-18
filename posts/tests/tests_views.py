@@ -2,6 +2,12 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase, Client, RequestFactory
 from posts.models import Post
 
+# in python 3: from io import StringIO
+from io import BytesIO
+from PIL import Image
+from django.core.files.base import File
+import decimal
+
 
 class TestViews(TestCase):
     def setUp(self):
@@ -167,3 +173,69 @@ class TestViews(TestCase):
         self.assertEquals(response4.status_code, 200)
         self.assertEquals(response4.context["report_list"], None)
         self.client.logout()
+
+    @staticmethod
+    def get_image_file(name, ext="png", size=(50, 50), color=(256, 0, 0)):
+        file_obj = BytesIO()
+        image = Image.new("RGBA", size=size, color=color)
+        image.save(file_obj, ext)
+        file_obj.seek(0)
+        return File(file_obj, name=name)
+
+    def test_create_post_edit_post(self):
+        login = self.client.login(email="test@example.com", password="12test12")
+        self.assertEquals(login, True)
+        image1 = self.get_image_file("image.png")
+        response = self.client.post(
+            "/posts/create/",
+            {
+                "name": "macbook pro",
+                "description": "used macbook pro",
+                "option": "rent",
+                "category": "tech",
+                "price": 50,
+                "location": "stern",
+                "picture": image1,
+            },
+        )
+        response2 = self.client.post(
+            "/posts/create/",
+            {
+                "name": "macbook pro",
+                "description": "used macbook pro",
+                "option": "rent",
+                "category": "tech",
+                "price": 50,
+                "location": "stern",
+            },
+        )
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response2.status_code, 200)
+        post = Post.objects.get(id=1)
+        self.assertEquals(post.user, self.poster)
+        self.assertEquals(post.price, decimal.Decimal("50.00"))
+        self.assertEquals(post.name, "macbook pro")
+        self.assertEquals(post.description, "used macbook pro")
+        self.assertEquals(post.location, "stern")
+        response3 = self.client.get("/posts/edit/1", post_id=1)
+        self.assertEquals(response3.status_code, 200)
+        # edit_response = self.client.post(
+        #     "/posts/edit/1",
+        #     {
+        #         "name": "macbook pro",
+        #         "description": "used macbook pro",
+        #         "option": "rent",
+        #         "category": "tech",
+        #         "price": 50,
+        #         "location": "tandon",
+        #         "picture": image1,
+        #     },
+        # )
+        # self.assertEquals(edit_response.status_code, 200)
+        # post_edited = Post.objects.get(id=1)
+        # self.assertEquals(post_edited.location, "tandon")
+        self.client.logout()
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        response4 = self.client.get("/posts/edit/1", post_id=1)
+        self.assertEquals(response4.status_code, 403)
