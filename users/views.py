@@ -69,8 +69,6 @@ def edit_profile(request):
 def post_interest_detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     interest_list = None
-    is_reported_by_user = False
-    is_user_already_interested = False
     report_list = None
 
     if request.method == "POST":
@@ -94,8 +92,6 @@ def post_interest_detail(request, post_id):
     context = {
         "post": post,
         "user": request.user,
-        "is_reported_by_user": is_reported_by_user,
-        "is_user_already_interested": is_user_already_interested,
         "interest_list": interest_list,
         "report_list": report_list,
     }
