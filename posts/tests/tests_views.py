@@ -104,10 +104,10 @@ class TestViews(TestCase):
         self.assertTemplateUsed(response2, "posts/detail.html")
         report = {"report": "report", "report_option": "4"}
         response3 = self.client.post("/posts/detail/1", report)
-        self.assertEquals(response3.status_code, 200)
+        self.assertEquals(response3.status_code, 302)
         cancel_report = {"cancel_report": "cancel_report"}
         response4 = self.client.post("/posts/detail/1", cancel_report)
-        self.assertEquals(response4.status_code, 200)
+        self.assertEquals(response4.status_code, 302)
         self.client.logout()
         login = self.client.login(email="user@nyu.edu", password="12test12")
         self.assertEquals(login, True)
@@ -116,10 +116,10 @@ class TestViews(TestCase):
         self.assertEquals(response9.status_code, 403)
         interested = {"interested": "interested"}
         response5 = self.client.post("/posts/detail/1", interested)
-        self.assertEquals(response5.status_code, 200)
+        self.assertEquals(response5.status_code, 302)
         cancel_interested = {"cancel_interest": "cancel_interest"}
         response9 = self.client.post("/posts/detail/1", cancel_interested)
-        self.assertEquals(response9.status_code, 200)
+        self.assertEquals(response9.status_code, 302)
         self.client.logout()
         login = self.client.login(password="12test12", email="test@example.com")
         self.assertEquals(login, True)
@@ -150,7 +150,7 @@ class TestViews(TestCase):
         self.assertEquals(login, True)
         report = {"report": "report", "report_option": "4"}
         response1 = self.client.post("/posts/detail/1", report)
-        self.assertEquals(response1.status_code, 200)
+        self.assertEquals(response1.status_code, 302)
         self.client.logout()
 
         login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
@@ -164,7 +164,7 @@ class TestViews(TestCase):
         self.assertEquals(login, True)
         cancel_report = {"cancel_report": "cancel_report"}
         response3 = self.client.post("/posts/detail/1", cancel_report)
-        self.assertEquals(response3.status_code, 200)
+        self.assertEquals(response3.status_code, 302)
         self.client.logout()
 
         login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
