@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client, RequestFactory
-from posts.models import Post
-
-# in python 3: from io import StringIO
+from posts.models import Post, Interest
 from io import BytesIO
 from PIL import Image
 from django.core.files.base import File
@@ -219,23 +217,32 @@ class TestViews(TestCase):
         self.assertEquals(post.location, "stern")
         response3 = self.client.get("/posts/edit/1", post_id=1)
         self.assertEquals(response3.status_code, 200)
-        # edit_response = self.client.post(
-        #     "/posts/edit/1",
-        #     {
-        #         "name": "macbook pro",
-        #         "description": "used macbook pro",
-        #         "option": "rent",
-        #         "category": "tech",
-        #         "price": 50,
-        #         "location": "tandon",
-        #         "picture": image1,
-        #     },
-        # )
-        # self.assertEquals(edit_response.status_code, 200)
-        # post_edited = Post.objects.get(id=1)
-        # self.assertEquals(post_edited.location, "tandon")
         self.client.logout()
         login = self.client.login(email="user@nyu.edu", password="12test12")
         self.assertEquals(login, True)
         response4 = self.client.get("/posts/edit/1", post_id=1)
         self.assertEquals(response4.status_code, 403)
+
+    def test_interest_star(self):
+        Post.objects.create(
+            name="macbook pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        post = Post.objects.get(id=1)
+        post.interested_count += 1
+        post.save()
+        Interest.objects.create(
+            post=post,
+            interested_user=self.user,
+            cust_message="interesting",
+        )
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        response = self.client.get("/posts/")
+        self.assertEquals(response.status_code, 200)
