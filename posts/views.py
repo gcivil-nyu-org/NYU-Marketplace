@@ -157,13 +157,8 @@ class index(LoginRequiredMixin, View):
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    interest_list = None
-    report_list = None
-    admin_check_report = False
     is_reported_by_user = False
     is_user_already_interested = False
-    if Report.objects.filter(post=post):
-        admin_check_report = True
     if Report.objects.filter(reported_by=request.user, post=post):
         is_reported_by_user = True
     if Interest.objects.filter(interested_user=request.user, post=post):
