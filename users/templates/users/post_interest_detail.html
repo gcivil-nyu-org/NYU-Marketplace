@@ -18,12 +18,14 @@
                     style="font-weight: bolder; font-size: 24px;">{{ post.name | truncatechars:20 }}</span>
 
             </div>
-          {% if not user.is_superuser %}
+          {% if user == post.user or user.is_superuser %}
             <div class="col-3">
+              {% if user == post.user %}
               <button type="submit" class="btn"
                       name="edit">
                 <i class="bi bi-pencil"></i>
               </button>
+              {% endif %}
               <button type="submit" class="btn"
                       name="delete" onclick="return confirm('Are you sure?');">
                 <i class="bi bi-trash"></i>
@@ -96,98 +98,6 @@
                 </div>
               </div>
             </div>
-
-            <div class="row justify-content-center mt-3">
-
-              <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
-                {% csrf_token %}
-                {% if user.is_superuser %}
-                  <div class="col-6">
-                    <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF"
-                            name="delete" onclick="return confirm('Are you sure?');">
-                      <i class="bi"></i>&nbsp DELETE
-                    </button>
-                  </div>
-                  </br>
-                {% elif post.user != user %}
-                  {% if is_user_already_interested %}
-                    <div class="col-6">
-                      <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF"
-                              name="cancel_interest" onclick="return confirm('Are you sure?');">
-                        <i class="bi bi-star"></i>&nbsp Cancel Interest
-                      </button>
-                    </div>
-                    </br>
-                  {% else %}
-                    <div class="col-6">
-                      <button type="button" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF"
-                              data-bs-toggle="modal" data-bs-target="#interestedModal" data-bs-whatever="@mdo">
-                        <i class="bi bi-star"></i>&nbsp Interested!
-                      </button>
-
-                    </div>
-                    <div class="modal fade" id="interestedModal" tabindex="-1" aria-labelledby="interestedModalLabel"
-                         aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="interestedModalLabel">I'm interested!</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <form>
-                            <div class="modal-body">
-                              <div class="mb-3">
-                                <label for="interested-message" class="col-form-label">Leave your message to
-                                  owner:</label>
-                                <textarea class="form-control" id="interested-message" name="cust_message"></textarea>
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                              <button type="submit" class="btn btn-primary" name="interested">Show Interested!</button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-
-                    </br>
-                  {% endif %}
-                  {% if is_reported_by_user %}
-                    <div class="col-6">
-                      <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF"
-                              name="cancel_report" onclick="return confirm('Are you sure?');">
-                        <i class="bi bi-flag-fill"></i>&nbsp Cancel Report
-                      </button>
-                    </div>
-                    </br>
-                  {% else %}
-                    <div class="col-6">
-                      <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF"
-                              name="report" onclick="return confirm('Are you sure?');">
-                        <i class="bi bi-flag"></i>&nbsp Report
-                      </button>
-                    </div>
-                    </br>
-
-                  {% endif %}
-                {% else %}
-
-                  {#            {% if interest_list %}#}
-                  {#              Interests:#}
-                  {#              <ul>#}
-                  {#              {% for interest in interest_list%}#}
-                  {#                <li>{{ interest.interested_user}} : {{interest.cust_message}}</li>#}
-                  {#              {% endfor %}#}
-                  {#              </ul>#}
-                  {#            {% endif %}#}
-
-
-                {% endif %}
-              </form>
-            </div>
-
-
           </div>
         </div>
         <!-- button onclick="clearImage()" class="btn btn-primary mt-3">Delete image</button-->
@@ -200,7 +110,10 @@
 
       <div class="container col-7 ">
         {% if user == post.user and not user.is_superuser %}
-          <div class="col-md-12">
+          {% if not interest_list%}
+            <h1>No Interests</h1>
+          {% else %}
+            <div class="col-md-12">
             <div class="table-wrap">
               <table class="table table-responsive-xl">
                 <thead>
@@ -249,58 +162,64 @@
                 {% endfor %}
               </table>
             </div>
-          </div>
-          {% elif user.is_superuser %}
-                    <div class="col-md-12">
-            <div class="table-wrap">
-              <table class="table table-responsive-xl">
-                <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Report reason</th>
-                </tr>
-                </thead>
-                {% for report in report_list %}
-                  <tr class="alert">
-                    <td class="d-flex align-items-center">
-                      {#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
-                      <div class="img">
-                           <a href="{% url 'users:user_info' report.reported_by.id %}">
-                        <img
-                            src={{ report.reported_by.profile.profile_pic.url }}
-                                class="rounded-circle"
-                            weight="40"
-                            height="40"
-                            alt="Black and White Portrait of a Man"
-                            loading="lazy"
-                        />
-                           </a>
-                      </div>
-                      <div class="pl-3 email">
-                          <a href="{% url 'users:user_info' report.reported_by.id %}">
-                        <span>{{ report.reported_by }}</span>
-                          </a>
-                        <span>Joined on {{ report.reported_by.date_joined }}</span>
-                      </div>
-                    </td>
-                    <td>{{ report.reported_by.email }}</td>
-                    {% if report.reason == 1 %}
-                      <td class="status">Inappropriate post content</td>
-                    {% elif report.reason == 2 %}
-                      <td class="status">Post item is unavailable anymore</td>
-                    {% elif report.reason == 3 %}
-                      <td class="status">Cannot reach out to post owner</td>
-                    {% elif report.reason == 4 %}
-                      <td class="status">Other</td>
-                    {% endif %}
-                  </tr>
-
-
-                {% endfor %}
-              </table>
             </div>
-          </div>
+          {% endif %}
+        {% elif user.is_superuser %}
+          {% if not report_list%}
+            <h1>0 Reports</h1>
+          {% else %}
+            <h1>Reports:</h1>
+            <div class="col-md-12">
+                <div class="table-wrap">
+                  <table class="table table-responsive-xl">
+                    <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Report reason</th>
+                    </tr>
+                    </thead>
+                    {% for report in report_list %}
+                      <tr class="alert">
+                        <td class="d-flex align-items-center">
+                          {#                                <div class="img" src = {{ interest.interested_user.profile.profile_pic.url  }}></div>#}
+                          <div class="img">
+                              <a href="{% url 'users:user_info' report.reported_by.id %}">
+                            <img
+                                src={{ report.reported_by.profile.profile_pic.url }}
+                                    class="rounded-circle"
+                                weight="40"
+                                height="40"
+                                alt="Black and White Portrait of a Man"
+                                loading="lazy"
+                            />
+                              </a>
+                          </div>
+                          <div class="pl-3 email">
+                              <a href="{% url 'users:user_info' report.reported_by.id %}">
+                            <span>{{ report.reported_by }}</span>
+                              </a>
+                            <span>Joined on {{ report.reported_by.date_joined }}</span>
+                          </div>
+                        </td>
+                        <td>{{ report.reported_by.email }}</td>
+                        {% if report.reason == 1 %}
+                          <td class="status">Inappropriate post content</td>
+                        {% elif report.reason == 2 %}
+                          <td class="status">Post item is unavailable anymore</td>
+                        {% elif report.reason == 3 %}
+                          <td class="status">Cannot reach out to post owner</td>
+                        {% elif report.reason == 4 %}
+                          <td class="status">Other</td>
+                        {% endif %}
+                      </tr>
+
+
+                    {% endfor %}
+                  </table>
+                </div>
+            </div>
+          {% endif %}
         {% endif %}
       </div>
 
