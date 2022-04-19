@@ -118,7 +118,6 @@ class index(LoginRequiredMixin, View):
             )
             for item in list:
                 user_interested_list.append(item[0])
-            print(user_interested_list)
         else:
             user_interested_list = ()
             # print(user_interested_list)
