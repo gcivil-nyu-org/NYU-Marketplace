@@ -112,9 +112,12 @@ class index(LoginRequiredMixin, View):
         post_list = Post.objects.all()
         post_list_pk = Post.objects.all().values("pk")
         if len(Interest.objects.filter(interested_user=request.user)) > 0:
-            user_interested_list = Interest.objects.filter(
-                interested_user=request.user
-            ).values_list("post")[0]
+            user_interested_list = []
+            list = Interest.objects.filter(interested_user=request.user).values_list(
+                "post"
+            )
+            for item in list:
+                user_interested_list.append(item[0])
         else:
             user_interested_list = ()
             # print(user_interested_list)
