@@ -72,59 +72,9 @@ def post_interest_detail(request, post_id):
     is_reported_by_user = False
     is_user_already_interested = False
     report_list = None
-    admin_check_report = False
-    if Report.objects.filter(post=post):
-        admin_check_report = True
-    if Report.objects.filter(reported_by=request.user, post=post):
-        is_reported_by_user = True
-    if Interest.objects.filter(interested_user=request.user, post=post):
-        is_user_already_interested = True
 
     if request.method == "POST":
         if (
-            post.user != request.user
-            and "interested" in request.POST
-            and not is_user_already_interested
-        ):
-            cust_message = request.POST.get("cust_message")
-            post.interested_count += 1
-            post.save()
-            interest = Interest(
-                interested_user=request.user, post=post, cust_message=cust_message
-            )
-            interest.save()
-            return redirect("posts:home")
-        elif (
-            post.user != request.user
-            and "cancel_interest" in request.POST
-            and is_user_already_interested
-        ):
-            post.interested_count -= 1
-            post.save()
-            interest = Interest.objects.filter(interested_user=request.user, post=post)
-            interest.delete()
-            return redirect("posts:home")
-        elif (
-            post.user != request.user
-            and "report" in request.POST
-            and not is_reported_by_user
-        ):
-            post.report_count += 1
-            post.save()
-            report = Report(reported_by=request.user, post=post)
-            report.save()
-            return redirect("posts:home")
-        elif (
-            post.user != request.user
-            and "cancel_report" in request.POST
-            and is_reported_by_user
-        ):
-            post.report_count -= 1
-            post.save()
-            report = Report.objects.filter(reported_by=request.user, post=post)
-            report.delete()
-            return redirect("posts:home")
-        elif (
             post.user == request.user or request.user.is_superuser
         ) and "delete" in request.POST:
             post.delete()
@@ -136,9 +86,10 @@ def post_interest_detail(request, post_id):
     else:
         if request.user == post.user:
             interest_list = Interest.objects.filter(post=post)
-        if request.user.is_superuser:
-            if admin_check_report:
-                report_list = Report.objects.filter(post=post)
+        elif request.user.is_superuser:
+            report_list = Report.objects.filter(post=post)
+        else:
+            raise PermissionDenied
 
     context = {
         "post": post,
