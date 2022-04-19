@@ -228,20 +228,14 @@ def detail(request, post_id):
         else:
             raise PermissionDenied()
     else:
-        if request.user == post.user:
-            interest_list = Interest.objects.filter(post=post)
-        if request.user.is_superuser:
-            if admin_check_report:
-                report_list = Report.objects.filter(post=post)
-                # print(report.reason)
+        if request.user == post.user or request.user.is_superuser:
+            return redirect("users:post_interest_detail", post_id)
 
     context = {
         "post": post,
         "user": request.user,
         "is_reported_by_user": is_reported_by_user,
         "is_user_already_interested": is_user_already_interested,
-        "interest_list": interest_list,
-        "report_list": report_list,
     }
     return render(request, "posts/detail.html", context)
 
