@@ -10,7 +10,7 @@
 
         <div class="justify-content-between col-12">
 
-          <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+          <form method="POST" action="{% url 'users:post_interest_detail' post.id %}" method="POST">
             {% csrf_token %}
         <div class="row">
             <div class="col-9">
