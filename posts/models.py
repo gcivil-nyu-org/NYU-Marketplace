@@ -8,11 +8,11 @@ class Post(models.Model):
 
     name = models.CharField(
         max_length=200,
-        validators=[MinLengthValidator(2, "Title must be greater than 2 characters")],
+        validators=[MinLengthValidator(2, "Name must be at least 2 characters long")],
     )
     description = models.TextField(
         max_length=400,
-        validators=[MinLengthValidator(2, "Title must be greater than 2 characters")],
+        validators=[MinLengthValidator(2, "Description must be at least 2 characters long")],
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -33,7 +33,7 @@ class Post(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     location = models.CharField(
         max_length=50,
-        validators=[MinLengthValidator(2, "Title must be greater than 2 characters")],
+        validators=[MinLengthValidator(2, "Location must be greater than 2 characters long")],
     )
 
     # Picture
