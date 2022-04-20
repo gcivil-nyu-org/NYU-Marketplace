@@ -98,3 +98,14 @@ class PostModelForm(forms.ModelForm):
                 }
             ),
         }
+
+    def clean(self):
+        super().clean()
+        option = self.cleaned_data["option"]
+        price = self.cleaned_data["price"]
+        if option == "exchange":
+            pass
+        else:
+            if price is None:
+                print("error")
+                raise forms.ValidationError("Price could not be empty")
