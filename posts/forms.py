@@ -108,4 +108,4 @@ class PostModelForm(forms.ModelForm):
         else:
             if price is None:
                 print("error")
-                raise forms.ValidationError({"price": ["Price could not be empty!"]})
+                raise forms.ValidationError({"price": ["Price can not be empty!"]})

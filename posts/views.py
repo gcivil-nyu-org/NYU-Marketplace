@@ -219,13 +219,6 @@ def detail(request, post_id):
             report.delete()
             is_reported_by_user = False
             return redirect("posts:detail", post_id)
-        elif (
-            post.user == request.user or request.user.is_superuser
-        ) and "delete" in request.POST:
-            post.delete()
-            return redirect("posts:home")
-        elif post.user == request.user and "edit" in request.POST:
-            return redirect("posts:post-edit", post_id=post_id)
         else:
             raise PermissionDenied()
     else:

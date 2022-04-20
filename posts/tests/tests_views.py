@@ -123,12 +123,12 @@ class TestViews(TestCase):
         self.assertEquals(login, True)
         edit = {"edit": "edit"}
         response6 = self.client.post("/posts/detail/1", edit)
-        self.assertEquals(response6.status_code, 302)
+        self.assertEquals(response6.status_code, 403)
         delete = {"delete": "delete"}
         response7 = self.client.post("/posts/detail/1", delete)
-        self.assertEquals(response7.status_code, 302)
-        response8 = self.client.get("/posts/detail/1")
-        self.assertEquals(response8.status_code, 404)
+        self.assertEquals(response7.status_code, 403)
+        # response8 = self.client.get("/posts/detail/1")
+        # self.assertEquals(response8.status_code, 404)
 
     def test_detail_view_admin(self):
         response = self.client.get("/posts/detail/1")
