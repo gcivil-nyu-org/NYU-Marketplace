@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from users.models import Profile
+from posts.models import Post
 
 
 class TestViews(TestCase):
@@ -10,6 +11,9 @@ class TestViews(TestCase):
             username="user",
             password="12test12",
             email="user@nyu.edu",
+        )
+        self.poster = get_user_model().objects.create_user(
+            username="test", password="12test12", email="test@example.com"
         )
         self.admin = get_user_model().objects.create_superuser(
             username="admin",
@@ -75,3 +79,20 @@ class TestViews(TestCase):
         response2 = self.client.get(f"/profile/user_info/{self.user.id}")
         self.assertEquals(response2.status_code, 200)
         self.assertTemplateUsed(response2, "users/user_info.html")
+
+    def test_post_interest_detail(self):
+        Post.objects.create(
+            name="macbook pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        login = self.client.login(email="test@example.com", password="12test12")
+        self.assertEquals(login, True)
+        response = self.client.get("/profile/post_interest_detail/1")
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, "users/post_interest_detail.html")
