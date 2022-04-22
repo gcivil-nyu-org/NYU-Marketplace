@@ -126,8 +126,12 @@ class index(LoginRequiredMixin, View):
             user_interested_list = ()
             # print(user_interested_list)
         if q != "":
-            users = User.objects.filter(username__icontains=q)
-            post_list = post_list.filter(Q(name__icontains=q) | Q(user__in=users))
+            # user = User.objects.filter(username=q)
+            try:
+                user = User.objects.get(username=q)
+            except User.DoesNotExist:
+                user = None
+            post_list = post_list.filter(Q(name__icontains=q) | Q(user=user))
         if category != "all":
             post_list = post_list.filter(category=category)
         if option != "all":

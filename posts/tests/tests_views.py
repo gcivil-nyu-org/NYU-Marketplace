@@ -388,7 +388,7 @@ class TestViews(TestCase):
         }
         response = self.client.get("/posts/", data)
         self.assertIsNotNone(response.context["post_list"])
-        self.assertEquals(len(response.context["post_list"]), 3)
+        self.assertEquals(len(response.context["post_list"]), 2)
         self.assertEquals(response.status_code, 200)
         data = {
             "category": "tech",
@@ -398,7 +398,7 @@ class TestViews(TestCase):
         }
         response = self.client.get("/posts/", data)
         self.assertIsNotNone(response.context["post_list"])
-        self.assertEquals(len(response.context["post_list"]), 1)
+        self.assertEquals(len(response.context["post_list"]), 0)
         self.assertEquals(response.status_code, 200)
         # data = {
         #     "category": "tech",
