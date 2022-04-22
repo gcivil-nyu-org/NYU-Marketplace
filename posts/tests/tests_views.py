@@ -268,17 +268,27 @@ class TestViews(TestCase):
             user=self.poster,
             picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
         )
-        data = {"category": "tech", "option": "exchange", "sort": "pricedesc", "q": "macbook"}
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "macbook",
+        }
         login = self.client.login(email="user@nyu.edu", password="12test12")
         self.assertEquals(login, True)
         response = self.client.get("/posts/", data)
-        self.assertIsNotNone(response.context['post_list'])
-        self.assertEquals(len(response.context['post_list']), 1)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 1)
         self.assertEquals(response.status_code, 200)
-        data = {"category": "tech", "option": "exchange", "sort": "pricedesc", "q": "macb"}
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "macb",
+        }
         response = self.client.get("/posts/", data)
-        self.assertIsNotNone(response.context['post_list'])
-        self.assertEquals(len(response.context['post_list']), 2)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 2)
         self.assertEquals(response.status_code, 200)
 
     def test_query_user(self):
@@ -312,20 +322,35 @@ class TestViews(TestCase):
             user=self.user,
             picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
         )
-        data = {"category": "tech", "option": "exchange", "sort": "pricedesc", "q": "test"}
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "test",
+        }
         login = self.client.login(email="user@nyu.edu", password="12test12")
         self.assertEquals(login, True)
         response = self.client.get("/posts/", data)
-        self.assertIsNotNone(response.context['post_list'])
-        self.assertEquals(len(response.context['post_list']), 2)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 2)
         self.assertEquals(response.status_code, 200)
-        data = {"category": "tech", "option": "exchange", "sort": "pricedesc", "q": "user"}
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "user",
+        }
         response = self.client.get("/posts/", data)
-        self.assertIsNotNone(response.context['post_list'])
-        self.assertEquals(len(response.context['post_list']), 1)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 1)
         self.assertEquals(response.status_code, 200)
-        data = {"category": "tech", "option": "exchange", "sort": "pricedesc", "q": "noname"}
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "noname",
+        }
         response = self.client.get("/posts/", data)
-        self.assertIsNotNone(response.context['post_list'])
-        self.assertEquals(len(response.context['post_list']), 0)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 0)
         self.assertEquals(response.status_code, 200)
