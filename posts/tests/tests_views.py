@@ -400,3 +400,13 @@ class TestViews(TestCase):
         self.assertIsNotNone(response.context["post_list"])
         self.assertEquals(len(response.context["post_list"]), 1)
         self.assertEquals(response.status_code, 200)
+        # data = {
+        #     "category": "tech",
+        #     "option": "exchange",
+        #     "sort": "pricedesc",
+        #     "q": "",
+        # }
+        # response = self.client.get("/posts/", data)
+        # self.assertIsNotNone(response.context["post_list"])
+        # self.assertEquals(len(response.context["post_list"]), 1)
+        # self.assertEquals(response.status_code, 200)
