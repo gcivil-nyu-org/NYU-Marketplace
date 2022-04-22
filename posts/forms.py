@@ -60,6 +60,7 @@ class PostModelForm(forms.ModelForm):
                     "type": "itemName",
                     "id": "inputItemName",
                     "placeholder": "Please Enter Item Name",
+                    "maxlength": "50",
                 }
             ),
             "option": forms.RadioSelect(
@@ -71,6 +72,7 @@ class PostModelForm(forms.ModelForm):
                     "type": "itemName",
                     "id": "inputDescription",
                     "rows": 3,
+                    "maxlength": "400",
                 }
             ),
             "price": forms.TextInput(
@@ -80,6 +82,7 @@ class PostModelForm(forms.ModelForm):
                     "id": "inputItemPrice",
                     "placeholder": "Please Enter Item Price",
                     "onkeyup": r"value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')",
+                    "maxlength": "7",
                 }
             ),
             "category": forms.Select(
@@ -91,6 +94,18 @@ class PostModelForm(forms.ModelForm):
                     "type": "itemLocation",
                     "id": "inputItemLocation",
                     "placeholder": "Please Enter Item Location",
+                    "maxlength": "50",
                 }
             ),
         }
+
+    def clean(self):
+        super().clean()
+        option = self.cleaned_data["option"]
+        price = self.cleaned_data["price"]
+        if option == "exchange":
+            pass
+        else:
+            if price is None:
+                print("error")
+                raise forms.ValidationError({"price": ["Price can not be empty!"]})

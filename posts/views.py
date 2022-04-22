@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post, Report, Interest, User
+from .models import Post, Report, Interest
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django.contrib.auth.models import User
 from notifications.signals import notify
 
 
@@ -91,6 +93,8 @@ class postCreate(LoginRequiredMixin, CreateView):
         if not form.is_valid():
             ctx = {"form": form}
             # print("form ng")
+            # messages.error(request, 'Invalid form submission.')
+            messages.error(request, form.errors)
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
@@ -114,14 +118,22 @@ class index(LoginRequiredMixin, View):
         post_list = Post.objects.all()
         post_list_pk = Post.objects.all().values("pk")
         if len(Interest.objects.filter(interested_user=request.user)) > 0:
-            user_interested_list = Interest.objects.filter(
-                interested_user=request.user
-            ).values_list("post")[0]
+            user_interested_list = []
+            list = Interest.objects.filter(interested_user=request.user).values_list(
+                "post"
+            )
+            for item in list:
+                user_interested_list.append(item[0])
         else:
             user_interested_list = ()
             # print(user_interested_list)
         if q != "":
-            post_list = post_list.filter(Q(name__icontains=q))
+            # user = User.objects.filter(username=q)
+            try:
+                user = User.objects.get(username=q)
+            except User.DoesNotExist:
+                user = None
+            post_list = post_list.filter(Q(name__icontains=q) | Q(user=user))
         if category != "all":
             post_list = post_list.filter(category=category)
         if option != "all":
@@ -156,13 +168,8 @@ class index(LoginRequiredMixin, View):
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    interest_list = None
-    report_list = None
-    admin_check_report = False
     is_reported_by_user = False
     is_user_already_interested = False
-    if Report.objects.filter(post=post):
-        admin_check_report = True
     if Report.objects.filter(reported_by=request.user, post=post):
         is_reported_by_user = True
     if Interest.objects.filter(interested_user=request.user, post=post):
@@ -191,16 +198,8 @@ def detail(request, post_id):
                 + " is interested in your post "
                 + post.name,
             )
-            is_user_already_interested = True
-            context = {
-                "post": post,
-                "user": request.user,
-                "is_reported_by_user": is_reported_by_user,
-                "is_user_already_interested": is_user_already_interested,
-                "interest_list": interest_list,
-            }
-            return render(request, "posts/detail.html", context)
             # return redirect("posts:home")
+            return redirect("posts:detail", post_id)
         elif (
             post.user != request.user
             and "cancel_interest" in request.POST
@@ -210,16 +209,7 @@ def detail(request, post_id):
             post.save()
             interest = Interest.objects.filter(interested_user=request.user, post=post)
             interest.delete()
-            is_user_already_interested = False
-            context = {
-                "post": post,
-                "user": request.user,
-                "is_reported_by_user": is_reported_by_user,
-                "is_user_already_interested": is_user_already_interested,
-                "interest_list": interest_list,
-            }
-            return render(request, "posts/detail.html", context)
-            # return redirect("posts:home")
+            return redirect("posts:detail", post_id)
         elif (
             post.user != request.user
             and "report" in request.POST
@@ -236,15 +226,7 @@ def detail(request, post_id):
             )
             report.save()
             is_reported_by_user = True
-            context = {
-                "post": post,
-                "user": request.user,
-                "is_reported_by_user": is_reported_by_user,
-                "is_user_already_interested": is_user_already_interested,
-                "interest_list": interest_list,
-            }
-            return render(request, "posts/detail.html", context)
-            # return redirect("posts:home")
+            return redirect("posts:detail", post_id)
         elif (
             post.user != request.user
             and "cancel_report" in request.POST
@@ -255,39 +237,18 @@ def detail(request, post_id):
             report = Report.objects.filter(reported_by=request.user, post=post)
             report.delete()
             is_reported_by_user = False
-            context = {
-                "post": post,
-                "user": request.user,
-                "is_reported_by_user": is_reported_by_user,
-                "is_user_already_interested": is_user_already_interested,
-                "interest_list": interest_list,
-            }
-            return render(request, "posts/detail.html", context)
-            # return redirect("posts:home")
-        elif (
-            post.user == request.user or request.user.is_superuser
-        ) and "delete" in request.POST:
-            post.delete()
-            return redirect("posts:home")
-        elif post.user == request.user and "edit" in request.POST:
-            return redirect("posts:post-edit", post_id=post_id)
+            return redirect("posts:detail", post_id)
         else:
             raise PermissionDenied()
     else:
-        if request.user == post.user:
-            interest_list = Interest.objects.filter(post=post)
-        if request.user.is_superuser:
-            if admin_check_report:
-                report_list = Report.objects.filter(post=post)
-                # print(report.reason)
+        if request.user == post.user or request.user.is_superuser:
+            return redirect("users:post_interest_detail", post_id)
 
     context = {
         "post": post,
         "user": request.user,
         "is_reported_by_user": is_reported_by_user,
         "is_user_already_interested": is_user_already_interested,
-        "interest_list": interest_list,
-        "report_list": report_list,
     }
     return render(request, "posts/detail.html", context)
 

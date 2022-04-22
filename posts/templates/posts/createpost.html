@@ -20,6 +20,7 @@
 <!--      </form>-->
 
 <div class="container  mt-5">
+{% include 'message.html' %}
   <form method="post" id="upload_form" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="row">

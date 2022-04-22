@@ -82,10 +82,10 @@
 
         <div class="row justify-content-center col-8 mt-5">
           <div class="col-2" style="margin-bottom: auto; margin-top: auto">
-              {% if post.interested_count == 0  %}
-            <i class="bi bi-star" ></i><span>&nbsp {{ post.interested_count}}</span>
-              {% elif post.interested_count > 0  %}
-            <i class="bi bi-star-fill" style='color:#ffc300' ></i><span>&nbsp {{ post.interested_count}}</span>
+              {% if is_user_already_interested  %}
+                <i class="bi bi-star-fill" style='color:#ffc300' ></i><span>&nbsp {{ post.interested_count}}</span>
+              {% else %}
+                <i class="bi bi-star" ></i><span>&nbsp {{ post.interested_count}}</span>
               {% endif %}
           </div>
 
@@ -98,10 +98,6 @@
                   </button>
                 </div>
               </form>
-{#                {% for report in report_list %}#}
-{#                <h1>{{ report.reason }}</h1>#}
-{#                {% endfor %}#}
-
             </br>
             {% elif post.user != user %}
               {% if is_user_already_interested %}
