@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 posts = [
     {
@@ -125,7 +126,11 @@ class index(LoginRequiredMixin, View):
             user_interested_list = ()
             # print(user_interested_list)
         if q != "":
-            post_list = post_list.filter(Q(name__icontains=q))
+            try:
+                user = User.objects.get(username=q)
+            except User.DoesNotExist:
+                user = None
+            post_list = post_list.filter(Q(name__icontains=q) | Q(user=user))
         if category != "all":
             post_list = post_list.filter(category=category)
         if option != "all":
