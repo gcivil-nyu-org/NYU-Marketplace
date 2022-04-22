@@ -25,6 +25,12 @@ class TestViews(TestCase):
         self.poster = get_user_model().objects.create_user(
             username="test", password="12test12", email="test@example.com"
         )
+        self.poster2 = get_user_model().objects.create_user(
+            username="test2", password="12test12", email="test2@example.com"
+        )
+        self.poster3 = get_user_model().objects.create_user(
+            username="different", password="12test12", email="test3@example.com"
+        )
 
         # post2 = Post.objects.create(
         #     name="macbook pro",
@@ -246,3 +252,161 @@ class TestViews(TestCase):
         self.assertEquals(login, True)
         response = self.client.get("/posts/")
         self.assertEquals(response.status_code, 200)
+
+    def test_query_title(self):
+        Post.objects.create(
+            name="macbook pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        Post.objects.create(
+            name="macb pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "macbook",
+        }
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        response = self.client.get("/posts/", data)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 1)
+        self.assertEquals(response.status_code, 200)
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "macb",
+        }
+        response = self.client.get("/posts/", data)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 2)
+        self.assertEquals(response.status_code, 200)
+
+    def test_query_user(self):
+        Post.objects.create(
+            name="macbook pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        Post.objects.create(
+            name="macbooo",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        Post.objects.create(
+            name="macb pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.user,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "test",
+        }
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        response = self.client.get("/posts/", data)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 2)
+        self.assertEquals(response.status_code, 200)
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "user",
+        }
+        response = self.client.get("/posts/", data)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 1)
+        self.assertEquals(response.status_code, 200)
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "noname",
+        }
+        response = self.client.get("/posts/", data)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 0)
+        self.assertEquals(response.status_code, 200)
+        Post.objects.create(
+            name="item2",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster2,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        Post.objects.create(
+            name="item3",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster3,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "test",
+        }
+        response = self.client.get("/posts/", data)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 2)
+        self.assertEquals(response.status_code, 200)
+        data = {
+            "category": "tech",
+            "option": "exchange",
+            "sort": "pricedesc",
+            "q": "dif",
+        }
+        response = self.client.get("/posts/", data)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 0)
+        self.assertEquals(response.status_code, 200)
+        # data = {
+        #     "category": "tech",
+        #     "option": "exchange",
+        #     "sort": "pricedesc",
+        #     "q": "",
+        # }
+        # response = self.client.get("/posts/", data)
+        # self.assertIsNotNone(response.context["post_list"])
+        # self.assertEquals(len(response.context["post_list"]), 1)
+        # self.assertEquals(response.status_code, 200)
