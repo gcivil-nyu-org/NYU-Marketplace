@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post, Report, Interest
+from .models import Post, Report, Interest, User
 from .forms import PostModelForm
 from django.views.generic import CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
+from notifications.signals import notify
+
 
 posts = [
     {
@@ -179,6 +181,16 @@ def detail(request, post_id):
                 interested_user=request.user, post=post, cust_message=cust_message
             )
             interest.save()
+            sender = User.objects.get(username=request.user)
+            receiver = User.objects.get(username=post.user)
+            notify.send(
+                sender,
+                recipient=receiver,
+                verb="",
+                description=sender.username
+                + " is interested in your post "
+                + post.name,
+            )
             is_user_already_interested = True
             context = {
                 "post": post,
