@@ -82,7 +82,7 @@ class PostModelForm(forms.ModelForm):
                     "id": "inputItemPrice",
                     "placeholder": "Please Enter Item Price",
                     "onkeyup": r"value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')",
-                    "maxlength": "7",
+                    "maxlength": "5",
                 }
             ),
             "category": forms.Select(
