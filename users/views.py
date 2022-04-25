@@ -37,11 +37,19 @@ def user_info(request, user_id):
     posts = posts.filter(user=user_id)
     user_info = Profile.objects.get(user=user_id)
     user_account = User.objects.get(id=user_id)
+    if len(Interest.objects.filter(interested_user=request.user)) > 0:
+        user_interested_list = []
+        list = Interest.objects.filter(interested_user=request.user).values_list("post")
+        for item in list:
+            user_interested_list.append(item[0])
+    else:
+        user_interested_list = []
     context = {
         "post_list": posts,
         "user": user_info,
         "default_user": request.user,
         "user_account": user_account,
+        "user_interested_list": user_interested_list,
     }
     if request.user.id == user_id:
         return render(request, "users/profile_detail.html", context)
