@@ -193,7 +193,7 @@ def detail(request, post_id):
             notify.send(
                 sender,
                 recipient=receiver,
-                verb="",
+                verb=post_id,
                 description=sender.username
                 + " is interested in your post "
                 + post.name,
@@ -209,6 +209,17 @@ def detail(request, post_id):
             post.save()
             interest = Interest.objects.filter(interested_user=request.user, post=post)
             interest.delete()
+            sender = User.objects.get(username=request.user)
+            receiver = User.objects.get(username=post.user)
+            notify.send(
+                sender,
+                recipient=receiver,
+                verb=post_id,
+                description=sender.username
+                            + " canceled interest in your post "
+                            + post.name,
+            )
+            # return redirect("posts:home")
             return redirect("posts:detail", post_id)
         elif (
             post.user != request.user
@@ -226,6 +237,17 @@ def detail(request, post_id):
             )
             report.save()
             is_reported_by_user = True
+            sender = User.objects.get(username=request.user)
+            receiver = User.objects.get(username=post.user)
+            notify.send(
+                sender,
+                recipient=receiver,
+                verb=post_id,
+                description=sender.username
+                            + " reported your post "
+                            + post.name,
+            )
+            # return redirect("posts:home")
             return redirect("posts:detail", post_id)
         elif (
             post.user != request.user
@@ -237,6 +259,16 @@ def detail(request, post_id):
             report = Report.objects.filter(reported_by=request.user, post=post)
             report.delete()
             is_reported_by_user = False
+            sender = User.objects.get(username=request.user)
+            receiver = User.objects.get(username=post.user)
+            notify.send(
+                sender,
+                recipient=receiver,
+                verb=post_id,
+                description=sender.username
+                            + " canceled the report of your post "
+                            + post.name,
+            )
             return redirect("posts:detail", post_id)
         else:
             raise PermissionDenied()

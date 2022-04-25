@@ -83,6 +83,7 @@
       <!-- Left links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
+{#            <a class="nav-link" href="{% url 'notifications:mark_all_as_read' %}?next={% url 'posts:home' %}">Home</a>#}
           <a class="nav-link" href="{% url 'posts:home' %}">Home</a>
         </li>
         <li class="nav-item">
@@ -123,6 +124,8 @@
           <div class="form-group row">
             <div class="col">
                 <div class="dropdown">
+{#                {{ 222 }}#}
+                  {% notifications_unread as unread_count %}
 
                    <a href="#" class="notification dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true">
                         <i class="fa fa-bell" style="font-size:20px"></i>
@@ -136,32 +139,27 @@
 {#                                </div>#}
 {#                                <div class="dropdown-divider"></div>#}
 {#                            {% endfor %}#}
+{#                                        <div style = " left: auto ; right : 0" class="dropdown-menu">#}
+{##}
+{#                                             #}
+{#                                            <div >#}
 
                                           <div style = " left: auto ; right : 0" class="dropdown-menu">
+                                          <a class="nav-link" style="color: #000000"  href="{% url 'notifications:mark_all_as_read' %}?next={% url 'posts:home' %}"><i class="bi bi-backspace-fill"></i>Mark as Read</a>
 
                                               {% for notification in  user.notifications.unread %}
                                                     <div class="dropdown-divider"></div>
 
-                                                       <button class="dropdown-item" type="button">{{ notification.description }}</button>
-
-
-
+                                                       <a class="nav-link" style="color: #000000"  href="{% url 'users:post_interest_detail' notification.verb %}" type="button">{{ notification.description }}</a>
                                             {% endfor %}
                                               <div >
-
                                           </div>
                                         </div>
-
-
-
-
                           </div>
                         </div>
                       {% live_notify_list list_class="dropdown-menu" %}
                 </div>
-
             </div>
-
           </div>
         <div class="dropdown">
 
