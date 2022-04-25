@@ -216,8 +216,8 @@ def detail(request, post_id):
                 recipient=receiver,
                 verb=post_id,
                 description=sender.username
-                            + " canceled interest in your post "
-                            + post.name,
+                + " canceled interest in your post "
+                + post.name,
             )
             # return redirect("posts:home")
             return redirect("posts:detail", post_id)
@@ -243,9 +243,7 @@ def detail(request, post_id):
                 sender,
                 recipient=receiver,
                 verb=post_id,
-                description=sender.username
-                            + " reported your post "
-                            + post.name,
+                description=sender.username + " reported your post " + post.name,
             )
             # return redirect("posts:home")
             return redirect("posts:detail", post_id)
@@ -266,8 +264,8 @@ def detail(request, post_id):
                 recipient=receiver,
                 verb=post_id,
                 description=sender.username
-                            + " canceled the report of your post "
-                            + post.name,
+                + " canceled the report of your post "
+                + post.name,
             )
             return redirect("posts:detail", post_id)
         else:

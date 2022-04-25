@@ -4,6 +4,7 @@ from .forms import ProfileForm
 from .models import Profile
 
 from posts.models import Post, Report, Interest
+
 # from notifications.models import notification
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
@@ -97,6 +98,7 @@ def post_interest_detail(request, post_id):
         "report_list": report_list,
     }
     return render(request, "users/post_interest_detail.html", context)
+
 
 # @login_required(login_url="/accounts/login/")
 # def mark_all_as_read(request):
