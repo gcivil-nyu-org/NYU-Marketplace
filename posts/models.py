@@ -32,7 +32,7 @@ class Post(models.Model):
         ("other", "Other"),
     )
     category = models.CharField(max_length=10, choices=categories, default="Textbook")
-    price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     location = models.CharField(
         max_length=50,
         validators=[
