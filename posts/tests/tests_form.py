@@ -1,8 +1,5 @@
-from django import forms
 from django.core.exceptions import ValidationError
-
 from posts.models import Post
-from posts import forms
 
 
 def test_price_over_limit(self):
