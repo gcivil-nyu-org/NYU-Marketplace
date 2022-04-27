@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from users.models import Profile
-from posts.models import Post
+from posts.models import Post, Interest
 
 
 class TestViews(TestCase):
@@ -66,6 +66,24 @@ class TestViews(TestCase):
         self.assertEquals(profile1.address, "6 Metrotech Center")
 
     def test_user_info_get(self):
+        Post.objects.create(
+            name="macbook pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        post = Post.objects.get(id=1)
+        post.interested_count += 1
+        post.save()
+        Interest.objects.create(
+            post=post,
+            interested_user=self.user,
+            cust_message="interesting",
+        )
         response = self.client.get(f"/profile/user_info/{self.user.id}")
         self.assertEquals(response.status_code, 302)
         login = self.client.login(email="user@nyu.edu", password="12test12")
@@ -74,7 +92,7 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "users/profile_detail.html")
         self.assertIsNotNone(response.context["user_interested_list"])
-        self.assertEquals(len(response.context["user_interested_list"]), 0)
+        self.assertEquals(len(response.context["user_interested_list"]), 1)
         self.client.logout()
         login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
         self.assertEquals(login, True)
