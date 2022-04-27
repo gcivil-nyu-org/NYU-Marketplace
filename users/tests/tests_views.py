@@ -73,6 +73,8 @@ class TestViews(TestCase):
         response = self.client.get(f"/profile/user_info/{self.user.id}")
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "users/profile_detail.html")
+        self.assertIsNotNone(response.context["user_interested_list"])
+        self.assertEquals(len(response.context["user_interested_list"]), 0)
         self.client.logout()
         login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
         self.assertEquals(login, True)
