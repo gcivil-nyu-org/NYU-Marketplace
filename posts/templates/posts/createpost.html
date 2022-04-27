@@ -30,12 +30,19 @@
           <!--input class="form-control" type="file" id="formImage" onchange="preview()"-->
           <div id="formImage" onchange="preview()">{{form.picture}}</div>
         </div>
+        {% if post%}
+        <img id="frame"
+             src="{{ post.picture.url }}"
+             class="img-fluid"
+        />
+        {% else %}
         <img id="frame"
              src="https://gmedia.playstation.com/is/image/SIEPDC/ps-plus-cloud-storage-dark-icon-01-en-25sep20?$native--t$"
              class="img-fluid"
         />
+        {%endif%}
         <!-- button onclick="clearImage()" class="btn btn-primary mt-3">Delete image</button-->
-
+      
       </div>
       <div class="col-1">
       </div>
@@ -123,7 +130,7 @@
         <br><br>
         <div style="text-align:center">
           <button type="submit" class="btn btn-primary">Submit</button>
-          {% if post_id %}
+          {% if post %}
             <input type="submit" class="btn btn-secondary" value="Cancel" onclick=window.history.back()>
           {% else %}
             <input type="submit" class="btn btn-secondary" value="Cancel" onclick="window.location.href='{% url 'posts:home' %}';return false;">

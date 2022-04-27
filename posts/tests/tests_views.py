@@ -213,6 +213,21 @@ class TestViews(TestCase):
                 "location": "stern",
             },
         )
+        response5 = self.client.post(
+            "/posts/edit/1",
+            {
+                "name": "mac pro",
+                "description": "used macbook pro",
+                "option": "rent",
+                "category": "tech",
+                "price": 50,
+                "location": "stern",
+                "picture": image1,
+            },
+            pk=None,
+            post_id=1,
+        )
+        self.assertEquals(response5.status_code, 200)
         self.assertEquals(response.status_code, 302)
         self.assertEquals(response2.status_code, 200)
         post = Post.objects.get(id=1)
