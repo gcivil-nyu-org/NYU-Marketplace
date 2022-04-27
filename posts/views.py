@@ -67,6 +67,7 @@ class postCreate(LoginRequiredMixin, CreateView):
     def get(self, request, pk=None, post_id=None):
         if request.user.is_superuser:
             raise PermissionDenied()
+        post = None
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
             if post.user != request.user:
@@ -74,25 +75,31 @@ class postCreate(LoginRequiredMixin, CreateView):
             form = PostModelForm(instance=post)
         else:
             form = PostModelForm()
-        ctx = {"form": form, "post_id": post_id}
+        ctx = {"form": form, "post": post}
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk=None, post_id=None):
         if request.user.is_superuser:
             raise PermissionDenied()
+        post = None
+        old_picture = None
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
+            old_picture = post.picture
         else:
-            post = Post()
+            post = None
         form = PostModelForm(request.POST, request.FILES or None, instance=post)
         # image = request.FILES.get("picture")
         # print(image)
 
         if not form.is_valid():
-            ctx = {"form": form}
             # print("form ng")
             # messages.error(request, 'Invalid form submission.')
             messages.error(request, form.errors)
+            if post:
+                post.picture = old_picture
+            form = PostModelForm(request.POST, instance=post)
+            ctx = {"form": form, "post": post}
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
