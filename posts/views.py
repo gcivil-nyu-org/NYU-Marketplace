@@ -146,9 +146,13 @@ class index(LoginRequiredMixin, View):
             else:
                 post_list = post_list.filter(option=option)
         if sort == "priceasc":
-            post_list = post_list.order_by("price")
+            post_list = post_list.filter(Q(option="sell") | Q(option="rent")).order_by(
+                "price"
+            )
         elif sort == "pricedesc":
-            post_list = post_list.order_by("-price")
+            post_list = post_list.filter(Q(option="sell") | Q(option="rent")).order_by(
+                "-price"
+            )
         elif option != "reported":
             post_list = post_list.order_by("-created_at")
         context = {

@@ -189,6 +189,19 @@
     if(optionPara == false){
         document.getElementById("allOption").className = "type-link-active";
     }
+
+    if(query.search("option=exchange") !== -1){
+        document.getElementById("priceasc").setAttribute("style","opacity: 0.2; pointer-events: none;");
+        document.getElementById("pricedesc").setAttribute("style","opacity: 0.2; pointer-events: none;");
+        var paraInUrl = window.location.href;
+        if(paraInUrl.search("sort=priceasc") !== -1){
+            paraInUrl = paraInUrl.replace("sort=priceasc", "sort=time")
+            window.location.href = paraInUrl;
+        }else if(paraInUrl.search("sort=pricedesc") !== -1){
+            paraInUrl = paraInUrl.replace("sort=pricedesc", "sort=time")
+            window.location.href = paraInUrl;
+        }
+    }
     function getItem(filter, value){
         var url = window.location.href;
         var query = window.location.search.substring(1);

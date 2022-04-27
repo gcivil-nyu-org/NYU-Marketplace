@@ -277,7 +277,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "macbook",
         }
         login = self.client.login(email="user@nyu.edu", password="12test12")
@@ -289,7 +289,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "macb",
         }
         response = self.client.get("/posts/", data)
@@ -331,7 +331,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "test",
         }
         login = self.client.login(email="user@nyu.edu", password="12test12")
@@ -343,7 +343,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "user",
         }
         response = self.client.get("/posts/", data)
@@ -353,7 +353,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "noname",
         }
         response = self.client.get("/posts/", data)
@@ -383,7 +383,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "test",
         }
         response = self.client.get("/posts/", data)
@@ -393,7 +393,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "dif",
         }
         response = self.client.get("/posts/", data)
@@ -403,7 +403,7 @@ class TestViews(TestCase):
         # data = {
         #     "category": "tech",
         #     "option": "exchange",
-        #     "sort": "pricedesc",
+        #     "sort": "time",
         #     "q": "",
         # }
         # response = self.client.get("/posts/", data)
