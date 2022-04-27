@@ -82,7 +82,7 @@ class PostModelForm(forms.ModelForm):
                     "id": "inputItemPrice",
                     "placeholder": "Please Enter Item Price",
                     "onkeyup": r"value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')",
-                    "maxlength": "7",
+                    "maxlength": "9",
                 }
             ),
             "category": forms.Select(
@@ -109,3 +109,8 @@ class PostModelForm(forms.ModelForm):
             if price is None:
                 print("error")
                 raise forms.ValidationError({"price": ["Price can not be empty!"]})
+            elif price >= 1000000:
+                print("error")
+                raise forms.ValidationError(
+                    {"price": ["Price can not be larger than 1000000!"]}
+                )

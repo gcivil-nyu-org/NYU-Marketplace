@@ -7,6 +7,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
+from django.contrib.auth.models import User
+from notifications.signals import notify
+
 
 posts = [
     {
@@ -66,6 +69,7 @@ class postCreate(LoginRequiredMixin, CreateView):
     def get(self, request, pk=None, post_id=None):
         if request.user.is_superuser:
             raise PermissionDenied()
+        post = None
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
             if post.user != request.user:
@@ -73,25 +77,31 @@ class postCreate(LoginRequiredMixin, CreateView):
             form = PostModelForm(instance=post)
         else:
             form = PostModelForm()
-        ctx = {"form": form, "post_id": post_id}
+        ctx = {"form": form, "post": post}
         return render(request, self.template_name, ctx)
 
     def post(self, request, pk=None, post_id=None):
         if request.user.is_superuser:
             raise PermissionDenied()
+        post = None
+        old_picture = None
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
+            old_picture = post.picture
         else:
-            post = Post()
+            post = None
         form = PostModelForm(request.POST, request.FILES or None, instance=post)
         # image = request.FILES.get("picture")
         # print(image)
 
         if not form.is_valid():
-            ctx = {"form": form}
             # print("form ng")
             # messages.error(request, 'Invalid form submission.')
             messages.error(request, form.errors)
+            if post:
+                post.picture = old_picture
+            form = PostModelForm(request.POST, instance=post)
+            ctx = {"form": form, "post": post}
             return render(request, self.template_name, ctx)
 
         # Add owner to the model before saving
@@ -125,7 +135,12 @@ class index(LoginRequiredMixin, View):
             user_interested_list = ()
             # print(user_interested_list)
         if q != "":
-            post_list = post_list.filter(Q(name__icontains=q))
+            # user = User.objects.filter(username=q)
+            try:
+                user = User.objects.get(username=q)
+            except User.DoesNotExist:
+                user = None
+            post_list = post_list.filter(Q(name__icontains=q) | Q(user=user))
         if category != "all":
             post_list = post_list.filter(category=category)
         if option != "all":
@@ -138,9 +153,13 @@ class index(LoginRequiredMixin, View):
             else:
                 post_list = post_list.filter(option=option)
         if sort == "priceasc":
-            post_list = post_list.order_by("price")
+            post_list = post_list.filter(Q(option="sell") | Q(option="rent")).order_by(
+                "price"
+            )
         elif sort == "pricedesc":
-            post_list = post_list.order_by("-price")
+            post_list = post_list.filter(Q(option="sell") | Q(option="rent")).order_by(
+                "-price"
+            )
         elif option != "reported":
             post_list = post_list.order_by("-created_at")
         context = {
@@ -180,6 +199,17 @@ def detail(request, post_id):
                 interested_user=request.user, post=post, cust_message=cust_message
             )
             interest.save()
+            sender = User.objects.get(username=request.user)
+            receiver = User.objects.get(username=post.user)
+            notify.send(
+                sender,
+                recipient=receiver,
+                verb=post_id,
+                description=sender.username
+                + " is interested in your post "
+                + post.name,
+            )
+            # return redirect("posts:home")
             return redirect("posts:detail", post_id)
         elif (
             post.user != request.user
@@ -190,6 +220,17 @@ def detail(request, post_id):
             post.save()
             interest = Interest.objects.filter(interested_user=request.user, post=post)
             interest.delete()
+            sender = User.objects.get(username=request.user)
+            receiver = User.objects.get(username=post.user)
+            notify.send(
+                sender,
+                recipient=receiver,
+                verb=post_id,
+                description=sender.username
+                + " canceled interest in your post "
+                + post.name,
+            )
+            # return redirect("posts:home")
             return redirect("posts:detail", post_id)
         elif (
             post.user != request.user
@@ -207,6 +248,15 @@ def detail(request, post_id):
             )
             report.save()
             is_reported_by_user = True
+            sender = User.objects.get(username=request.user)
+            receiver = User.objects.get(username=post.user)
+            notify.send(
+                sender,
+                recipient=receiver,
+                verb=post_id,
+                description=sender.username + " reported your post " + post.name,
+            )
+            # return redirect("posts:home")
             return redirect("posts:detail", post_id)
         elif (
             post.user != request.user
@@ -218,6 +268,16 @@ def detail(request, post_id):
             report = Report.objects.filter(reported_by=request.user, post=post)
             report.delete()
             is_reported_by_user = False
+            sender = User.objects.get(username=request.user)
+            receiver = User.objects.get(username=post.user)
+            notify.send(
+                sender,
+                recipient=receiver,
+                verb=post_id,
+                description=sender.username
+                + " canceled the report of your post "
+                + post.name,
+            )
             return redirect("posts:detail", post_id)
         else:
             raise PermissionDenied()
