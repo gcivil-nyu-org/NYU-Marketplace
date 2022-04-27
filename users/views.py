@@ -4,6 +4,8 @@ from .forms import ProfileForm
 from .models import Profile
 
 from posts.models import Post, Report, Interest
+
+# from notifications.models import notification
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 
@@ -37,11 +39,19 @@ def user_info(request, user_id):
     posts = posts.filter(user=user_id)
     user_info = Profile.objects.get(user=user_id)
     user_account = User.objects.get(id=user_id)
+    if len(Interest.objects.filter(interested_user=request.user)) > 0:
+        user_interested_list = []
+        list = Interest.objects.filter(interested_user=request.user).values_list("post")
+        for item in list:
+            user_interested_list.append(item[0])
+    else:
+        user_interested_list = []
     context = {
         "post_list": posts,
         "user": user_info,
         "default_user": request.user,
         "user_account": user_account,
+        "user_interested_list": user_interested_list,
     }
     if request.user.id == user_id:
         return render(request, "users/profile_detail.html", context)
@@ -96,3 +106,9 @@ def post_interest_detail(request, post_id):
         "report_list": report_list,
     }
     return render(request, "users/post_interest_detail.html", context)
+
+
+# @login_required(login_url="/accounts/login/")
+# def mark_all_as_read(request):
+#     posts.filter(user=request.user)
+#     return
