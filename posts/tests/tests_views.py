@@ -213,6 +213,21 @@ class TestViews(TestCase):
                 "location": "stern",
             },
         )
+        response5 = self.client.post(
+            "/posts/edit/1",
+            {
+                "name": "mac pro",
+                "description": "used macbook pro",
+                "option": "rent",
+                "category": "tech",
+                "price": 50,
+                "location": "stern",
+                "picture": image1,
+            },
+            pk=None,
+            post_id=1,
+        )
+        self.assertEquals(response5.status_code, 200)
         self.assertEquals(response.status_code, 302)
         self.assertEquals(response2.status_code, 200)
         post = Post.objects.get(id=1)
@@ -277,7 +292,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "macbook",
         }
         login = self.client.login(email="user@nyu.edu", password="12test12")
@@ -289,7 +304,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "macb",
         }
         response = self.client.get("/posts/", data)
@@ -331,7 +346,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "test",
         }
         login = self.client.login(email="user@nyu.edu", password="12test12")
@@ -343,7 +358,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "user",
         }
         response = self.client.get("/posts/", data)
@@ -353,7 +368,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "noname",
         }
         response = self.client.get("/posts/", data)
@@ -383,7 +398,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "test",
         }
         response = self.client.get("/posts/", data)
@@ -393,7 +408,7 @@ class TestViews(TestCase):
         data = {
             "category": "tech",
             "option": "exchange",
-            "sort": "pricedesc",
+            "sort": "time",
             "q": "dif",
         }
         response = self.client.get("/posts/", data)
@@ -403,7 +418,7 @@ class TestViews(TestCase):
         # data = {
         #     "category": "tech",
         #     "option": "exchange",
-        #     "sort": "pricedesc",
+        #     "sort": "time",
         #     "q": "",
         # }
         # response = self.client.get("/posts/", data)
