@@ -160,9 +160,6 @@ class index(LoginRequiredMixin, View):
         return render(request, "posts/home.html", context)
 
 
-# TODO do if else both cleaner - both here and in detail.html
-
-
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
@@ -174,9 +171,10 @@ def detail(request, post_id):
         is_user_already_interested = True
 
     if request.method == "POST":
-        if (
-            post.user != request.user
-            and "interested" in request.POST
+        if post.user == request.user:
+            raise PermissionDenied()
+        elif (
+            "interested" in request.POST
             and not is_user_already_interested
         ):
             cust_message = request.POST.get("cust_message")
@@ -188,8 +186,7 @@ def detail(request, post_id):
             interest.save()
             return redirect("posts:detail", post_id)
         elif (
-            post.user != request.user
-            and "cancel_interest" in request.POST
+            "cancel_interest" in request.POST
             and is_user_already_interested
         ):
             post.interested_count -= 1
@@ -198,8 +195,7 @@ def detail(request, post_id):
             interest.delete()
             return redirect("posts:detail", post_id)
         elif (
-            post.user != request.user
-            and "report" in request.POST
+            "report" in request.POST
             and not is_reported_by_user
         ):
             post.report_count += 1
@@ -215,8 +211,7 @@ def detail(request, post_id):
             is_reported_by_user = True
             return redirect("posts:detail", post_id)
         elif (
-            post.user != request.user
-            and "cancel_report" in request.POST
+            "cancel_report" in request.POST
             and is_reported_by_user
         ):
             post.report_count -= 1

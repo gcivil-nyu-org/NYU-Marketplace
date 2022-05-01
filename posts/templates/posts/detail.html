@@ -89,17 +89,7 @@
               {% endif %}
           </div>
 
-            {% if user.is_superuser %}
-              <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
-                {% csrf_token %}
-                <div class="col-6">
-                  <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
-                    <i class="bi"></i>&nbsp DELETE
-                  </button>
-                </div>
-              </form>
-            </br>
-            {% elif post.user != user %}
+            {% if post.user != user %}
               {% if is_user_already_interested %}
                 <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
                   {% csrf_token %}
@@ -215,24 +205,6 @@
 
               </br>
               {% endif %}
-            {% else %}
-              <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
-                {% csrf_token %}
-                <div class="col-6">
-                  <button type="submit" class="btn btn-primary" style="background-color: #da0c0c; color: #FFFFFF" name="delete" onclick="return confirm('Are you sure?');">
-                    <i class="bi"></i>&nbsp DELETE
-                  </button>
-                </div>
-              </form>
-            </br>
-              <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
-                {% csrf_token %}
-                <div class="col-6">
-                  <button type="submit" class="btn btn-primary" style="background-color: #a686c0; color: #FFFFFF" name="edit">
-                    <i class="bi"></i>&nbsp EDIT
-                  </button>
-                </div>
-              </form>
             {% endif %}
         </div>
 
