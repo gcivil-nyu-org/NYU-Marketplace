@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ProfileForm
 from .models import Profile
-
+from notifications.signals import notify
 from posts.models import Post, Report, Interest
 
 # from notifications.models import notification
@@ -85,6 +85,15 @@ def post_interest_detail(request, post_id):
         if (
             post.user == request.user or request.user.is_superuser
         ) and "delete" in request.POST:
+            if request.user.is_superuser:
+                sender = User.objects.get(username=request.user)
+                receiver = User.objects.get(username=post.user)
+                notify.send(
+                    sender=sender,
+                    recipient=receiver,
+                    verb=post_id,
+                    description="Administration deleted your post " + post.name,
+                )
             post.delete()
             return redirect("posts:home")
         elif post.user == request.user and "edit" in request.POST:
