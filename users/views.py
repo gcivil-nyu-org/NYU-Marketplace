@@ -91,7 +91,7 @@ def post_interest_detail(request, post_id):
                 notify.send(
                     sender=sender,
                     recipient=receiver,
-                    verb=post_id,
+                    verb="delete",
                     description="Administration deleted your post " + post.name,
                 )
             post.delete()
