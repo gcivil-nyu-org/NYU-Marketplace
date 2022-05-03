@@ -124,6 +124,7 @@ class index(LoginRequiredMixin, View):
         q = request.GET.get("q", default="")
         post_list = Post.objects.all()
         post_list_pk = Post.objects.all().values("pk")
+        interested_filter_list = Post.objects.none()
         if len(Interest.objects.filter(interested_user=request.user)) > 0:
             user_interested_list = []
             list = Interest.objects.filter(interested_user=request.user).values_list(
@@ -131,6 +132,8 @@ class index(LoginRequiredMixin, View):
             )
             for item in list:
                 user_interested_list.append(item[0])
+                cur_post = post_list.filter(pk=item[0])
+                interested_filter_list |= cur_post
         else:
             user_interested_list = ()
             # print(user_interested_list)
@@ -141,8 +144,6 @@ class index(LoginRequiredMixin, View):
             except User.DoesNotExist:
                 user = None
             post_list = post_list.filter(Q(name__icontains=q) | Q(user=user))
-        if category != "all":
-            post_list = post_list.filter(category=category)
         if option != "all":
             if option == "reported":
                 if request.user.is_superuser:
@@ -150,8 +151,12 @@ class index(LoginRequiredMixin, View):
                     post_list = post_list.order_by("-report_count")
                 else:
                     raise PermissionDenied()
+            elif option == "interested":
+                post_list = interested_filter_list
             else:
                 post_list = post_list.filter(option=option)
+        if category != "all":
+            post_list = post_list.filter(category=category)
         if sort == "priceasc":
             post_list = post_list.filter(Q(option="sell") | Q(option="rent")).order_by(
                 "price"
@@ -167,6 +172,7 @@ class index(LoginRequiredMixin, View):
             "user": request.user,
             "user_interested_list": user_interested_list,
             "post_list_pk": post_list_pk,
+            "interested_filter_list": interested_filter_list,
         }
         # print(post_list_pk)
         # print(user_interested_list)
