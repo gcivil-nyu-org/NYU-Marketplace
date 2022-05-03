@@ -237,11 +237,29 @@ def detail(request, post_id):
             is_reported_by_user = True
             sender = User.objects.get(username=request.user)
             receiver = User.objects.get(username=post.user)
+            reasons = {
+                "1": "inappropriate post content",
+                "2": "post item is no longer available",
+                "3": "reporter cannot reach out to you",
+                "4": "other reasons",
+            }
+            superusers = User.objects.filter(is_superuser=True)
+            notify.send(
+                sender,
+                recipient=superusers,
+                verb=post_id,
+                description=post.name + " is being reported."
+                # description=request.POST.get("report_option"),
+            )
             notify.send(
                 sender,
                 recipient=receiver,
                 verb=post_id,
-                description=sender.username + " reported your post " + post.name,
+                description="Your post "
+                + post.name
+                + " is being reported due to "
+                + reasons.get(request.POST.get("report_option")),
+                # description=request.POST.get("report_option"),
             )
             # return redirect("posts:home")
             return redirect("posts:detail", post_id)
@@ -257,9 +275,7 @@ def detail(request, post_id):
                 sender,
                 recipient=receiver,
                 verb=post_id,
-                description=sender.username
-                + " canceled the report of your post "
-                + post.name,
+                description="User canceled the report of your post " + post.name,
             )
             return redirect("posts:detail", post_id)
         else:

@@ -80,8 +80,10 @@
           </div>
         </div>
 
-        <div class="row justify-content-center col-8 mt-5">
-          <div class="col-2" style="margin-bottom: auto; margin-top: auto">
+        <div class="row col-12 mt-5">
+          <div class="col-1">
+          </div>
+          <div class="col-1" style="margin-bottom: auto; margin-top: auto">
               {% if is_user_already_interested  %}
                 <i class="bi bi-star-fill" style='color:#ffc300' ></i><span>&nbsp {{ post.interested_count}}</span>
               {% else %}
@@ -91,17 +93,19 @@
 
             {% if post.user != user %}
               {% if is_user_already_interested %}
-                <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
-                  {% csrf_token %}
-                  <div class="col-6">
+                <div class="col-3">
+                  <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                    {% csrf_token %}
+
                       <button type="submit" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" name="cancel_interest" onclick="return confirm('Are you sure?');">
                         <i class="bi bi-star-fill" style='color: #f3da35'></i>&nbsp Cancel Interest
                       </button>
-                  </div>
-                </form>
+
+                  </form>
+                </div>
               </br>
               {% else %}
-                <div class="col-6">
+                <div class="col-3">
                   <button type="button" class="btn btn-primary" style="background-color: #57068c; color: #FFFFFF" data-bs-toggle="modal" data-bs-target="#interestedModal" data-bs-whatever="@mdo">
                     <i class="bi bi-star"></i>&nbsp Interested!
                   </button>
@@ -135,17 +139,19 @@
               {% endif %}
 
               {% if is_reported_by_user%}
-                <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
-                  {% csrf_token %}
-                  <div class="col-6">
+                <div class="col-3" style="margin-left: -30px">
+                  <form method="POST" action="{% url 'posts:detail' post.id %}" method="POST">
+                    {% csrf_token %}
+
                     <button type="submit" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" name="cancel_report" onclick="return confirm('Are you sure?');"">
                       <i class="bi bi-flag-fill"></i>&nbsp Cancel Report
                     </button>
-                  </div>
-                </form>
+
+                  </form>
+                </div>
               </br>
               {% else %}
-                <div class="col-6">
+                <div class="col-3" style="margin-left: -30px">
                   <button type="button" class="btn btn-primary" style="background-color: #b20606; color: #FFFFFF" data-bs-toggle="modal" data-bs-target="#reportModal" data-bs-whatever="@mdo">
                     <i class="bi bi-flag"></i>&nbsp Report
                   </button>
