@@ -173,9 +173,6 @@ class index(LoginRequiredMixin, View):
         return render(request, "posts/home.html", context)
 
 
-# TODO do if else both cleaner - both here and in detail.html
-
-
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
@@ -187,11 +184,9 @@ def detail(request, post_id):
         is_user_already_interested = True
 
     if request.method == "POST":
-        if (
-            post.user != request.user
-            and "interested" in request.POST
-            and not is_user_already_interested
-        ):
+        if post.user == request.user:
+            raise PermissionDenied()
+        elif "interested" in request.POST and not is_user_already_interested:
             cust_message = request.POST.get("cust_message")
             post.interested_count += 1
             post.save()
@@ -211,11 +206,7 @@ def detail(request, post_id):
             )
             # return redirect("posts:home")
             return redirect("posts:detail", post_id)
-        elif (
-            post.user != request.user
-            and "cancel_interest" in request.POST
-            and is_user_already_interested
-        ):
+        elif "cancel_interest" in request.POST and is_user_already_interested:
             post.interested_count -= 1
             post.save()
             interest = Interest.objects.filter(interested_user=request.user, post=post)
@@ -232,11 +223,7 @@ def detail(request, post_id):
             )
             # return redirect("posts:home")
             return redirect("posts:detail", post_id)
-        elif (
-            post.user != request.user
-            and "report" in request.POST
-            and not is_reported_by_user
-        ):
+        elif "report" in request.POST and not is_reported_by_user:
             post.report_count += 1
             post.save()
             # print(request.POST.get("report_option"))
@@ -276,11 +263,7 @@ def detail(request, post_id):
             )
             # return redirect("posts:home")
             return redirect("posts:detail", post_id)
-        elif (
-            post.user != request.user
-            and "cancel_report" in request.POST
-            and is_reported_by_user
-        ):
+        elif "cancel_report" in request.POST and is_reported_by_user:
             post.report_count -= 1
             post.save()
             report = Report.objects.filter(reported_by=request.user, post=post)
