@@ -151,11 +151,14 @@
 
                                               {% for notification in  user.notifications.unread %}
                                                     <div class="dropdown-divider"></div>
+                                                  {% if notification.verb == "delete" %}
+                                                     <a>{{ notification.description }}</a>
 
-                                                       <a class="nav-link" style="color: #000000"  href="{% url 'users:post_interest_detail' notification.verb %}" type="button">{{ notification.description }}</a>
+                                                  {% else %}
+                                                      <a class="nav-link" style="color: #000000"  href="{% url 'users:post_interest_detail' notification.verb %}" type="button">{{ notification.description }}</a>
+                                                  {% endif %}
+
                                             {% endfor %}
-                                              <div >
-                                          </div>
                                         </div>
                           </div>
                         </div>
@@ -227,13 +230,21 @@
                                           <div id="notification-list2" style = " left: auto ; right : 0" class="dropdown-menu">
                                           <a class="nav-link" style="color: #000000"  href="{% url 'notifications:mark_all_as_read' %}?next={{ request.path }} "><i class="bi bi-backspace-fill"></i>Mark as Read</a>
 
+{#                                              {% for notification in  default_user.notifications.unread %}#}
+{#                                                    <div class="dropdown-divider"></div>#}
+{##}
+{#                                                       <a class="nav-link" style="color: #000000"  href="{% url 'users:post_interest_detail' notification.verb %}" type="button">{{ notification.description }}</a>#}
+{#                                            {% endfor %}#}
                                               {% for notification in  default_user.notifications.unread %}
                                                     <div class="dropdown-divider"></div>
+                                                  {% if notification.verb == "delete" %}
+                                                     <a>{{ notification.description }}</a>
 
-                                                       <a class="nav-link" style="color: #000000"  href="{% url 'users:post_interest_detail' notification.verb %}" type="button">{{ notification.description }}</a>
+                                                  {% else %}
+                                                      <a class="nav-link" style="color: #000000"  href="{% url 'users:post_interest_detail' notification.verb %}" type="button">{{ notification.description }}</a>
+                                                  {% endif %}
+
                                             {% endfor %}
-                                              <div >
-                                          </div>
                                         </div>
                           </div>
                         </div>
