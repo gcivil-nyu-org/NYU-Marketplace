@@ -445,6 +445,12 @@ class TestViews(TestCase):
             interested_user=self.user,
             cust_message="interesting",
         )
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        data = {"option": "interested"}
+        response = self.client.get("/posts/", data)
+        self.assertIsNotNone(response.context["post_list"])
+        self.assertEquals(len(response.context["post_list"]), 1)
         Post.objects.create(
             name="macbook pro2",
             description="used macbook pro2",
@@ -463,7 +469,10 @@ class TestViews(TestCase):
             interested_user=self.user,
             cust_message="fancy",
         )
-        login = self.client.login(email="user@nyu.edu", password="12test12")
-        self.assertEquals(login, True)
-        response = self.client.get("/posts/")
-        self.assertEquals(response.status_code, 200)
+
+        response2 = self.client.get("/posts/")
+        self.assertEquals(response2.status_code, 200)
+        data = {"option": "interested"}
+        response3 = self.client.get("/posts/", data)
+        self.assertIsNotNone(response3.context["post_list"])
+        self.assertEquals(len(response3.context["post_list"]), 2)

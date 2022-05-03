@@ -79,3 +79,21 @@ class TestViews(TestCase):
             },
         )
         self.assertEqual(response.status_code, 302)
+
+    def test_exchange_check_nothing(self):
+        login = self.client.login(email="test@example.com", password="12test12")
+        self.assertEquals(login, True)
+        image1 = self.get_image_file("image.png")
+        response = self.client.post(
+            "/posts/create/",
+            {
+                "name": "macbook pro",
+                "description": "used macbook pro",
+                "option": "exchange",
+                "category": "tech",
+                "location": "stern",
+                "picture": image1,
+                "user": "self.poster",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
