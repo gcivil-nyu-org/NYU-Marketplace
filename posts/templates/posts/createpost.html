@@ -131,7 +131,7 @@
         <div style="text-align:center">
           <button type="submit" class="btn btn-primary">Submit</button>
           {% if post %}
-            <input type="submit" class="btn btn-secondary" value="Cancel" onclick=window.history.back()>
+          <input type="submit" class="btn btn-secondary" value="Cancel" onclick="window.location.href='{% url 'users:post_interest_detail' post.id%}';return false;">
           {% else %}
             <input type="submit" class="btn btn-secondary" value="Cancel" onclick="window.location.href='{% url 'posts:home' %}';return false;">
           {% endif %}
