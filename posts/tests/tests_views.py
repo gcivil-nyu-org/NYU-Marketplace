@@ -425,3 +425,45 @@ class TestViews(TestCase):
         # self.assertIsNotNone(response.context["post_list"])
         # self.assertEquals(len(response.context["post_list"]), 1)
         # self.assertEquals(response.status_code, 200)
+
+    def test_interest_option(self):
+        Post.objects.create(
+            name="macbook pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        post = Post.objects.get(id=1)
+        post.interested_count += 1
+        post.save()
+        Interest.objects.create(
+            post=post,
+            interested_user=self.user,
+            cust_message="interesting",
+        )
+        Post.objects.create(
+            name="macbook pro2",
+            description="used macbook pro2",
+            option="rent",
+            category="tech",
+            price=60,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        post2 = Post.objects.get(id=2)
+        post.interested_count += 1
+        post.save()
+        Interest.objects.create(
+            post=post2,
+            interested_user=self.user,
+            cust_message="fancy",
+        )
+        login = self.client.login(email="user@nyu.edu", password="12test12")
+        self.assertEquals(login, True)
+        response = self.client.get("/posts/")
+        self.assertEquals(response.status_code, 200)
