@@ -110,7 +110,7 @@
                     {% endif %}
                 </div>
                 <div class="row col-12 mt-2 justify-content-between">
-                  {% if post.price %}
+                  {% if post.option == 'sell' or post.option == 'rent' %}
                     <div class="col-9">
                     <span class="poppins"
                           style="margin-left:6px; font-size:18px; font-weight: bolder; color: #4b4b4b">$&nbsp{{ post.price | cut:'.00' }}</span>
