@@ -146,7 +146,7 @@
 {#                                             #}
 {#                                            <div >#}
 
-                                          <div id="notification-list1" style = " left: auto ; right : 0" class="dropdown-menu">
+                                          <div id="notification-list1" style = " left: auto ; right : 0; max-height: 450px; overflow-y: auto" class="dropdown-menu">
                                           <a class="nav-link" style="color: #000000"  href="{% url 'notifications:mark_all_as_read' %}?next={{ request.path }} "><i class="bi bi-backspace-fill"></i>Mark as Read</a>
 
                                               {% for notification in  user.notifications.unread %}
@@ -224,7 +224,7 @@
 {#                                             #}
 {#                                            <div >#}
 
-                                          <div id="notification-list2" style = " left: auto ; right : 0" class="dropdown-menu">
+                                          <div id="notification-list2" style = " left: auto ; right : 0; max-height: 450px; overflow-y: auto" class="dropdown-menu">
                                           <a class="nav-link" style="color: #000000"  href="{% url 'notifications:mark_all_as_read' %}?next={{ request.path }} "><i class="bi bi-backspace-fill"></i>Mark as Read</a>
 
                                               {% for notification in  default_user.notifications.unread %}
