@@ -77,7 +77,11 @@ def edit_profile(request):
 
 @login_required(login_url="/accounts/login/")
 def post_interest_detail(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+    # post = get_object_or_404(Post, pk=post_id)
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return render(request, "posts/custom404.html")
     interest_list = None
     report_list = None
 

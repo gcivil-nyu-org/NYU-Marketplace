@@ -181,7 +181,14 @@ class index(LoginRequiredMixin, View):
 
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+    # post = Post.objects.get(pk=post_id)
+    # return render(request, "posts/custom404.html")
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return render(request, "posts/custom404.html")
+
+    # post = get_object_or_404(Post, pk=post_id)
     is_reported_by_user = False
     is_user_already_interested = False
     if Report.objects.filter(reported_by=request.user, post=post):
