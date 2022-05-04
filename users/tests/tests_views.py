@@ -142,6 +142,6 @@ class TestViews(TestCase):
         response = self.client.post("/profile/post_interest_detail/1", data)
         self.assertEquals(response.status_code, 302)
         response = self.client.get("/profile/post_interest_detail/1")
-        self.assertEquals(response.status_code, 404)
+        self.assertTemplateUsed(response, "posts/custom404.html")
         post = Post.objects.filter(id=1)
         self.assertEquals(len(post), 0)
