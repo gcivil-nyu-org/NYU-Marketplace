@@ -51,15 +51,15 @@
 
             <div class="row justify-content-between col-12 mt-4">
               {% if post.option == 'exchange' %}
-              <div class="col-6">
+              <div class="col-5">
                 <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Exchange</h2>
               </div>
               {% else %}
-              <div class="col-6">
+              <div class="col-5">
                 <h2 class="poppins nyu-purple" style="font-weight: bold; font-size: 24px">$&nbsp{{ post.price }}</h2>
               </div>
               {%endif%}
-              <div class="col-4">
+              <div class="col-3">
                 {% if post.option == 'sell' %}
                   <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 24px">Sell</h2>
                 {% elif post.option == 'rent' %}
