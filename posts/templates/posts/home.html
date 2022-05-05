@@ -67,17 +67,17 @@
                 <a class="type-link" id="exchange" href="javascript:void(0);" onclick="getItem('option', 'exchange')"
                    style="padding-right: 50px; font-size: 25px"><i class="bi bi-layers-half"></i>&nbsp Exchange</a>
               </li>
-
-              <li class="type-item">
-                <a class="type-link" id="interested" href="javascript:void(0);" onclick="getItem('option', 'interested')"
-                   style="padding-right: 50px; font-size: 25px"><i class="bi bi-calendar2-heart"></i>&nbsp Interested</a>
-              </li>
-                {%  if user.is_superuser %}
+              {% if user.is_superuser %}
                 <li class="type-item">
-                <a class="type-link" id="reported" href="javascript:void(0);" onclick="getItem('option', 'reported')"
+                  <a class="type-link" id="reported" href="javascript:void(0);" onclick="getItem('option', 'reported')"
                    style="padding-right: 50px; font-size: 25px"><i class="bi bi-flag-fill"></i>&nbsp Reported</a>
-              </li>
-                {%  endif %}
+                </li>
+              {% else %}
+                <li class="type-item">
+                  <a class="type-link" id="interested" href="javascript:void(0);" onclick="getItem('option', 'interested')"
+                     style="padding-right: 50px; font-size: 25px"><i class="bi bi-calendar2-heart"></i>&nbsp Interested</a>
+                </li>
+              {%  endif %}
             </ul>
           </nav>
 
@@ -95,13 +95,16 @@
                 </div>
                 <div class="row col-12 mt-3 justify-content-between">
 
-                  <div class="col-11">
+                  <div class="col-10">
                     <a class="title"
                        style="margin-left:6px; color: #000000; text-decoration: none; font-weight: bolder; font-size: 18px"
                        href="{% url 'posts:detail' post.id %}">{{ post.name }}</a>
                   </div>
-                    {% if post.pk in user_interested_list %}
-
+                    {% if user.is_superuser %}
+                    <div class="col-2">
+                      <i class="bi bi-flag"></i><span>&nbsp {{ post.report_count }}</span>
+                    </div>
+                    {% elif post.pk in user_interested_list %}
                     <div class="col-1">
 {#                    <h1>{{ post.pk }}</h1>#}
                     <i class="bi bi-star-fill" style="color:#ffc300"></i>

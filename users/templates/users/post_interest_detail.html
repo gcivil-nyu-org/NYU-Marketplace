@@ -49,34 +49,32 @@
           <div>
 
 
-            {% if post.option == 'exchange' %}
-              <div class="row justify-content-between col-12 mt-5">
-                <div class="col-6">
-                  <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Exchange</h2>
-                </div>
-                <div class="col-4">
-                </div>
-                <div class="col-2" style="margin-bottom: auto; margin-top: auto">
-                  <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count }}</span>
-                </div>
+            <div class="row justify-content-between col-12 mt-4">
+              {% if post.option == 'exchange' %}
+              <div class="col-5">
+                <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Exchange</h2>
               </div>
-            {% else %}
-              <div class="row justify-content-between col-12 mt-4">
-                <div class="col-6">
-                  <h2 class="poppins nyu-purple" style="font-weight: bold; font-size: 24px">$&nbsp{{ post.price }}</h2>
-                </div>
-                <div class="col-4">
-                  {% if post.option == 'sell' %}
-                    <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 24px">Sell</h2>
-                  {% elif post.option == 'rent' %}
-                    <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Rent</h2>
-                  {% endif %}
-                </div>
-                <div class="col-2" style="margin-bottom: auto; margin-top: auto">
-                  <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count }}</span>
-                </div>
+              {% else %}
+              <div class="col-5">
+                <h2 class="poppins nyu-purple" style="font-weight: bold; font-size: 24px">$&nbsp{{ post.price }}</h2>
               </div>
-            {% endif %}
+              {%endif%}
+              <div class="col-3">
+                {% if post.option == 'sell' %}
+                  <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 24px">Sell</h2>
+                {% elif post.option == 'rent' %}
+                  <h2 class="poppins" style="font-weight: bolder; color: #faad14; font-size: 30px">Rent</h2>
+                {% endif %}
+              </div>
+              {% if user.is_superuser%}
+              <div class="col-2" style="margin-bottom: auto; margin-top: auto">
+                <i class="bi bi-flag"></i><span>&nbsp {{ post.report_count }}</span>
+              </div>
+              {% endif %}
+              <div class="col-2" style="margin-bottom: auto; margin-top: auto">
+                <i class="bi bi-star"></i><span>&nbsp {{ post.interested_count }}</span>
+              </div>
+            </div>
 
             <div class="col-12 mt-3">
 
