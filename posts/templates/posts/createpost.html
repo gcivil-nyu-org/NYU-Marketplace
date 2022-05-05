@@ -113,7 +113,7 @@
 {{ form.price }}          </div>
         </div>
         <div class="row mb-3">
-          <label for="inputLocation" class="col-sm-3 col-form-label">{{ form.location.label }}</label></label>
+          <label for="inputLocation" class="col-sm-3 col-form-label">{{ form.location.label }}<label style="color:red">*</label></label></label>
           <div class="col-sm-9">
             {{ form.location }}
           </div>
@@ -121,7 +121,7 @@
 
         <br><br><br>
         <div class="row mb-3">
-          <label for="inputDescription" class="col-sm-2 col-form-label">{{ form.description.label }}</label></label>
+          <label for="inputDescription" class="col-sm-2 col-form-label">{{ form.description.label }}<label style="color:red">*</label></label></label>
           <div>
 {{ form.description }}
           </div>
