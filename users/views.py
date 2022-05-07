@@ -69,7 +69,7 @@ def edit_profile(request):
             ctx = {"form": form}
             return render(request, "users/edit_profile.html", ctx)
         form.save()
-        return redirect("posts:home")
+        return redirect("users:profile_detail")
     else:
         form = ProfileForm(instance=request.user.profile)
     return render(request, "users/edit_profile.html", {"form": form})
@@ -119,6 +119,11 @@ def post_interest_detail(request, post_id):
         "report_list": report_list,
     }
     return render(request, "users/post_interest_detail.html", context)
+
+
+def about_us(request):
+
+    return render(request, "users/about_us.html")
 
 
 # @login_required(login_url="/accounts/login/")

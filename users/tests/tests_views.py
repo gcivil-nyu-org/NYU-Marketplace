@@ -119,6 +119,11 @@ class TestViews(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "users/post_interest_detail.html")
 
+    def test_about_us(self):
+        response = self.client.get("/profile/about_us")
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, "users/about_us.html")
+
     def test_superuser_delete_post(self):
         Post.objects.create(
             name="macbook pro",
