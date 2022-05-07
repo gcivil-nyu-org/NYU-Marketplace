@@ -1,0 +1,163 @@
+{% extends "posts/base.html" %}
+{% load static %}
+{% block content %}
+    <style>
+    .card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+}
+
+.title {
+  color: grey;
+  font-size: 18px;
+}
+
+.center {
+
+text-align: center;
+    padding-bottom: 20px;
+    color: #472080
+}
+
+.a {
+  text-decoration: none;
+  font-size: 22px;
+  color: black;
+}
+
+
+
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <div class="container mt-5">
+    {% csrf_token %}
+  </div>
+
+
+
+      <div class="container">
+      <div class="row center">
+          <h1>About Us</h1>
+
+      </div>
+
+      <div style="padding-bottom: 20px">
+                <div style = "background: #d4d4d540; padding: 20px " class="row">
+
+                    <div class="col-lg-6">
+                        <img style="height:400px;display:block; margin-left : auto; margin-right : auto"  src="https://www.nyu.edu/content/dam/nyu/social/images/WALLPAPERS/2020_0706_nyu-background_6_3x2.jpg" alt="Abirbhav" style="width:100%">
+                    </div>
+                      <div class="col-lg-6">
+                          <h1 style="font-size: 1.875rem; font-weight: 700;margin: 135px 0 0">NYU Marketplace</h1>
+                          <hr>
+                          <p style="color: grey;">Welcome to NYU Marketplace. This is a trusted platform for the NYU community built by our very own NYU students.  Students can help each other out by buying, selling or exchanging items with each other. </p>
+                    </div>
+                </div>
+          </div>
+
+          <div class="row center">
+          <h1>Our Developers</h1>
+
+      </div>
+                <div  class="row">
+
+                      <div class="col-lg-4">
+
+                            <div style = "background: #d4d4d540" class="card">
+                                <div style=" padding-top: 25px; ">
+                              <img style="width: 50%;   display: block; margin-left: auto; margin-right: auto;  border-radius: 50%;"  src="https://nyu-marketplace-team1.s3.amazonaws.com/WhatsApp+Image+2022-05-03+at+4.13.04+PM.jpeg" alt="Abirbhav" style="width:100%">
+                                </div>
+                              <h1>Abirbhav Dutta</h1>
+                              <p class="title">Developer</p>
+                              <p>New York University May '23</p>
+                                <div class="row">
+
+                              <a class ="a" href="https://www.linkedin.com/in/abirbhavdutta/" target="_blank" ><i class="fa fa-linkedin"></i></a>
+                              <a class ="a" href="https://github.com/abirbhav" target="_blank" ><i class="fa fa-github"></i></a>
+                                </div>
+                            </div>
+                    </div>
+
+                      <div class="col-lg-4">
+                              <div style = "background: #d4d4d540" class="card">
+                                <div style=" padding-top: 25px; ">
+                              <img style="width: 50%;   display: block; margin-left: auto; margin-right: auto;  border-radius: 50%;"  src="https://nyu-marketplace-team1.s3.amazonaws.com/WhatsApp+Image+2022-05-03+at+4.05.57+PM.jpeg" alt="Kaibo" style="width:100%">
+                                </div>
+                              <h1>Kaibo Zhang</h1>
+                              <p class="title">Developer</p>
+                              <p>New York University Dec '22</p>
+                                <div class="row">
+
+                              <a class ="a" href="https://www.linkedin.com/in/kaibo-zhang/" target="_blank" ><i class="fa fa-linkedin"></i></a>
+                              <a class ="a" href="https://github.com/furrkai" target="_blank" ><i class="fa fa-github"></i></a>
+                                </div>
+
+                    </div>
+                </div>
+
+                    <div class="col-lg-4">
+
+                            <div style = "background: #d4d4d540" class="card">
+                                <div style=" padding-top: 25px; ">
+                              <img style="width: 50%;   display: block; margin-left: auto; margin-right: auto;  border-radius: 50%;"  src="https://nyu-marketplace-team1.s3.amazonaws.com/shravani.jpeg" alt="Shravani" style="width:100%">
+                                </div>
+                              <h1>Shravani Rakshe</h1>
+                              <p class="title">Product Owner and Developer</p>
+                              <p>New York University May '23</p>
+                                <div class="row">
+
+                              <a class ="a"  href="https://www.linkedin.com/in/shravani-rakshe-4752351b9/" target="_blank" ><i class="fa fa-linkedin"></i></a>
+                              <a class ="a"  href="https://github.com/Shravanirakshe" target="_blank" ><i class="fa fa-github"></i></a>
+                                </div>
+                            </div>
+                    </div>
+                    <br>
+                        <div style="padding-top: 40px" class = "row">
+                            <div class="col-lg-2">
+                            </div>
+                             <div class="col-lg-4">
+                                       <div style = "background: #d4d4d540" class="card">
+                                <div style=" padding-top: 25px; ">
+                              <img style="width: 50%;   display: block; margin-left: auto; margin-right: auto;  border-radius: 50%;"  src="https://nyu-marketplace-team1.s3.amazonaws.com/weineng.jpeg" alt="Weineng" style="width:100%">
+                                </div>
+                              <h1>Weineng Hsu</h1>
+                              <p class="title">Developer</p>
+                              <p>New York University May '22</p>
+                                <div class="row">
+
+                              <a class ="a" href="https://www.linkedin.com/in/wei-neng-hsu-1b3a8779/" target="_blank" ><i class="fa fa-linkedin"></i></a>
+                              <a class ="a" href="https://github.com/weineng-hsu" target="_blank" ><i class="fa fa-github"></i></a>
+                                </div>
+                                       </div>
+
+                            </div>
+
+                             <div class="col-lg-4">
+                                       <div style = "background: #d4d4d540" class="card">
+                                <div style=" padding-top: 25px; ">
+                              <img style="width: 50%;   display: block; margin-left: auto; margin-right: auto;  border-radius: 50%;"  src="https://nyu-marketplace-team1.s3.amazonaws.com/WhatsApp+Image+2022-05-05+at+10.45.18+PM.jpeg" alt="Yan" style="width:100%">
+                                </div>
+                              <h1>Yan Gao</h1>
+                              <p class="title">Developer</p>
+                              <p>New York University Dec '22</p>
+                                <div class="row">
+
+                              <a class ="a" href="https://www.linkedin.com/in/yan-gao-8241a2102/" target="_blank" ><i class="fa fa-linkedin"></i></a>
+                              <a class ="a" href="https://github.com/nevermoreno1" target="_blank" ><i class="fa fa-github"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                            </div>
+                        </div>
+      </div>
+  </div>
+
+
+
+
+  </div>
+{% endblock content %}

@@ -86,16 +86,22 @@
 {#            <a class="nav-link" href="{% url 'notifications:mark_all_as_read' %}?next={% url 'posts:home' %}">Home</a>#}
           <a class="nav-link" href="{% url 'posts:home' %}">Home</a>
         </li>
+
+        {% if user.is_authenticated or default_user.is_authenticated%}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'users:profile_detail' %}">Profile</a>
         </li>
-        {% if not user.is_superuser %}
+      {% endif %}
+        {% if not user.is_superuser and user.is_authenticated or default_user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'posts:post-create' %}">Create a Post</a>
         </li>
         {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'users:about_us' %}">About Us</a>
+        </li>
+        {% if user.is_authenticated or default_user.is_authenticated %}
         <li style="margin-left: 300px;">
-
           <div class="form-group row">
             <div class="col">
               <input type="text" id="searchInput" name="q" class="form-control" onkeydown="searchWords(1)"
@@ -106,10 +112,10 @@
                       onclick="searchWords(2)"><i
                   class="bi bi-search"></i></button>
             </div>
-
           </div>
-
         </li>
+      {% endif %}
+
       </ul>
       <!-- Left links -->
     </div>
@@ -129,20 +135,10 @@
 
                    <a href="#" class="notification dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true">
                         <i class="fa fa-bell" style="font-size:20px"></i>
+
                         <span class="badge">{% live_notify_badge %}</span>
                       </a>
-{#                          <div class="dropdown-menu" aria-labelledby="dropdownMenu2">#}
-{#                            {% for notification in  user.notifications.unread %}#}
-{#                                <div>#}
-{#                                Message from <b>{{ notification.actor }}</b>#}
-{#                                <button class="dropdown-item" type="button">{{ notification.description }}</button>#}
-{#                                </div>#}
-{#                                <div class="dropdown-divider"></div>#}
-{#                            {% endfor %}#}
-{#                                        <div style = " left: auto ; right : 0" class="dropdown-menu">#}
-{##}
-{#                                             #}
-{#                                            <div >#}
+
 
                                           <div style = " left: auto ; right : 0" class="dropdown-menu">
                                           <a class="nav-link" style="color: #000000"  href="{% url 'notifications:mark_all_as_read' %}?next={% url 'posts:home' %}"><i class="bi bi-backspace-fill"></i>Mark as Read</a>
@@ -190,9 +186,7 @@
             <li>
               <a class="dropdown-item" href="{% url 'users:profile_detail' %}">My profile</a>
             </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'posts:home' %}">Settings</a>
-            </li>
+
             <li>
               <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
             </li>
@@ -268,9 +262,7 @@
             <li>
               <a class="dropdown-item" href="{% url 'users:profile_detail' %}">My profile</a>
             </li>
-            <li>
-              <a class="dropdown-item" href="{% url 'posts:home' %}">Settings</a>
-            </li>
+
             <li>
               <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
             </li>
