@@ -43,8 +43,6 @@ class AccountTests(TestCase):
         )
         if password:
             user.set_password(password)
-        else:
-            user.set_unusable_password()
         user.save()
         return user
 

@@ -121,3 +121,30 @@ class TestViews(TestCase):
         response = self.client.get("/profile/about_us")
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "users/about_us.html")
+
+    def test_superuser_delete_post(self):
+        Post.objects.create(
+            name="macbook pro",
+            description="used macbook pro",
+            option="exchange",
+            category="tech",
+            price=50,
+            location="stern",
+            user=self.poster,
+            picture="https://nyu-marketplace-team1.s3.amazonaws.com/algo.jpg",
+        )
+        login = self.client.login(email="admin@nyu.edu", password="admintestadmin")
+        self.assertEquals(login, True)
+        response = self.client.get("/profile/post_interest_detail/1")
+        self.assertEquals(response.status_code, 200)
+        post = Post.objects.get(id=1)
+        self.assertEquals(post.user, self.poster)
+        self.assertEquals(post.price, decimal.Decimal("50.00"))
+        data = {"delete": "delete"}
+        # test delete successfull or not
+        response = self.client.post("/profile/post_interest_detail/1", data)
+        self.assertEquals(response.status_code, 302)
+        response = self.client.get("/profile/post_interest_detail/1")
+        self.assertTemplateUsed(response, "posts/custom404.html")
+        post = Post.objects.filter(id=1)
+        self.assertEquals(len(post), 0)
