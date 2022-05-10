@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .forms import ProfileForm
 from .models import Profile
-
+from notifications.signals import notify
 from posts.models import Post, Report, Interest
 
 # from notifications.models import notification
@@ -69,7 +69,7 @@ def edit_profile(request):
             ctx = {"form": form}
             return render(request, "users/edit_profile.html", ctx)
         form.save()
-        return redirect("posts:home")
+        return redirect("users:profile_detail")
     else:
         form = ProfileForm(instance=request.user.profile)
     return render(request, "users/edit_profile.html", {"form": form})
@@ -77,7 +77,11 @@ def edit_profile(request):
 
 @login_required(login_url="/accounts/login/")
 def post_interest_detail(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+    # post = get_object_or_404(Post, pk=post_id)
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return render(request, "posts/custom404.html")
     interest_list = None
     report_list = None
 
@@ -85,6 +89,15 @@ def post_interest_detail(request, post_id):
         if (
             post.user == request.user or request.user.is_superuser
         ) and "delete" in request.POST:
+            if request.user.is_superuser:
+                sender = User.objects.get(username=request.user)
+                receiver = User.objects.get(username=post.user)
+                notify.send(
+                    sender=sender,
+                    recipient=receiver,
+                    verb="delete",
+                    description="Administration deleted your post " + post.name,
+                )
             post.delete()
             return redirect("posts:home")
         elif post.user == request.user and "edit" in request.POST:
@@ -106,6 +119,11 @@ def post_interest_detail(request, post_id):
         "report_list": report_list,
     }
     return render(request, "users/post_interest_detail.html", context)
+
+
+def about_us(request):
+
+    return render(request, "users/about_us.html")
 
 
 # @login_required(login_url="/accounts/login/")

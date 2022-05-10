@@ -107,10 +107,10 @@ class PostModelForm(forms.ModelForm):
             pass
         else:
             if price is None:
-                print("error")
+                # print("error")
                 raise forms.ValidationError({"price": ["Price can not be empty!"]})
             elif price >= 1000000:
-                print("error")
+                # print("error")
                 raise forms.ValidationError(
                     {"price": ["Price can not be larger than 1000000!"]}
                 )

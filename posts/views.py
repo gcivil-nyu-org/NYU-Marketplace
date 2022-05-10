@@ -124,6 +124,7 @@ class index(LoginRequiredMixin, View):
         q = request.GET.get("q", default="")
         post_list = Post.objects.all()
         post_list_pk = Post.objects.all().values("pk")
+        interested_filter_list = Post.objects.none()
         if len(Interest.objects.filter(interested_user=request.user)) > 0:
             user_interested_list = []
             list = Interest.objects.filter(interested_user=request.user).values_list(
@@ -131,6 +132,8 @@ class index(LoginRequiredMixin, View):
             )
             for item in list:
                 user_interested_list.append(item[0])
+                cur_post = post_list.filter(pk=item[0])
+                interested_filter_list |= cur_post
         else:
             user_interested_list = ()
             # print(user_interested_list)
@@ -141,8 +144,6 @@ class index(LoginRequiredMixin, View):
             except User.DoesNotExist:
                 user = None
             post_list = post_list.filter(Q(name__icontains=q) | Q(user=user))
-        if category != "all":
-            post_list = post_list.filter(category=category)
         if option != "all":
             if option == "reported":
                 if request.user.is_superuser:
@@ -150,8 +151,12 @@ class index(LoginRequiredMixin, View):
                     post_list = post_list.order_by("-report_count")
                 else:
                     raise PermissionDenied()
+            elif option == "interested":
+                post_list = interested_filter_list
             else:
                 post_list = post_list.filter(option=option)
+        if category != "all":
+            post_list = post_list.filter(category=category)
         if sort == "priceasc":
             post_list = post_list.filter(Q(option="sell") | Q(option="rent")).order_by(
                 "price"
@@ -167,18 +172,23 @@ class index(LoginRequiredMixin, View):
             "user": request.user,
             "user_interested_list": user_interested_list,
             "post_list_pk": post_list_pk,
+            "interested_filter_list": interested_filter_list,
         }
         # print(post_list_pk)
         # print(user_interested_list)
         return render(request, "posts/home.html", context)
 
 
-# TODO do if else both cleaner - both here and in detail.html
-
-
 @login_required(login_url="/accounts/login/")
 def detail(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+    # post = Post.objects.get(pk=post_id)
+    # return render(request, "posts/custom404.html")
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return render(request, "posts/custom404.html")
+
+    # post = get_object_or_404(Post, pk=post_id)
     is_reported_by_user = False
     is_user_already_interested = False
     if Report.objects.filter(reported_by=request.user, post=post):
@@ -187,11 +197,9 @@ def detail(request, post_id):
         is_user_already_interested = True
 
     if request.method == "POST":
-        if (
-            post.user != request.user
-            and "interested" in request.POST
-            and not is_user_already_interested
-        ):
+        if post.user == request.user:
+            raise PermissionDenied()
+        elif "interested" in request.POST and not is_user_already_interested:
             cust_message = request.POST.get("cust_message")
             post.interested_count += 1
             post.save()
@@ -211,11 +219,7 @@ def detail(request, post_id):
             )
             # return redirect("posts:home")
             return redirect("posts:detail", post_id)
-        elif (
-            post.user != request.user
-            and "cancel_interest" in request.POST
-            and is_user_already_interested
-        ):
+        elif "cancel_interest" in request.POST and is_user_already_interested:
             post.interested_count -= 1
             post.save()
             interest = Interest.objects.filter(interested_user=request.user, post=post)
@@ -232,11 +236,7 @@ def detail(request, post_id):
             )
             # return redirect("posts:home")
             return redirect("posts:detail", post_id)
-        elif (
-            post.user != request.user
-            and "report" in request.POST
-            and not is_reported_by_user
-        ):
+        elif "report" in request.POST and not is_reported_by_user:
             post.report_count += 1
             post.save()
             # print(request.POST.get("report_option"))
@@ -250,19 +250,33 @@ def detail(request, post_id):
             is_reported_by_user = True
             sender = User.objects.get(username=request.user)
             receiver = User.objects.get(username=post.user)
+            reasons = {
+                "1": "inappropriate post content",
+                "2": "post item is no longer available",
+                "3": "reporter cannot reach out to you",
+                "4": "other reasons",
+            }
+            superusers = User.objects.filter(is_superuser=True)
+            notify.send(
+                sender,
+                recipient=superusers,
+                verb=post_id,
+                description=post.name + " is being reported."
+                # description=request.POST.get("report_option"),
+            )
             notify.send(
                 sender,
                 recipient=receiver,
                 verb=post_id,
-                description=sender.username + " reported your post " + post.name,
+                description="Your post "
+                + post.name
+                + " is being reported due to "
+                + reasons.get(request.POST.get("report_option")),
+                # description=request.POST.get("report_option"),
             )
             # return redirect("posts:home")
             return redirect("posts:detail", post_id)
-        elif (
-            post.user != request.user
-            and "cancel_report" in request.POST
-            and is_reported_by_user
-        ):
+        elif "cancel_report" in request.POST and is_reported_by_user:
             post.report_count -= 1
             post.save()
             report = Report.objects.filter(reported_by=request.user, post=post)
@@ -274,9 +288,7 @@ def detail(request, post_id):
                 sender,
                 recipient=receiver,
                 verb=post_id,
-                description=sender.username
-                + " canceled the report of your post "
-                + post.name,
+                description="User canceled the report of your post " + post.name,
             )
             return redirect("posts:detail", post_id)
         else:
